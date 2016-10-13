@@ -1,0 +1,69 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+de:
+  js:
+    poll:
+      voters:
+        one: "Teilnehmer"
+        other: "Teilnehmer"
+      total_votes:
+        one: "abgegebene Stimme"
+        other: "abgegebene Stimmen"
+      average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      public:
+        title: "Abgegebene Stimmen werden veröffentlicht."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Du musst mindestens <strong>1</strong> Option auswählen."
+            other: "Du musst mindestens <strong>%{count}</strong> Optionen auswählen."
+          up_to_max_options:
+            one: "Du kannst bis zu <strong>eine</strong> Option auswählen."
+            other: "Du kannst bis zu <strong>%{count}</strong> Optionen auswählen."
+          x_options:
+            one: "Bitte wähle <strong>1</strong> Option"
+            other: "Bitte wähle <strong>%{count}</strong> Optionen"
+          between_min_and_max_options: "Bitte wähle zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen"
+      cast-votes:
+        title: "Gib deine Stimmen ab"
+        label: "Jetzt abstimmen!"
+      show-results:
+        title: "Das Ergebnis der Umfrage anzeigen"
+        label: "Ergebnisse anzeigen"
+      hide-results:
+        title: "Zurück zur Umfrage"
+        label: "Ergebnisse ausblenden"
+      open:
+        title: "Umfrage starten"
+        label: "Starten"
+        confirm: "Möchtest du diese Umfrage wirklich starten?"
+      close:
+        title: "Umfrage beenden"
+        label: "Beenden"
+        confirm: "Möchtest du diese Umfrage wirklich beenden?"
+      error_while_toggling_status: "Entschuldige, es gab einen Fehler beim Wechseln des Status dieser Umfrage."
+      error_while_casting_votes: "Entschuldige, es gab einen Fehler beim Abgeben deiner Stimme."
+      error_while_fetching_voters: "Entschuldige, es gab einen Fehler beim Anzeigen der Teilnehmer."
+      ui_builder:
+        title: Umfrage erstellen
+        insert: Umfrage einfügen
+        help:
+          options_count: Gib mindestens 2 Optionen ein
+        poll_type:
+          label: Art
+          regular: Einfachauswahl
+          multiple: Mehrfachauswahl
+          number: Bewertung
+        poll_config:
+          max: max.
+          min: min.
+          step: Schrittweite
+        poll_public:
+          label: Anzeigen wer abgestimmt hat
+        poll_options:
+          label: Bitte gib eine Umfrageoption pro Zeile ein

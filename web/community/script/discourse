@@ -1,0 +1,230 @@
+#!/usr/bin/env ruby
+
+require "thor"
+
+class DiscourseCLI < Thor
+  class_option :verbose, default: false, aliases: :v
+
+  desc "remap", "Remap a string sequence accross all tables"
+  def remap(from, to, global=nil)
+    load_rails
+
+    global = global == "--global"
+
+    puts "Rewriting all occurences of #{from} to #{to}"
+    puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
+    puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if global
+    text = STDIN.gets
+    if text.strip != "YES"
+      puts "aborting."
+      exit
+    end
+
+    if global
+      RailsMultisite::ConnectionManagement.each_connection do |db|
+        puts "","Remapping tables on #{db}...",""
+        do_remap(from, to)
+      end
+    else
+      do_remap(from, to)
+    end
+  end
+
+  desc "backup", "Backup a discourse forum"
+  def backup(filename = nil)
+    load_rails
+    require "backup_restore/backup_restore"
+    require "backup_restore/backuper"
+
+    puts "Starting backup..."
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+    backup = backuper.run
+    if filename.present?
+      puts "Moving '#{backup}' to '#{filename}'"
+      puts "Including version number into '#{filename}'"
+      version_string = File.basename(backup)[/-#{BackupRestore::VERSION_PREFIX}\d{14}/]
+      filename = filename.dup.insert(filename.index('.'), version_string)
+      FileUtils.mv(backup, filename)
+      backup = filename
+    end
+    puts "Backup done."
+    puts "Output file is in: #{backup}", ""
+
+    exit(1) unless backuper.success
+  end
+
+  desc "export", "Backup a Discourse forum"
+  def export
+    backup
+  end
+
+  desc "restore", "Restore a Discourse backup"
+  def restore(filename=nil)
+
+    if !filename
+      puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
+
+      Dir["public/backups/default/*"].each do |f|
+        puts "script/discourse restore #{File.basename(f)}"
+      end
+
+      return
+    end
+
+    load_rails
+    require "backup_restore/backup_restore"
+    require "backup_restore/restorer"
+
+    begin
+      puts "Starting restore: #{filename}"
+      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename: filename)
+      restorer.run
+      puts 'Restore done.'
+    rescue BackupRestore::FilenameMissingError
+      puts '', 'The filename argument was missing.', ''
+      usage
+    rescue BackupRestore::RestoreDisabledError
+      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
+      puts 'Restore cancelled.', ''
+    end
+
+    exit(1) unless restorer.try(:success)
+  end
+
+  desc "import", "Restore a Discourse backup"
+  def import(filename)
+    restore(filename)
+  end
+
+  desc "rollback", "Rollback to the previous working state"
+  def rollback
+    load_rails
+    require "backup_restore"
+
+    puts 'Rolling back if needed..'
+    BackupRestore.rollback!
+    puts 'Done.'
+  end
+
+  desc "enable_restore", "Allow restore operations"
+  def enable_restore
+    load_rails
+    require "site_setting"
+
+    SiteSetting.allow_restore = true
+    puts 'Restore are now permitted. Disable them with `disable_restore`'
+  end
+
+  desc "disable_restore", "Forbid restore operations"
+  def disable_restore
+    load_rails
+    require "site_setting"
+
+    SiteSetting.allow_restore = false
+    puts 'Restore are now forbidden. Enable them with `enable_restore`'
+  end
+
+  desc "enable_readonly", "Enable the readonly mode"
+  def enable_readonly
+    load_rails
+
+    Discourse.enable_readonly_mode
+    puts 'The site is now in readonly mode.'
+  end
+
+  desc "disable_readonly", "Disable the readonly mode"
+  def disable_readonly
+    load_rails
+
+    Discourse.disable_readonly_mode
+    puts 'The site is now fully operable.'
+  end
+
+  desc "request_refresh", "Ask all clients to refresh the browser"
+  def request_refresh
+    load_rails
+
+    Discourse.request_refresh!
+    puts 'Requests sent. Clients will refresh on next navigation.'
+  end
+
+  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
+  def export_category(category_id, filename=nil)
+    raise "Category id argument is missing!" unless category_id
+
+    load_rails
+    load_import_export
+    ImportExport.export_category(category_id, filename)
+    puts "", "Done", ""
+  end
+
+  desc "import_category", "Import a category, its topics and the users from the output of the export_category command"
+  def import_category(filename)
+    raise "File name argument missing!" unless filename
+
+    puts "Starting import from #{filename}..."
+    load_rails
+    load_import_export
+    ImportExport.import_category(filename)
+    puts "", "Done", ""
+  end
+
+  desc "export_topics", "Export topics and all users who posted in that topic. Accepts multiple topic id's"
+  def export_topics(*topic_ids)
+    puts "Starting export of topics...", ""
+    load_rails
+    load_import_export
+    ImportExport.export_topics(topic_ids)
+    puts "", "Done", ""
+  end
+
+  desc "import_topics", "Import topics and their users from the output of the export_topic command"
+  def import_topics(filename)
+    raise "File name argument missing!" unless filename
+
+    puts "Starting import from #{filename}..."
+    load_rails
+    load_import_export
+    ImportExport.import_topics(filename)
+    puts "", "Done", ""
+  end
+
+  private
+
+  def load_rails
+    require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  end
+
+  def load_import_export
+    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
+  end
+
+  def do_remap(from, to)
+    sql = "SELECT table_name, column_name
+FROM information_schema.columns
+WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
+
+    cnn = ActiveRecord::Base.connection.raw_connection
+
+    results = cnn.async_exec(sql).to_a
+
+    results.each do |result|
+      table_name = result["table_name"]
+      column_name = result["column_name"]
+      puts "Remapping #{table_name} #{column_name}"
+      begin
+        result = cnn.async_exec("UPDATE #{table_name}
+                        SET #{column_name} = replace(#{column_name}, $1, $2)
+                        WHERE NOT #{column_name} IS NULL
+                          AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+        puts "#{result.cmd_tuples} rows affected!"
+      rescue => ex
+        puts "Error: #{ex}"
+      end
+    end
+  end
+
+
+end
+
+DiscourseCLI.start(ARGV)

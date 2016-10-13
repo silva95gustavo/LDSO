@@ -1,0 +1,20 @@
+<div class="modal-body change-timestamp">
+  <p>
+    {{i18n 'topic.change_timestamp.instructions'}}
+  </p>
+
+  <p class="alert alert-error {{unless validTimestamp 'hidden'}}">
+    {{i18n 'topic.change_timestamp.invalid_timestamp'}}
+  </p>
+
+  <form>
+    {{date-picker-past value=date containerId="date-container"}}
+    {{input type="time" value=time}}
+  </form>
+
+  <div id="date-container" />
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" disabled={{buttonDisabled}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>
+</div>

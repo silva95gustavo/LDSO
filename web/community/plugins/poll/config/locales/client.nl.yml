@@ -1,0 +1,69 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+nl:
+  js:
+    poll:
+      voters:
+        one: "stemmer"
+        other: "stemmers"
+      total_votes:
+        one: "totale stem"
+        other: "totale stemmen"
+      average_rating: "Gemiddeld cijfer: <strong>%{average}</strong>."
+      public:
+        title: "Stemmen zijn openbaar."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Kies tenminste <strong>1</strong> optie"
+            other: "Kies tenminste <strong>%{count}</strong> opties"
+          up_to_max_options:
+            one: "Kies maximaal <strong>1</string> optie"
+            other: "Kies maximaal <strong>%{count}</string> opties"
+          x_options:
+            one: "Kies <strong>1</strong> optie"
+            other: "Kies <strong>%{count}</strong> opties"
+          between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties"
+      cast-votes:
+        title: "Breng je stemmen uit"
+        label: "Stem nu!"
+      show-results:
+        title: "Bekijk de resultaten van de poll"
+        label: "Bekijk resultaten"
+      hide-results:
+        title: "Terug naar je stemmen"
+        label: "Verberg resultaten"
+      open:
+        title: "Open de poll"
+        label: "Open"
+        confirm: "Weet je zeker dat je deze poll wil openen?"
+      close:
+        title: "Sluit de poll"
+        label: "Sluit"
+        confirm: "Weet je zeker dat je deze poll wil sluiten?"
+      error_while_toggling_status: "Sorry, er is iets misgegaan bij het aanpassen van de status van deze poll."
+      error_while_casting_votes: "Sorry, er is iets misgegaan bij het uitbrengen van je stemmen."
+      error_while_fetching_voters: "Sorry, er is iets misgegaan bij het weergeven van de stemmers."
+      ui_builder:
+        title: Maak Poll
+        insert: Poll Invoegen
+        help:
+          options_count: Geef ten minste 2 opties
+        poll_type:
+          label: Type
+          regular: Eén Keuze
+          multiple: Multiple Choice
+          number: Numerieke Beoordeling
+        poll_config:
+          max: Max
+          min: Min
+          step: Stap
+        poll_public:
+          label: Laat zien wie gestemd heeft
+        poll_options:
+          label: Geef één polloptie per regel op

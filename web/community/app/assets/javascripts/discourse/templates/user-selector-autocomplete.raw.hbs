@@ -1,0 +1,24 @@
+<div class='autocomplete'>
+  <ul>
+    {{#each options.users as |user|}}
+      <li>
+        <a href>
+          {{avatar user imageSize="tiny"}}
+          <span class='username'>{{user.username}}</span>
+          <span class='name'>{{user.name}}</span>
+        </a>
+      </li>
+    {{/each}}
+    {{#if options.groups}}
+      {{#each options.groups as |group|}}
+        <li>
+          <a href>
+            <i class='fa fa-users'></i>
+            <span class='username'>{{group.name}}</span>
+            <span class='name'>{{max-usernames group.usernames max="3"}}</span>
+          </a>
+        </li>
+      {{/each}}
+    {{/if}}
+  </ul>
+</div>

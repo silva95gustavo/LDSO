@@ -1,0 +1,159 @@
+.fps-invalid {
+  margin-bottom: 1em;
+}
+
+.fps-result {
+
+  .author {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .like-count {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    .fa { color: $love; font-size: 12px; }
+  }
+
+  .badge-wrapper span.badge-category {
+    max-width: inherit;
+  }
+
+  .search-category {
+    padding-top:3px;
+  }
+
+  margin-bottom: 28px;
+  max-width: 780px;
+  .topic {
+     padding-bottom: 2px;
+     max-width:700px;
+  }
+  .avatar {
+    margin-right: 14px;
+  }
+  a.search-link:visited .topic-title {
+    color: scale-color($tertiary, $lightness: 15%);
+  }
+  .search-link {
+    .topic-statuses, .topic-title {
+      font-size: 1.3em;
+      line-height: 25px;
+    }
+
+    .topic-statuses {
+      float: none;
+      display: inline-block;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      font-size: 1.0em;
+    }
+  }
+  .blurb {
+    font-size: 1.0em;
+    line-height: 20px;
+    word-wrap: break-word;
+    max-width: 640px;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    .date {
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    }
+
+    .search-highlight {
+      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+    }
+  }
+
+  .discourse-tag {
+    font-size: 0.8em;
+  }
+}
+
+.fps-topic {
+  display: inline-block;
+}
+
+.fps-select {
+  margin-top: -15px;
+  margin-bottom: 15px;
+  a:hover {
+    color: $secondary;
+    background-color: $tertiary;
+  }
+  a {
+    margin-right: 15px;
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+}
+
+.search.row {
+  margin-bottom: 15px;
+  input {
+    height: 22px;
+    padding-left: 6px;
+  }
+
+  .new-topic-btn {
+    float:right;
+  }
+}
+
+.search-advanced {
+  margin-bottom: 15px;
+
+  .panel-title {
+    background-color: dark-light-diff($primary, $secondary, 94%, -80%);
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+
+  .search-options {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    padding: 10px;
+
+    .control-group.pull-left {
+      width: 50%;
+    }
+  }
+}
+
+.search-footer {
+  margin-bottom: 30px;
+}
+
+.panel-body-contents .search-context label {
+  float: left;
+}
+
+.search-title {
+
+  .term {
+    font-weight: bold;
+  }
+
+  position: relative;
+  .result-count {
+    float: left;
+    span {
+      line-height: 28px;
+      height: 28px;
+      display: inline-block;
+    }
+    margin-bottom: 4px;
+  }
+  margin: 10px 0 15px;
+  max-width: 780px;
+  border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  width: 100%;
+  .sort-by {
+    .desc {
+      margin-right: 5px;
+    }
+    select {
+      margin-bottom: 0;
+      width: auto;
+      min-width: 150px;
+    }
+    float: right;
+    margin-bottom: 4px;
+  }
+}

@@ -1,0 +1,80 @@
+<%- if include_crawler_content? %>
+
+<%= server_plugin_outlet "topic_list_header" %>
+
+<%- if SiteSetting.tagging_enabled && @tag_id %>
+  <h1>
+    <%= link_to "#{Discourse.base_url}/tags/#{@tag_id}", itemprop: 'item' do %>
+      <span itemprop='name'><%= @tag_id %></span>
+    <% end %>
+  </h1>
+<% end %>
+
+<% if @category %>
+  <h1>
+    <% if @category.parent_category %>
+    <%= link_to @category.parent_category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.parent_category.name %></span>
+    <% end %>
+    &nbsp;
+    <% end %>
+    <%= link_to @category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.name %></span>
+    <% end %>
+  </h1>
+  <br/>
+<% end %>
+
+<div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+  <% @list.topics.each_with_index do |t,i| %>
+    <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <meta itemprop='url' content='<%= t.url %>'>
+      <a href='<%= t.relative_url %>' itemprop='item'>
+        <span itemprop='name'><%= t.title %></span>
+      </a>
+      <%= page_links(t) %>
+      <% if (!@category || @category.has_children?) && t.category %>
+        <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
+      <% end %>
+      <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+    </div>
+  <% end %>
+</div>
+
+<% if @list.topics.length > 0 && @list.more_topics_url %>
+  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% if params[:page].to_i > 0 %>
+      <span itemprop='url'><a href='<%= @list.prev_topics_url %>' rel='prev' itemprop='name'><%= t 'prev_page' %></a> &nbsp;</span>
+    <% end %>
+    <span itemprop='url'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='name'><%= t 'next_page' %></a></b></span>
+  </div>
+<% end %>
+
+<%- end %>
+
+<% if @rss %>
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, "#{Discourse.base_url}/posts.rss", title: I18n.t("rss_description.posts")) %>
+    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed" }, title: I18n.t("rss_description.#{@rss}")) %>
+  <% end %>
+<% end %>
+
+<% if @category %>
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, { action: :category_feed }, title: t('rss_topics_in_category', category: @category.name)) %>
+    <%= raw crawlable_meta_data(title: @category.name, description: @category.description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
+<% end %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% elsif @category %>
+  <% content_for :title do %><%= @category.name %><% end %>
+<% elsif params[:page] %>
+  <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>
+<% end %>
