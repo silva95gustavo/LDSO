@@ -4598,5 +4598,53 @@
         "keywords": [
             "discussion"
         ]
+    },
+    {
+        "name": "gtugablue/flarum-ext-portuguese",
+        "version": "v0.1.0-beta.6",
+        "version_normalized": "0.1.0.0-beta6",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/gtugablue/flarum-ext-portuguese.git",
+            "reference": "4f48e136e6d9480750628705330414594f5c4bf2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/gtugablue/flarum-ext-portuguese/zipball/4f48e136e6d9480750628705330414594f5c4bf2",
+            "reference": "4f48e136e6d9480750628705330414594f5c4bf2",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-10-14 15:45:31",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Portuguese",
+                "icon": {
+                    "image": "icon.svg",
+                    "backgroundColor": "#00247d",
+                    "backgroundSize": "cover",
+                    "backgroundPosition": "center"
+                }
+            },
+            "flarum-locale": {
+                "code": "pt",
+                "title": "Portuguese"
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Portuguese language pack.",
+        "keywords": [
+            "locale"
+        ]
     }
 ]

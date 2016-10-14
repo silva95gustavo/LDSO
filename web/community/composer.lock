@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fc68977a9b8094c6bfb1e193d948a7ec",
-    "content-hash": "e6a06883268aa19e14a3e6630c8906e6",
+    "hash": "4d9c7a16e54963f6ec0e82dae2bc4ed4",
+    "content-hash": "201cd29a12a46c3f43b1d2768292076f",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -1700,6 +1700,52 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "time": "2015-10-31 11:25:43"
+        },
+        {
+            "name": "gtugablue/flarum-ext-portuguese",
+            "version": "v0.1.0-beta.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gtugablue/flarum-ext-portuguese.git",
+                "reference": "4f48e136e6d9480750628705330414594f5c4bf2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gtugablue/flarum-ext-portuguese/zipball/4f48e136e6d9480750628705330414594f5c4bf2",
+                "reference": "4f48e136e6d9480750628705330414594f5c4bf2",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.5"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                },
+                "flarum-extension": {
+                    "title": "Portuguese",
+                    "icon": {
+                        "image": "icon.svg",
+                        "backgroundColor": "#00247d",
+                        "backgroundSize": "cover",
+                        "backgroundPosition": "center"
+                    }
+                },
+                "flarum-locale": {
+                    "code": "pt",
+                    "title": "Portuguese"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Portuguese language pack.",
+            "keywords": [
+                "locale"
+            ],
+            "time": "2016-10-14 15:45:31"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4448,7 +4494,9 @@
     ],
     "aliases": [],
     "minimum-stability": "beta",
-    "stability-flags": [],
+    "stability-flags": {
+        "gtugablue/flarum-ext-portuguese": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
