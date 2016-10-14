@@ -1,3 +1,0 @@
-fi:
-  site_settings:
-    daily_performance_report: "Analysoi NGINX lokit päivittäin ja julkaise vain henkilökunnalle näkyvä ketju yksityiskohdista"

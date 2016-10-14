@@ -1,3 +1,0 @@
-es:
-  site_settings:
-    daily_performance_report: "Analizar registros de NGINX diariamente y publicar un tema para Administradores con los detalles"
