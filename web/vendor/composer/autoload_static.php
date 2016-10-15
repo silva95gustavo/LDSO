@@ -103,9 +103,9 @@ class ComposerStaticInitDrupal8
     public static $prefixDirsPsr4 = array (
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Zumba\\Mink\\Driver\\' => 
         array (
@@ -372,13 +372,13 @@ class ComposerStaticInitDrupal8
 
     public static $classMap = array (
         'CallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
-        'Drupal' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal.php',
-        'Drupal\\Component\\Utility\\Timer' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Component/Utility/Timer.php',
-        'Drupal\\Component\\Utility\\Unicode' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Component/Utility/Unicode.php',
-        'Drupal\\Core\\Database\\Database' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Core/Database/Database.php',
-        'Drupal\\Core\\DrupalKernel' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Core/DrupalKernel.php',
-        'Drupal\\Core\\DrupalKernelInterface' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Core/DrupalKernelInterface.php',
-        'Drupal\\Core\\Site\\Settings' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/core/lib/Drupal/Core/Site/Settings.php',
+        'Drupal' => __DIR__ . '/../..' . '/core/lib/Drupal.php',
+        'Drupal\\Component\\Utility\\Timer' => __DIR__ . '/../..' . '/core/lib/Drupal/Component/Utility/Timer.php',
+        'Drupal\\Component\\Utility\\Unicode' => __DIR__ . '/../..' . '/core/lib/Drupal/Component/Utility/Unicode.php',
+        'Drupal\\Core\\Database\\Database' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/Database/Database.php',
+        'Drupal\\Core\\DrupalKernel' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/DrupalKernel.php',
+        'Drupal\\Core\\DrupalKernelInterface' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/DrupalKernelInterface.php',
+        'Drupal\\Core\\Site\\Settings' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/Site/Settings.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
@@ -805,7 +805,6 @@ class ComposerStaticInitDrupal8
         'SebastianBergmann\\Environment\\Runtime' => __DIR__ . '/..' . '/sebastian/environment/src/Runtime.php',
         'SebastianBergmann\\Exporter\\Exporter' => __DIR__ . '/..' . '/sebastian/exporter/src/Exporter.php',
         'SebastianBergmann\\GlobalState\\Blacklist' => __DIR__ . '/..' . '/sebastian/global-state/src/Blacklist.php',
-        'SebastianBergmann\\GlobalState\\CodeExporter' => __DIR__ . '/..' . '/sebastian/global-state/src/CodeExporter.php',
         'SebastianBergmann\\GlobalState\\Exception' => __DIR__ . '/..' . '/sebastian/global-state/src/Exception.php',
         'SebastianBergmann\\GlobalState\\Restorer' => __DIR__ . '/..' . '/sebastian/global-state/src/Restorer.php',
         'SebastianBergmann\\GlobalState\\RuntimeException' => __DIR__ . '/..' . '/sebastian/global-state/src/RuntimeException.php',
@@ -815,14 +814,14 @@ class ComposerStaticInitDrupal8
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
-        'Symfony\\Component\\HttpFoundation\\FileBag' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-foundation/FileBag.php',
-        'Symfony\\Component\\HttpFoundation\\HeaderBag' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-foundation/HeaderBag.php',
-        'Symfony\\Component\\HttpFoundation\\ParameterBag' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-foundation/ParameterBag.php',
-        'Symfony\\Component\\HttpFoundation\\Request' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-foundation/Request.php',
-        'Symfony\\Component\\HttpFoundation\\ServerBag' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-foundation/ServerBag.php',
-        'Symfony\\Component\\HttpKernel\\HttpKernel' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-kernel/HttpKernel.php',
-        'Symfony\\Component\\HttpKernel\\HttpKernelInterface' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-kernel/HttpKernelInterface.php',
-        'Symfony\\Component\\HttpKernel\\TerminableInterface' => __DIR__ . '/../..' . '/../../../../../wamp64/www/LDSO/web/vendor/symfony/http-kernel/TerminableInterface.php',
+        'Symfony\\Component\\HttpFoundation\\FileBag' => __DIR__ . '/..' . '/symfony/http-foundation/FileBag.php',
+        'Symfony\\Component\\HttpFoundation\\HeaderBag' => __DIR__ . '/..' . '/symfony/http-foundation/HeaderBag.php',
+        'Symfony\\Component\\HttpFoundation\\ParameterBag' => __DIR__ . '/..' . '/symfony/http-foundation/ParameterBag.php',
+        'Symfony\\Component\\HttpFoundation\\Request' => __DIR__ . '/..' . '/symfony/http-foundation/Request.php',
+        'Symfony\\Component\\HttpFoundation\\ServerBag' => __DIR__ . '/..' . '/symfony/http-foundation/ServerBag.php',
+        'Symfony\\Component\\HttpKernel\\HttpKernel' => __DIR__ . '/..' . '/symfony/http-kernel/HttpKernel.php',
+        'Symfony\\Component\\HttpKernel\\HttpKernelInterface' => __DIR__ . '/..' . '/symfony/http-kernel/HttpKernelInterface.php',
+        'Symfony\\Component\\HttpKernel\\TerminableInterface' => __DIR__ . '/..' . '/symfony/http-kernel/TerminableInterface.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
     );
 
