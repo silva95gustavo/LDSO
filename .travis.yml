@@ -12,7 +12,8 @@ install:
   - composer update
   - cd core
   - composer update
-  - ../vendor/bin/phpunit --testsuite=unit 
+  
+script: ../vendor/bin/phpunit --testsuite=unit 
 
 notifications:
   email: false
