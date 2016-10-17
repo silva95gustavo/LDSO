@@ -11,6 +11,7 @@ before_install:
 
 install:
   - cd core
+  - ../vendor/bin/phpunit --testsuite=unit 
 
 notifications:
   email: false
