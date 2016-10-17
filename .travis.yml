@@ -6,6 +6,9 @@ php:
 before_install:
   - composer self-update
 
+install:
+  - cd web/core
+
 notifications:
   email: false
   slack: ldso-italien:Q0U7sHHaNrawf6UVsV2J58A9
