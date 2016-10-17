@@ -10,7 +10,7 @@ before_install:
   - composer update
 
 install:
-  - cd web/core
+  - cd core
 
 notifications:
   email: false
