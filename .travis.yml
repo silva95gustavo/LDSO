@@ -5,6 +5,9 @@ php:
 
 before_install:
   - composer self-update
+  - cd web
+  - composer install
+  - composer update
 
 install:
   - cd web/core
