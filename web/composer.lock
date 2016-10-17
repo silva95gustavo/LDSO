@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e23d640609e332249c40265646861166",
-    "content-hash": "f959f8060500065724d2f44f70f23b91",
+    "hash": "7d101b08e5ae002d827cd42ae9a4e344",
+    "content-hash": "60f7057617c6d995bf9946d0b12f0b5d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -730,46 +730,6 @@
                 "validator"
             ],
             "time": "2016-07-03 21:52:18"
-        },
-        {
-            "name": "gtugablue/flarum-ext-portuguese",
-            "version": "v0.1.0-beta.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gtugablue/flarum-ext-portuguese.git",
-                "reference": "16c85426cce57da7245773d29c63952bc21152a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gtugablue/flarum-ext-portuguese/zipball/16c85426cce57da7245773d29c63952bc21152a7",
-                "reference": "16c85426cce57da7245773d29c63952bc21152a7",
-                "shasum": ""
-            },
-            "type": "flarum-extension",
-            "extra": {
-                "flarum-extension": {
-                    "title": "English",
-                    "icon": {
-                        "image": "icon.svg",
-                        "backgroundColor": "#00247d",
-                        "backgroundSize": "cover",
-                        "backgroundPosition": "center"
-                    }
-                },
-                "flarum-locale": {
-                    "code": "en",
-                    "title": "English"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "English language pack.",
-            "keywords": [
-                "locale"
-            ],
-            "time": "2015-11-04 22:52:09"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4361,9 +4321,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "gtugablue/flarum-ext-portuguese": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
