@@ -1,8 +1,22 @@
 language: php
 
 php:
-  - 5.4
+  - 7.0.8
 
 before_install:
-  - sudo apt-get update & /dev/null
   - composer self-update
+  - cd web
+  - composer install
+  - composer update
+
+install:
+  - cd core
+  - ../vendor/bin/phpunit --testsuite=unit 
+
+notifications:
+  email: false
+  slack: ldso-italien:Q0U7sHHaNrawf6UVsV2J58A9
+
+branches:
+  only:
+  - master
