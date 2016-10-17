@@ -15,3 +15,7 @@ install:
 notifications:
   email: false
   slack: ldso-italien:Q0U7sHHaNrawf6UVsV2J58A9
+
+branches:
+  only:
+  - master
