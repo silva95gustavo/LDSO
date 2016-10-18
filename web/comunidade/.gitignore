@@ -1,0 +1,5 @@
+vendor/
+storage/
+/assets/*.js
+/assets/*.css
+config.local.php
