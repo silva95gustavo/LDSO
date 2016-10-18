@@ -39,7 +39,8 @@
         "flarum/flarum-ext-sticky": "^0.1.0",
         "flarum/flarum-ext-subscriptions": "^0.1.0",
         "flarum/flarum-ext-suspend": "^0.1.0",
-        "flarum/flarum-ext-tags": "^0.1.0"
+        "flarum/flarum-ext-tags": "^0.1.0",
+        "gtugablue/flarum-ext-portuguese": "^0.1.0@beta"
     },
     "require-dev": {
         "franzl/studio": "^0.10.0"
