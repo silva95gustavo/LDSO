@@ -1,3 +1,3 @@
 @echo off
-mysqldump --no-data cuidadores > cuidadores.sql
+mysqldump --no-data --add-drop-table cuidadores > cuidadores.sql
 mysqldump --no-create-info --ignore-table=cuidadores.cache_config --ignore-table=cuidadores.cache_container --ignore-table=cuidadores.cache_data--ignore-table=cuidadores.cache_default --ignore-table=cuidadores.cache_discovery --ignore-table=cuidadores.cache_dynamic_page_cache --ignore-table=cuidadores.cache_entiy --ignore-table=cuidadores.cache_menu --ignore-table=cuidadores.cache_render --ignore-table=cuidadores.cache_toolbar --ignore-table=cuidadores.session --ignore-table=cuidadores.watchdog cuidadores >> cuidadores.sql
