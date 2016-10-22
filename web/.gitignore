@@ -10,5 +10,6 @@ sites/*/settings*.php
 sites/*/services*.yml
 
 # Ignore paths that contain user-generated content.
-sites/*/files
+sites/*/files/css
+sites/*/files/js
 sites/*/private
