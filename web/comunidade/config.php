@@ -1,4 +1,8 @@
-<?php return array (
+<?php 
+if (file_exists(__DIR__ . '/config.local.php')) {
+  return include __DIR__ . '/config.local.php';
+}
+return array (
   'debug' => true,
   'database' => 
   array (
