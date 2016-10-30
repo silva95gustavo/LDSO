@@ -39,3 +39,10 @@ body {
 #navbar-bottom-collapse {
 	margin-top: 8rem;
 }
+
+#search-block-form .input-group {
+	position: relative;
+	bottom: 1rem;
+	width: 20rem;
+	float: right;
+}

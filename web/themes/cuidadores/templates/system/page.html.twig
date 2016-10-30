@@ -92,9 +92,14 @@
 		{% endif %}
 			
 		{# Navigation bottom (collapsible) #}
-		{% if page.navigation_bottom_collapsible %}
+		{% if page.navigation_bottom_collapsible or page.search %}
 		  <div id="navbar-bottom-collapse" class="navbar-collapse collapse row">
-			{{ page.navigation_bottom_collapsible }}
+			{% if page.navigation_bottom_collapsible %}
+				{{ page.navigation_bottom_collapsible }}
+			{% endif %}
+			{% if page.search %}
+				{{ page.search }}
+			{% endif %}
 		  </div>
 		{% endif %}
 	  
