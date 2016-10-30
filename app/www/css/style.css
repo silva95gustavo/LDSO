@@ -1,1 +1,9 @@
 /* Empty. Add your own CSS if you like */
+
+.bar.bar-stable 
+{
+    border-color: #b2b2b2;
+    background-color: rgb(74,172,197);
+    background: rgb(74,172,197);
+    color: black; 
+}
