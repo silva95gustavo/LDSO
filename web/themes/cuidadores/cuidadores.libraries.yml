@@ -1,4 +1,6 @@
 global-styling:
+  fonts: 
   css:
     theme:
+      //fonts.googleapis.com/css?family=Open+Sans: {}
       css/style.css: {}
