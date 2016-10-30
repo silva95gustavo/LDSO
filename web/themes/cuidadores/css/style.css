@@ -1,0 +1,48 @@
+body {
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+#navbar {
+	background-color: #4AACC5;
+}
+
+#navbar * {
+	color: white;
+}
+
+#navbar input {
+	color: #555;
+}
+
+#navbar > .container-fluid {
+	padding-left: 0;
+}
+
+#navbar .logo {
+    padding: 0;
+	padding-right: calc(13rem * 80 / 333);
+	margin-bottom: 0;
+	margin-top: 0;
+	background-image: url("../images/cuidadores_logo_separator.png");
+	background-repeat: no-repeat;
+	background-position: top right;
+	background-size: auto 100%;
+}
+
+#navbar .logo img {
+    background-color: white;
+	border-bottom: 4px solid #264A74;
+	padding: 2rem;
+	height: 13rem;
+}
+
+#navbar-bottom-collapse {
+	margin-top: 8rem;
+}
+
+#search-block-form .input-group {
+	position: relative;
+	bottom: 1rem;
+	width: 20rem;
+	float: right;
+}
