@@ -9,7 +9,7 @@
 }
 
 .view-with-bg{
-    background: url(../img/home.png) no-repeat top center fixed;
+    background: url(../img/default.png) no-repeat top center;
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     -o-background-size: 100%;
@@ -18,8 +18,9 @@
 
 .content{
     padding: 5%;
-    padding-top: 0%;
-    margin-top: 50%;
+    padding-top: 5%;
+    margin-top: 60%;
     background: white;
-    box-shadow: 0px -1px 5px rgb(38,74,116);
+    box-shadow: 0px -3px 5px grey;
+    text-align: justify;
 }

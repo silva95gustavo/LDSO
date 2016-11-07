@@ -17,7 +17,7 @@
     </script>-->
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="styles/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -29,9 +29,24 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
+    <!-- JQuery Import -->
+    <script src="lib/jquery-3.1.1.min.js"></script>
+
+    <!-- app's js -->
+    <script src="scripts/app.js"></script>
+
+    <!-- Controllers Import-->
+    <script src="scripts/controllers/homeController.js"></script>
+    <script src="scripts/controllers/carerController.js"></script>
+    <script src="scripts/controllers/servicesController.js"></script>
+    <script src="scripts/controllers/calendarController.js"></script>
+    <script src="scripts/controllers/restrictedController.js"></script>
+    <script src="scripts/controllers/contactsController.js"></script>
+    <script src="scripts/controllers/communityController.js"></script>
+    <script src="scripts/controllers/sessionController.js"></script>
+
+    <!-- Directives Import-->
+    <script src="scripts/directives/homeDirective.js"></script>
   </head>
 
   <body ng-app="starter">

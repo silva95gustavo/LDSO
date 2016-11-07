@@ -1,0 +1,56 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Menu</h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item menu-close class="item item-icon-right" href="#/app/home">
+          Sobre nós
+          <i class = "icon icon ion-home"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#/app/carer">
+          Sou um Cuidador?
+          <i class = "icon icon ion-help"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#">
+          Serviços
+          <i class = "icon icon ion-home"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#">
+          Calendário
+          <i class = "icon icon ion-android-locate"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  ng-click="login()">
+          Área Restrita (Membros)
+          <i class = "icon icon ion-android-lock"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#">
+          Contactos
+          <i class = "icon icon ion-ios-telephone"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#">
+          Comunidade Online
+          <i class = "icon icon ion-ios-people"></i>
+        </ion-item>
+        <ion-item menu-close class="item item-icon-right"  href="#">
+          Login/Logout
+          <i class = "icon icon ion-log-in"></i>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
