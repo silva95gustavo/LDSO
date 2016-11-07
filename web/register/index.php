@@ -23,7 +23,7 @@
 		<!--<h1 id="title">Registo</h1> -->
 
 		<form id="frm_email">
-			<input type="email" id="email" required="required" placeholder="email@example.com">
+			<input type="email" id="email" required="required" placeholder="email@example.com" value="soaresrebelo@gmail.com">
 			<br>
 			<div class="error">Ocorreu um erro.</div>
 			<input class="blue" type="submit" value="Continuar"><br>
@@ -40,8 +40,8 @@
 			<!-- for when not registered anywhere -->
 			<div id="not_registered">
 				<label for="password">Password</label><br>
-				<input type="password" id="new_password" placeholder="Password"><br>
-				<input type="password" id="new_password2" placeholder="Repita a password">
+				<input value="potato123" type="password" id="new_password" placeholder="Password"><br>
+				<input value="potato123" type="password" id="new_password2" placeholder="Repita a password">
 			</div>
 
 			<!-- register website -->
