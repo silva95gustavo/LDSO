@@ -46,3 +46,8 @@ body {
 	width: 20rem;
 	float: right;
 }
+
+.navbar-default .navbar-nav>.active>a {
+    background-color: #144877;
+    border-radius: 10px 10px 0 0;
+}
