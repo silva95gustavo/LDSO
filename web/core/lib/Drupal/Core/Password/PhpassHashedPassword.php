@@ -219,6 +219,11 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check($password, $hash) {
+    // Support php's password_hash and password_verify
+  	if(substr($hash, 0, 4) == '$2y$') {
+  	  return password_verify($password, $hash);
+    }
+
     if (substr($hash, 0, 2) == 'U$') {
       // This may be an updated password from user_update_7000(). Such hashes
       // have 'U' added as the first character and need an extra md5() (see the

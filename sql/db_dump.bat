@@ -1,3 +1,4 @@
-call mysqldump --no-data --add-drop-table cuidadores > cuidadores.sql
-call mysqldump --no-create-info --ignore-table=cuidadores.cache_bootstrap --ignore-table=cuidadores.cache_config --ignore-table=cuidadores.cache_container --ignore-table=cuidadores.cache_data --ignore-table=cuidadores.cache_default --ignore-table=cuidadores.cache_discovery --ignore-table=cuidadores.cache_dynamic_page_cache --ignore-table=cuidadores.cache_entity --ignore-table=cuidadores.cache_menu --ignore-table=cuidadores.cache_render --ignore-table=cuidadores.cache_toolbar --ignore-table=cuidadores.session --ignore-table=cuidadores.watchdog cuidadores >> cuidadores.sql
+set dbname=%1
+call mysqldump --no-data --add-drop-table %dbname% > cuidadores.sql
+call mysqldump --no-create-info --ignore-table=%dbname%.cache_bootstrap --ignore-table=%dbname%.cache_config --ignore-table=%dbname%.cache_container --ignore-table=%dbname%.cache_data --ignore-table=%dbname%.cache_default --ignore-table=%dbname%.cache_discovery --ignore-table=%dbname%.cache_dynamic_page_cache --ignore-table=%dbname%.cache_entity --ignore-table=%dbname%.cache_menu --ignore-table=%dbname%.cache_render --ignore-table=%dbname%.cache_toolbar --ignore-table=%dbname%.session --ignore-table=%dbname%.watchdog %dbname% >> cuidadores.sql
 pause
