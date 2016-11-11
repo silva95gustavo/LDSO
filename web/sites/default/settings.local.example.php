@@ -9,3 +9,5 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
+
+$config['system.file']['path']['temporary'] = '/tmp';
