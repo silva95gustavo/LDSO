@@ -13,6 +13,9 @@ install:
   - cd core
   - composer update
   
+before_script:
+  - phpenv config-rm xdebug.ini || true
+  
 script: ../vendor/bin/phpunit --testsuite=unit 
 
 notifications:
