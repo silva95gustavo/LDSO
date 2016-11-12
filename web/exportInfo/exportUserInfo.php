@@ -15,15 +15,30 @@
 		$stmt->execute();
 
 
-		header('Content-type: text/html');
-		header('Content-Disposition: attachment; filename="downloaded.txt"');
+		header('Content-type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename="downloaded.xls"');
 		
 		echo "<table>"; // start a table tag in the HTML
+		echo "<tr><th>Email</th><th>Faixa Etária</th><th>Username</th><th>Conta Activada</th></tr>";
 
-		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){   //Creates a loop to loop through results
-			echo "<tr><td>" . $row['email'] . "</td><td>" . $row['faixa_etaria'] . "</td></tr>". $row['username'] . "</td></tr>". $row['activada'] . "</td></tr>";  //$row['index'] the index here is a field name
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){  
+			echo "<tr>";
+			echo "<td>" . $row['email'] . "</td><td>";
+			if($row['faixa_etaria'])
+				echo $row['faixa_etaria'];
+			else echo "null";
+			echo "</td><td>";
+			if($row['username'])
+				echo $row['username'];
+			else echo "null";
+			echo "</td><td>";
+			if($row['activada'])
+				echo $row['activada'];
+			else echo "null";
+			echo "</td>";
+			echo "</tr>";
 			}
 
-echo "</table>";
+		echo "</table>";
 
 ?>
