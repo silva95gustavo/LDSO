@@ -7,8 +7,10 @@ description: 'Associação Cuidadores custom theme.'
 package: 'Bootstrap'
 
 regions:
-  navigation: 'Navigation'
-  navigation_collapsible: 'Navigation (Collapsible)'
+  logo: 'Logo'
+  navigation_top_collapsible: 'Navigation top (Collapsible)'
+  navigation_bottom_collapsible: 'Navigation bottom (Collapsible)'
+  search: 'Search'
   header: 'Top Bar'
   highlighted: 'Highlighted'
   help: 'Help'
