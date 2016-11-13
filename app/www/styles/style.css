@@ -10,9 +10,6 @@
 
 .view-with-bg{
     background: url(../img/default.png) no-repeat top center;
-    -webkit-background-size: 100%;
-    -moz-background-size: 100%;
-    -o-background-size: 100%;
     background-size: 100%;
 }
 
