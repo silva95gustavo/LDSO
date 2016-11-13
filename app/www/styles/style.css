@@ -1,0 +1,28 @@
+/* Empty. Add your own CSS if you like */
+
+.bar.bar-stable 
+{
+    border-color: #b2b2b2;
+    background-color: rgb(74,172,197);
+    background: rgb(74,172,197);
+    color: black; 
+}
+
+.view-with-bg{
+    background: url(../img/default.png) no-repeat top center;
+    background-size: 100%;
+}
+
+.content{
+    position: absolute;
+    padding: 5%;
+    padding-top: 5%;
+    margin-top: 60%;
+    margin-bottom: 0;
+    background: white;
+    box-shadow: 0px -3px 5px grey;
+}
+
+.text-justify {
+    text-align: justify;
+}

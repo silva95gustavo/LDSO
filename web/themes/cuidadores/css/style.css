@@ -51,3 +51,43 @@ body {
     background-color: #144877;
     border-radius: 10px 10px 0 0;
 }
+
+.top_footer {
+	margin-top: 45px;
+	padding-top: 35px;
+	padding-bottom: 36px;
+	border-top: 1px solid #E5E5E5;
+}
+
+.top_footer_left, .top_footer_right {
+	text-align: center;
+	vertical-align: middle;
+	margin: auto;
+	height: 100%;
+}
+
+.top_footer_left {
+	margin-bottom: 35px;
+	padding-top: 15px;
+}
+
+.top_footer_right {
+	margin-top: 35px;
+}
+
+.mid_footer {
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 35px;
+}
+
+.mid_footer .view-parceiros .view-content .field-content img {
+	max-height: 150px;
+	height: expression(this.height > 150 ? 150: true);
+	width: auto;
+	margin: auto;
+}
+
+.footer {
+	margin-top: 0;
+}

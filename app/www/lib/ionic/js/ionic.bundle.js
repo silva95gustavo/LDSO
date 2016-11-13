@@ -47363,7 +47363,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
  *          deps="angular-animate.js"
  *          animations="true" fixBase="true">
  *   <file name="index.html">
- *     <div class="container" ng-controller="AppCtrl">
+ *     <div class="container" ng-controller="menuController">
  *       <div ng-animate-swap="number" class="cell swap-animation" ng-class="colorClass(number)">
  *         {{ number }}
  *       </div>
@@ -47371,7 +47371,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
  *   </file>
  *   <file name="script.js">
  *     angular.module('ngAnimateSwapExample', ['ngAnimate'])
- *       .controller('AppCtrl', ['$scope', '$interval', function($scope, $interval) {
+ *       .controller('menuController', ['$scope', '$interval', function($scope, $interval) {
  *         $scope.number = 0;
  *         $interval(function() {
  *           $scope.number++;
@@ -55414,7 +55414,7 @@ var LOADING_TPL =
  * app.constant('$ionicLoadingConfig', {
  *   template: 'Default Loading Template...'
  * });
- * app.controller('AppCtrl', function($scope, $ionicLoading) {
+ * app.controller('menuController', function($scope, $ionicLoading) {
  *   $scope.showLoading = function() {
  *     //options default to values in $ionicLoadingConfig
  *     $ionicLoading.show().then(function(){
