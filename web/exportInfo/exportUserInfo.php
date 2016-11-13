@@ -16,7 +16,7 @@
 
 
 		header('Content-type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="downloaded.xls"');
+		header('Content-Disposition: attachment; filename="userInfo.xls"');
 		
 		echo "<table>"; // start a table tag in the HTML
 		echo "<tr><th>Email</th><th>Faixa Etária</th><th>Username</th><th>Conta Activada</th></tr>";
