@@ -88,6 +88,22 @@ body {
 	margin: auto;
 }
 
+.external_links img, .external_links img, .external_links img {
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 30px;
+	height: 30px;
+	margin: 15px 10px 0 10px;
+}
+
+.external_links {
+	float: right;
+}
+
+.external_links section {
+	float: right;
+}
+
 .footer {
 	margin-top: 0;
 }
