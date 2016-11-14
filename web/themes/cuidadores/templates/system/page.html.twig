@@ -239,7 +239,20 @@
 {% if page.footer %}
   {% block footer %}
     <footer class="footer {{ container }}" role="contentinfo">
-      {{ page.footer }}
+    	<div class="row">
+    		<div class="col-md-8">
+    			{{ page.footer }}
+    		</div>
+    		<div class="col-md-4">
+    			{% if page.external_links %}
+  					{% block external_links %}
+  						<div class="external_links {{ container }}">
+  							{{ page.external_links }}
+  						</div>
+  					{% endblock %}
+				{% endif %}
+    		</div>
+    	</div>
     </footer>
   {% endblock %}
 {% endif %}
