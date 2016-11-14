@@ -21,6 +21,7 @@ regions:
   top_footer_center: 'Top Footer (Center)'
   top_footer_right: 'Top Footer (Right)'
   mid_footer: 'Mid Footer'
+  external_links: 'External Links'
   footer: 'Footer'
   page_top: 'Page top'
   page_bottom: 'Page bottom'
