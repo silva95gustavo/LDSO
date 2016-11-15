@@ -1,16 +1,11 @@
 /* Empty. Add your own CSS if you like */
 
-.bar.bar-stable 
+.bar.bar-stable
 {
     border-color: #b2b2b2;
     background-color: rgb(74,172,197);
     background: rgb(74,172,197);
-    color: black; 
-}
-
-.view-with-bg{
-    background: url(../img/default.png) no-repeat top center;
-    background-size: 100%;
+    color: black;
 }
 
 .content{
