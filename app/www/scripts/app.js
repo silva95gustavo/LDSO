@@ -30,7 +30,7 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         url: '/menu',
         abstract: true,
         templateUrl: 'views/menu.html',
-        controller: 'menuCtrl'
+        controller: 'menuCtrl as menu'
       })
 
       .state('home', {

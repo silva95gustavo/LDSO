@@ -9,10 +9,10 @@ angular.module('starter.controllers.menu', [])
   var ctrl = this;
 
   // Form data for the login modal
-  $scope.loginData = {};
+  ctrl.loginData = {};
   $scope.$on('$ionicView.enter', function (e) {
-    $scope.loginData.username = "admin";
-    $scope.loginData.password = "qlamiepho4";
+    ctrl.loginData.username = "admin";
+    ctrl.loginData.password = "qlamiepho4";
   });
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('views/login.html', {
@@ -22,18 +22,18 @@ angular.module('starter.controllers.menu', [])
   });
 
   // Triggered in the login modal to close it
-  $scope.closeLogin = function () {
+  this.closeLogin = function () {
     $scope.modal.hide();
   };
 
   // Open the login modal
-  $scope.login = function () {
+  this.login = function () {
     $scope.modal.show();
   };
 
   // Perform the login action when the user submits the login form
-  $scope.doLogin = function () {
-    requests.login($scope.loginData.username, $scope.loginData.password)
+  this.doLogin = function () {
+    requests.login(ctrl.loginData.username, ctrl.loginData.password)
     .then(
       function(response){
         console.log(response);
@@ -45,7 +45,7 @@ angular.module('starter.controllers.menu', [])
           authenticated : (response.data.current_user.roles[0] === "authenticated"),
           administrator : (response.data.current_user.roles[1] === "administrator"),
         }
-        console.log( $scope.session);
+        console.log($scope.session);
       },
       function(response){
         console.log(response);

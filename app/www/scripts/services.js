@@ -8,12 +8,12 @@
  .factory('requests', function ($http, HOST) {
      return {
          getHomeText: function () {
-             return $http.get(HOST.string + '?_format=json');
+             return $http.get(HOST.domain + '?_format=json');
          },
          login: function (username, password) {
              return $http({
                  crossDomain: true,
-                 url: HOST.string + "/user/login",
+                 url: HOST.domain + "/user/login",
                  method: "POST",
                  data: JSON.stringify({
                      name: username,
