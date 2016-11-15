@@ -52,6 +52,10 @@ body {
     border-radius: 10px 10px 0 0;
 }
 
+.navbar-default .navbar-nav>.active>a:hover {
+	background-color: #FF9A5F;
+}
+
 .top_footer {
 	margin-top: 45px;
 	padding-top: 35px;
@@ -86,6 +90,22 @@ body {
 	height: expression(this.height > 150 ? 150: true);
 	width: auto;
 	margin: auto;
+}
+
+.external_links img, .external_links img, .external_links img {
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 30px;
+	height: 30px;
+	margin: 15px 10px 0 10px;
+}
+
+.external_links {
+	float: right;
+}
+
+.external_links section {
+	float: right;
 }
 
 .footer {
