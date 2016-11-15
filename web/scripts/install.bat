@@ -3,10 +3,10 @@ set dbpass=%2
 set dbname=%3
 cd ..
 call composer install
-call composer update
+REM call composer update
 cd comunidade
 call composer install
-call composer update
+REM call composer update
 cd ../..
 cd sql
 IF "%dbpass%"=="" (
