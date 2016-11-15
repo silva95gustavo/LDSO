@@ -1,4 +1,10 @@
 vendor/
 /assets/*.js
 /assets/*.css
-config.local.php
+/config.local.php
+/storage/less/*
+!/storage/less/.gitkeep
+/storage/logs
+/storage/views/*
+!/storage/views/.gitkeep
+/assets/rev-manifest.json
