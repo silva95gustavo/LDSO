@@ -13,15 +13,10 @@
 <head>
 	<title>Cuidadores - Registo</title>
 	<meta charset="utf-8" /> 
-	<!--<link rel="stylesheet" href="css/materialize.css">-->
 	<link rel="stylesheet" href="css/style.css">
-	<!--<style><?=$css?></style>-->
 </head>
 <body>
-	<!--<?=$body?>-->
 	<div id="wrapper">
-		<!--<h1 id="title">Registo</h1> -->
-
 		<form id="frm_email">
 			<input type="email" id="email" required="required" placeholder="email@example.com">
 			<br>
