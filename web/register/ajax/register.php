@@ -73,6 +73,8 @@
 
 		if(!is_numeric($bday_d) || $bday_d < 1 || $bday_d > 31)
 			on_error("Dia inválido");
+	} else {
+		$birthday = false;
 	}
 
 	$dbh = get_dbh();
@@ -123,9 +125,9 @@
 	}
 
 	if($user) {
-		update_user($dbh, $email, $id_site, $id_community);
+		update_user($dbh, $email, $id_site, $id_community, $birthday);
 	} else {
-		create_user($dbh, $email, $id_site, $id_community);
+		create_user($dbh, $email, $id_site, $id_community, $birthday);
 	}
 
 	$dbh->commit();

@@ -20,6 +20,20 @@
         "source": "https://github.com/flarum/flarum",
         "docs": "http://flarum.org/docs"
     },
+    "repositories": [
+    	{
+			"type":"package",
+			"package": {
+			  "name": "joserebelo/flarum-ext-youngadult",
+			  "version":"master",
+			  "source": {
+			      "url": "https://github.com/joserebelo/flarum-ext-youngadult.git",
+			      "type": "git",
+			      "reference":"master"
+			    }
+			}
+    	}
+    ],
     "require": {
         "flarum/core": "dev-master",
         "flarum/flarum-ext-akismet": "^0.1.0",
@@ -40,7 +54,8 @@
         "flarum/flarum-ext-subscriptions": "^0.1.0",
         "flarum/flarum-ext-suspend": "^0.1.0",
         "flarum/flarum-ext-tags": "^0.1.0",
-        "gtugablue/flarum-ext-portuguese": "^0.1.0@beta"
+        "gtugablue/flarum-ext-portuguese": "^0.1.0@beta",
+        "phpmailer/phpmailer": "~5.2"
     },
     "require-dev": {
         "franzl/studio": "^0.10.0"
