@@ -5,8 +5,11 @@
 
  angular.module('starter.services', [])
 
- .factory('requests', function ($http, HOST) {
+ .factory('requests', function ($http, HOST, IMAGES) {
      return {
+         getHomeImage: function () {
+             return $http.get(HOST.domain + IMAGES.url + 'home.png');
+         },
          getHomeText: function () {
              return $http.get(HOST.domain + '?_format=json');
          },
@@ -25,4 +28,4 @@
              });
          },
      }
- });
+ });"@@"
