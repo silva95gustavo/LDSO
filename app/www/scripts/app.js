@@ -66,6 +66,16 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         }
       })
 
+      .state('community', {
+        parent: 'menu',
+        url: '/community',
+        views: {
+          'menuContent': {
+            templateUrl: 'views/community.html'
+          }
+        }
+      })
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/menu/home');
 
