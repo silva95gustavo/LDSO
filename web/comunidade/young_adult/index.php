@@ -5,7 +5,7 @@
 	$style = get_style($dbh);
 
 	$style_html = $style[0]["value"];
-	$style_css = $style[1]["value"];
+	//$style_css = $style[1]["value"];
 
 	$flarum_remember = $_COOKIE['flarum_remember'];
 
@@ -22,7 +22,7 @@
 <head>
 	<title></title>
 	<style>
-		<?=$style_css?>
+		@import url('../assets/style.css');
 	</style>
 	<link rel="stylesheet" href="style.css">
 </head>

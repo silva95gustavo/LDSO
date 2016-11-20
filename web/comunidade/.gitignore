@@ -8,3 +8,4 @@ vendor/
 /storage/views/*
 !/storage/views/.gitkeep
 /assets/rev-manifest.json
+!/assets/style.css
