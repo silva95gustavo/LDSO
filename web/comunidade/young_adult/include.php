@@ -1,5 +1,5 @@
 <?php
-	$databases = include '..\config.php';
+	$databases = include '../config.php';
 
 	function get_dbh() {
 		global $databases;
