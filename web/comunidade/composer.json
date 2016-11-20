@@ -20,20 +20,6 @@
         "source": "https://github.com/flarum/flarum",
         "docs": "http://flarum.org/docs"
     },
-    "repositories": [
-    	{
-			"type":"package",
-			"package": {
-			  "name": "joserebelo/flarum-ext-youngadult",
-			  "version":"master",
-			  "source": {
-			      "url": "https://github.com/joserebelo/flarum-ext-youngadult.git",
-			      "type": "git",
-			      "reference":"master"
-			    }
-			}
-    	}
-    ],
     "require": {
         "flarum/core": "dev-master",
         "flarum/flarum-ext-akismet": "^0.1.0",
