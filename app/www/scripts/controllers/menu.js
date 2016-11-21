@@ -1,6 +1,6 @@
 angular.module('starter.controllers.menu', [])
 
-.controller('menuCtrl', function ($scope, $ionicModal, $http, $timeout, requests) {
+.controller('menuCtrl', function ($scope, $ionicModal, $http,$ionicPopup, $timeout, requests) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -30,7 +30,18 @@ angular.module('starter.controllers.menu', [])
   this.login = function () {
     $scope.modal.show();
   };
-
+  $scope.loginSuccess = function() {
+    $ionicPopup.alert({
+      title: 'Login',
+      template: 'Success'
+    });
+  };
+  $scope.loginFail = function() {
+    $ionicPopup.alert({
+      title: 'Login',
+      template: 'Fail'
+    });
+  };
   // Perform the login action when the user submits the login form
   this.doLogin = function () {
     requests.login(ctrl.loginData.username, ctrl.loginData.password)
@@ -46,9 +57,11 @@ angular.module('starter.controllers.menu', [])
           administrator : (response.data.current_user.roles[1] === "administrator"),
         }
         console.log($scope.session);
+         $scope.loginSuccess();
       },
       function(response){
         console.log(response);
+        $scope.loginFail();
       }
     );
   };
