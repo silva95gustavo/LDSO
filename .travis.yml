@@ -4,14 +4,12 @@ php:
   - 7.0.8
 
 before_install:
-  - composer self-update
+  - phpenv config-rm xdebug.ini || true
   
 install:
   - cd web
   - composer install
-  - composer update
   - cd core
-  - composer update
   
 script: ../vendor/bin/phpunit --testsuite=unit 
 

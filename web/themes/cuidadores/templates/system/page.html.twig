@@ -191,10 +191,68 @@
   </div>
 {% endblock %}
 
+{% if page.top_footer_left or page.top_footer_center or page.top_footer_right %}
+	<div class="top_footer row">
+		
+    			<div class="col-md-4">
+    				{% if page.top_footer_left %}
+  						{% block top_footer_left %}
+    						<div class="top_footer_left {{ container }}" role="contentinfo">
+      							{{ page.top_footer_left }}
+    						</div>
+  						{% endblock %}
+					{% endif %}
+    			</div>
+    			
+    			<div class="col-md-4">
+    				{% if page.top_footer_center %}
+  						{% block top_footer_center %}
+    						<div class="top_footer_center {{ container }}" role="contentinfo">
+     							{{ page.top_footer_center }}
+   							</div>
+  						{% endblock %}
+					{% endif %}
+    			</div> 
+    			
+    			<div class="col-md-4">
+    				{% if page.top_footer_right %}
+  						{% block top_footer_right %}
+    						<div class="top_footer_right {{ container }}" role="contentinfo">
+      							{{ page.top_footer_right }}
+    						</div>
+  						{% endblock %}
+					{% endif %}
+    			</div>
+  			</tr>
+		</table>
+	</div>
+{% endif %}
+
+{% if page.mid_footer %}
+  {% block mid_footer %}
+    <div class="mid_footer {{ container }}" role="contentinfo">
+      {{ page.mid_footer }}
+    </div>
+  {% endblock %}
+{% endif %}
+
 {% if page.footer %}
   {% block footer %}
     <footer class="footer {{ container }}" role="contentinfo">
-      {{ page.footer }}
+    	<div class="row">
+    		<div class="col-md-8">
+    			{{ page.footer }}
+    		</div>
+    		<div class="col-md-4">
+    			{% if page.external_links %}
+  					{% block external_links %}
+  						<div class="external_links {{ container }}">
+  							{{ page.external_links }}
+  						</div>
+  					{% endblock %}
+				{% endif %}
+    		</div>
+    	</div>
     </footer>
   {% endblock %}
 {% endif %}

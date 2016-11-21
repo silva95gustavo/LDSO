@@ -1,0 +1,30 @@
+/* Empty. Add your own CSS if you like */
+
+.bar.bar-stable{
+    border-color: #b2b2b2;
+    background-color: rgb(74,172,197);
+    background: rgb(74,172,197);
+    color: black;
+}
+
+.parallax {
+    background: url("../img/default.png") no-repeat top center;
+    background-size: 100%;
+}
+
+.content {
+    background-color: white;
+    position: absolute;
+    padding: 5%;
+    padding-top: 5%;
+    margin-top: 250px;
+    box-shadow: 0px -1px 5px rgb(38,74,116);
+    width: 100%;
+}
+
+.webPage{
+  width: 100%;
+  height: 100%;
+  border: 2px solid #EAAB00;
+  padding: 0px;
+}
