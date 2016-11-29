@@ -1,0 +1,71 @@
+#cuidadores_header {
+	font-size: 10px;
+	height: 13em;
+	width: 100%;
+	background-color: #4AACC5;
+}
+
+#cuidadores_logo_wrapper {
+	display: inline-block;
+	height: 100%;
+	float: left;
+	margin: 0;
+	padding: 0;
+	background-image: url("../../themes/cuidadores/images/cuidadores_logo_separator.png");
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+	background-position: top right;
+}
+
+#cuidadores_logo {
+	height: 100%;
+	padding: 2em;
+	margin-right: calc(13em * 80 / 333);
+	width: 230px;
+	background-color: white;
+	border-bottom: 4px solid #264A74;
+	background-image: url("../../sites/default/files/logo.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center; 
+	background-size: 220px auto;
+}
+
+#cuidadores_nav_wrapper {
+	display: inline-block;
+	height: 100%;
+}
+
+#cuidadores_primary_nav,
+#cuidadores_secondary_nav {
+	color: white;
+}
+
+#cuidadores_primary_nav {
+	margin-top: 5rem;
+}
+
+#cuidadores_secondary_nav {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+nav > ul > li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0.5em;
+	float: left;
+	font-size: 14px;
+	padding: 15px 15px;
+}
+
+nav > ul > li > a {
+	color: white;
+	text-decoration: none;
+}
+
+nav>ul>li.active {
+	background-color: #144877;
+	border-radius: 10px 10px 0 0;
+}

@@ -21,7 +21,7 @@
         "docs": "http://flarum.org/docs"
     },
     "require": {
-        "flarum/core": "^0.1.0",
+        "flarum/core": "dev-master",
         "flarum/flarum-ext-akismet": "^0.1.0",
         "flarum/flarum-ext-approval": "^0.1.0",
         "flarum/flarum-ext-auth-facebook": "^0.1.0",
@@ -40,7 +40,8 @@
         "flarum/flarum-ext-subscriptions": "^0.1.0",
         "flarum/flarum-ext-suspend": "^0.1.0",
         "flarum/flarum-ext-tags": "^0.1.0",
-        "gtugablue/flarum-ext-portuguese": "^0.1.0@beta"
+        "gtugablue/flarum-ext-portuguese": "^0.1.0@beta",
+        "phpmailer/phpmailer": "~5.2"
     },
     "require-dev": {
         "franzl/studio": "^0.10.0"
