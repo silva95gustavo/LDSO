@@ -1,0 +1,18 @@
+type: simplenews_issue
+name: Newsletter Issue
+description: 'Use <em>Newsletter Issue</em> for newsletters.'
+help: ''
+has_title: true
+title_label: Title
+preview_mode: 1
+display_submitted: false
+status: true
+new_revision: false
+settings:
+  node:
+    options:
+      promote: true
+      sticky: false
+status: true
+langcode: en
+dependencies: {  }

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.simplenews_subscriber.field_city
+id: simplenews_subscriber.simplenews_subscriber.field_city
+field_name: field_city
+entity_type: simplenews_subscriber
+bundle: simplenews_subscriber
+label: City
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: ''
+default_value_callback: ''
+settings: {  }
+field_type: string

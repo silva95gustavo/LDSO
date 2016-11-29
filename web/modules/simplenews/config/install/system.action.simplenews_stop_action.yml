@@ -1,0 +1,6 @@
+id: simplenews_stop_action
+label: 'Stop sending'
+status: true
+langcode: en
+type: node
+plugin: simplenews_stop_action
