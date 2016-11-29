@@ -46,6 +46,10 @@
           Comunidade Online
           <i class = "icon icon ion-ios-people"></i>
         </ion-item>
+        <ion-item ng-show="session.authenticated === true" menu-close class="item item-icon-right" ng-click="menu.logout()">
+          Logout
+          <i class = "icon icon ion-log-out"></i>
+        </ion-item>
       </ion-list>
     </ion-content>
   </ion-side-menu>

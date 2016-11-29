@@ -7,7 +7,7 @@ angular.module('starter.controllers.home', ['ngSanitize'])
 
     requests.getHomeImage()
       .success(function (response){
-        $('.parallax').css('background', 'url('+ HOST.domain + IMAGES.url + 'home.png' + ')', 'no-repeat', 'top', 'center');
+        $('.parallax').css('background', 'url('+ HOST.domain + IMAGES.url + 'home_0.png' + ')', 'no-repeat', 'top', 'center');
         $('.parallax').css('background-size', '100%');
       })
 
