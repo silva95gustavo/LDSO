@@ -2601,7 +2601,7 @@ CREATE TABLE `watchdog` (
   KEY `type` (`type`),
   KEY `uid` (`uid`),
   KEY `severity` (`severity`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='Table that contains logs of all system events.';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COMMENT='Table that contains logs of all system events.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2666,7 +2666,7 @@ CREATE TABLE `yamlform_submission_data` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-29 19:19:40
+-- Dump completed on 2016-11-29 19:22:04
 -- MySQL dump 10.13  Distrib 5.7.15, for Linux (x86_64)
 --
 -- Host: localhost    Database: cuidadores_dev
@@ -3586,7 +3586,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES (1,'1cWbgejO2LMVZ0zPfUPAbnMXAK-S49rheaVg9ubcJKU','193.136.33.109',1480447076,'_sf2_attributes|a:1:{s:3:\"uid\";s:1:\"1\";}_sf2_flashes|a:0:{}_sf2_meta|a:4:{s:1:\"u\";i:1480446925;s:1:\"c\";i:1480446925;s:1:\"l\";s:7:\"2000000\";s:1:\"s\";s:43:\"WHl3d5P-S9AH1cAoJA3UC1B2C9W4FBg0ViJtz0HFsiQ\";}');
+INSERT INTO `sessions` VALUES (1,'1cWbgejO2LMVZ0zPfUPAbnMXAK-S49rheaVg9ubcJKU','193.136.33.109',1480447076,'_sf2_attributes|a:1:{s:3:\"uid\";s:1:\"1\";}_sf2_flashes|a:0:{}_sf2_meta|a:4:{s:1:\"u\";i:1480446925;s:1:\"c\";i:1480446925;s:1:\"l\";s:7:\"2000000\";s:1:\"s\";s:43:\"WHl3d5P-S9AH1cAoJA3UC1B2C9W4FBg0ViJtz0HFsiQ\";}'),(1,'6ig4CnN2iv3gyq3OIRUJMNS_03dyYVYj-1PQArr6NFg','193.136.33.110',1480447222,'_sf2_attributes|a:1:{s:3:\"uid\";s:1:\"1\";}_sf2_flashes|a:0:{}_sf2_meta|a:4:{s:1:\"u\";i:1480447223;s:1:\"c\";i:1480447223;s:1:\"l\";s:7:\"2000000\";s:1:\"s\";s:43:\"Yk-ZXjpRTP5892nNyFTXqLG7JY6Z7RczgAxpp-rn5zA\";}'),(1,'7iF-FsA3rkc5a_NqxVUqn5HwuCJmlB9tHcwWN8QT3Uk','193.136.33.110',1480447193,'_sf2_attributes|a:1:{s:3:\"uid\";s:1:\"1\";}_sf2_flashes|a:0:{}_sf2_meta|a:4:{s:1:\"u\";i:1480447193;s:1:\"c\";i:1480447193;s:1:\"l\";s:7:\"2000000\";s:1:\"s\";s:43:\"ZUbrny409j5N7b05HvCtK0Zx--UaVBUygD0HcOrqPEA\";}');
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3761,7 +3761,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `users_field_data` WRITE;
 /*!40000 ALTER TABLE `users_field_data` DISABLE KEYS */;
-INSERT INTO `users_field_data` VALUES (0,'pt-pt','pt-pt',NULL,'',NULL,NULL,'',0,1476670332,1476670332,0,0,NULL,1),(1,'pt-pt','pt-pt',NULL,'admin','$S$EwbvGRwR1EEXvRzmHDKtML.a1vMiTyRbfp1XMJ6T5XNEwXxBkE2F','admin@cuidadores.tk','UTC',1,1476670332,1476670496,1480446974,1480446925,'silva95gustavo@gmail.com',1),(2,'pt-pt','pt-pt',NULL,'1111666d-f793-4091-a75b-7149a3c7cb13','$2y$10$8JVAt5Z86VMa3Nq4ygLjLe0/z0154uOTdh4Ijlus5n8HG3eFGkj5e','test_user@gmail.com','UTC',1,1478482430,1478482430,0,0,NULL,1),(29,'en','en','en','rcerqueira94','$S$Ekk3Lbvh1aLUBLG2LpV3tsW6LI4jF8HIoByedUHpO0v703Xu1ovt','rcerqueira94@gmail.com','Europe/London',0,1479056458,1479056458,0,0,'rcerqueira94@gmail.com',1);
+INSERT INTO `users_field_data` VALUES (0,'pt-pt','pt-pt',NULL,'',NULL,NULL,'',0,1476670332,1476670332,0,0,NULL,1),(1,'pt-pt','pt-pt',NULL,'admin','$S$EwbvGRwR1EEXvRzmHDKtML.a1vMiTyRbfp1XMJ6T5XNEwXxBkE2F','admin@cuidadores.tk','UTC',1,1476670332,1476670496,1480447193,1480447222,'silva95gustavo@gmail.com',1),(2,'pt-pt','pt-pt',NULL,'1111666d-f793-4091-a75b-7149a3c7cb13','$2y$10$8JVAt5Z86VMa3Nq4ygLjLe0/z0154uOTdh4Ijlus5n8HG3eFGkj5e','test_user@gmail.com','UTC',1,1478482430,1478482430,0,0,NULL,1),(29,'en','en','en','rcerqueira94','$S$Ekk3Lbvh1aLUBLG2LpV3tsW6LI4jF8HIoByedUHpO0v703Xu1ovt','rcerqueira94@gmail.com','Europe/London',0,1479056458,1479056458,0,0,'rcerqueira94@gmail.com',1);
 /*!40000 ALTER TABLE `users_field_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3794,4 +3794,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-29 19:19:41
+-- Dump completed on 2016-11-29 19:22:05

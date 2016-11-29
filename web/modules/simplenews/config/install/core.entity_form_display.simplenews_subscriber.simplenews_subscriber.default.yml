@@ -1,0 +1,24 @@
+id: simplenews_subscriber.simplenews_subscriber.default
+targetEntityType: simplenews_subscriber
+bundle: simplenews_subscriber
+mode: default
+content:
+  subscriptions:
+    type: simplenews_subscription_select
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  mail:
+    type: email_default
+    weight: 5
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  uid: true
+status: true
+dependencies:
+  config:
+    - field.field.simplenews_subscriber.simplenews_subscriber.subscriptions
+  module:
+    - simplenews

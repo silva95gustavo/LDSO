@@ -1,0 +1,20 @@
+id: simplenews_subscriber.simplenews_subscriber.subscriptions
+status: true
+langcode: en
+field_name: subscriptions
+entity_type: simplenews_subscriber
+bundle: simplenews_subscriber
+label: Subscriptions
+description: ''
+required: false
+default_value: {}
+default_value_function: ''
+translatable: false
+settings:
+  handler: default
+  handler_settings:
+    target_bundles: null
+dependencies:
+  config:
+    - field.storage.simplenews_subscriber.subscriptions
+field_type: simplenews_subscription
