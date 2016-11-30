@@ -5,10 +5,10 @@ angular.module('starter.controllers.menu', [])
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
     // listen for the $ionicView.enter event:
+    var ctrl = this;
 
     $scope.session = {};
     $scope.session.authenticated = false;
-
     if (!$scope.session.authenticated)
 
       localforage.getItem('session').then(function (value) {
