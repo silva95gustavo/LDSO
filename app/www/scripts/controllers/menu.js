@@ -9,12 +9,16 @@ angular.module('starter.controllers.menu', [])
     $scope.session = {};
     $scope.session.authenticated = false;
 
-    var ctrl = this;
+    if (!$scope.session.authenticated)
+
+      localforage.getItem('session').then(function (value) {
+        ctrl.session = value;
+      })
 
     // Form data for the login modal
     ctrl.loginData = {};
     $scope.$on('$ionicView.enter', function (e) {
-      ctrl.loginData.username = "admin@cuidadores.tk";
+      ctrl.loginData.username = "admin";
       ctrl.loginData.password = "qlamiepho4";
     });
     // Create the login modal that we will use later
@@ -25,58 +29,63 @@ angular.module('starter.controllers.menu', [])
     });
 
     // Triggered in the login modal to close it
-    this.closeLogin = function () {
+    ctrl.closeLogin = function () {
       $scope.modal.hide();
     };
 
     // Open the login modal
-    this.login = function () {
-      if (!$scope.session.authenticated)
-        $scope.modal.show();
-      else $state.go('restricted');
+    ctrl.login = function () {
+      $scope.modal.show();
     };
+    $scope.loginSuccess = function () {
+      $ionicPopup.alert({
+        title: 'Login',
+        template: 'Success'
+      }).then(function (succ) {
 
+        // redirect on login success
+        $scope.modal.hide();
+      })
+    };
+    $scope.loginFail = function () {
+      $ionicPopup.alert({
+        title: 'Login',
+        template: 'Fail'
+      });
+    };
     // Perform the login action when the user submits the login form
-    this.doLogin = function () {
+    ctrl.doLogin = function () {
       requests.login(ctrl.loginData.username, ctrl.loginData.password)
-        .success(function (response) {
+        .then(
+        function (response) {
           console.log(response);
           $scope.session = {
-            set: true,
-            uid: response.current_user.uid,
-            user: response.current_user.name,
-            csrf_token: response.csrf_token,
-            logout_token: response.logout_token,
-            authenticated: (response.current_user.roles[0] === "authenticated"),
-            administrator: (response.current_user.roles[1] === "administrator"),
+            uid: response.data.current_user.uid,
+            user: response.data.current_user.name,
+            csrf_token: response.data.csrf_token,
+            logout_token: response.data.logout_token,
+            authenticated: (response.data.current_user.roles[0] === "authenticated"),
+            administrator: (response.data.current_user.roles[1] === "administrator"),
           }
           console.log($scope.session);
-          $scope.modal.hide();
-          $state.go('restricted');
-        })
-        .error(function () {
-          $ionicPopup.alert({
-            title: 'Erro na autenticação',
-            template: 'O nome de utilizador ou a palavra-chave estão errados.<br> Tente novamente'
-          });
-        })
+          localforage.setItem('session', $scope.session);
+          ctrl.session = $scope.session;
+          $scope.loginSuccess();
+        },
+        function (response) {
+          console.log(response);
+          $scope.loginFail();
+        }
+        );
     };
 
-    this.logout = function () {
-      requests.logout($scope.session.csrf_token, $scope.session.logout_token)
-        .then(function (response) {
-          console.log(response);
-          $scope.session = {
-            set: false,
-            uid: null,
-            user: null,
-            csrf_token: null,
-            logout_token: null,
-            authenticated: false,
-            administrator: false,
-          }
-          console.log($scope.session);
-          $state.go('home');
-        })
-    };
+    ctrl.logout = function () {
+      localforage.removeItem('session').then(function (value) {
+        ctrl.session = null;
+        $ionicPopup.alert({
+          title: 'Logged out',
+          template: 'Logged out successfully'
+        });
+      });
+    }
   })
