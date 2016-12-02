@@ -1,11 +1,10 @@
 <?php
-	 
+	
 	namespace Drupal\exportinfo;
 
 	use Drupal\Core\Controller\ControllerBase;
-	use Drupal\Core\Database\Driver\mysql;
-
-	
+	use Drupal\Core\Database\Database;
+	use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 	 
 	class exportinfo extends ControllerBase {
 	  public function content() {
@@ -13,28 +12,7 @@
 		$uid = \Drupal::currentUser()->id();
 
 	  	if($uid == 1){
-	  	
-	  			include '../../../register/include.php';
-
-	  			{
-			  	global $databases;
-				$db_settings = $databases['default']['default'];
-
-				$db_host = $db_settings['host'] . ":" . $db_settings['port'];
-				$dsn = "mysql:host=" . $db_host . ";dbname=" . $db_settings['database'];
-
-				$username = $db_settings['username'];
-				$password = $db_settings['password'];
-				try {
-					$dbh = new PDO($dsn, $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-
-					$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				} catch(PDOException $e) {
-					echo "Connection to database failed: " . $e->getMessage();
-				}
-				}
-	  			
-	  			//$dbh = get_dbh();
+	  			$dbh = Database::getConnection();
 	  	
 	  			$stmt = $dbh->prepare("	SELECT 1 as type, cuidadores_users.email as email, community_users_groups.group_id as faixa_etaria, community_users.username as username, community_users.is_activated as activada 
 	  										FROM cuidadores_users, community_users_groups, community_users
@@ -52,7 +30,7 @@
 	  	
 	  	
 	  				header('Content-type: application/vnd.ms-excel');
-	  				header('Content-Disposition: attachment; filename="userInfo.xls"');
+	  				header('Content-Disposition: attachment; filename="userInfo.xlsx"');
 	  				
 	  				echo "<table>"; // start a table tag in the HTML
 	  				echo "<tr><th>Tipo de Conta</th><th>Email</th><th>Username</th><th>Faixa Etaria</th><th>Conta Activada</th></tr>";
@@ -105,7 +83,10 @@
 	  	
 	  				echo "</table>";
 	  			}
-
+	  			else
+	  			{
+	  				throw new AccessDeniedHttpException();
+	  			}
 		}
 	}
 
