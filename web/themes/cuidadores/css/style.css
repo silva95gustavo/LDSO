@@ -117,3 +117,7 @@ body {
 .footer {
 	margin-top: 0;
 }
+
+.view-estatisticas > .view-content > div > article > h2:first-child {
+	display: none;
+}
