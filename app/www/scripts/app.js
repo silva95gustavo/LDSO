@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.directives'])
+angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.constants'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -26,43 +26,63 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
 
-      .state('app', {
-        url: '/app',
+      .state('menu', {
+        url: '/menu',
         abstract: true,
         templateUrl: 'views/menu.html',
-        controller: 'sessionController'
+        controller: 'menuCtrl as menu'
       })
 
-      .state('app.home', {
+      .state('home', {
+        parent: 'menu',
         url: '/home',
         views: {
           'menuContent': {
             templateUrl: 'views/home.html',
-            controller: 'homeController'
+            controller: 'homeCtrl as home'
           }
         }
       })
 
-      .state('app.carer', {
+      .state('carer', {
+        parent: 'menu',
         url: '/carer',
         views: {
           'menuContent': {
             templateUrl: 'views/carer.html',
-            controller: 'carerController'
+            controller: 'carerCtrl as carer'
           }
         }
       })
 
-      .state('app.services', {
+      .state('services', {
+        parent: 'menu',
         url: '/services',
         views: {
           'menuContent': {
-            templateUrl: 'views/services.html'
+            templateUrl: 'views/services.html',
+            controller: 'servicesCtrl as services'
+          }
+        }
+      })
+
+      .state('community', {
+        parent: 'menu',
+        url: '/community',
+        views: {
+          'menuContent': {
+            templateUrl: 'views/community.html'
           }
         }
       })
 
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise('/menu/home');
 
-});
+})
+
+.run(function($rootScope, $state, $ionicHistory) {
+  $rootScope.$back = function() {
+    $ionicHistory.goBack();
+  };
+})

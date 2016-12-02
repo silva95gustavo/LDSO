@@ -9,9 +9,7 @@ before_install:
 install:
   - cd web
   - composer install
-  - composer update
   - cd core
-  - composer update
   
 script: ../vendor/bin/phpunit --testsuite=unit 
 

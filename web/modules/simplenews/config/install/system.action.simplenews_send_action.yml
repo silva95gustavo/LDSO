@@ -1,0 +1,6 @@
+id: simplenews_send_action
+label: 'Send newsletter issue'
+status: true
+langcode: en
+type: node
+plugin: simplenews_send_action

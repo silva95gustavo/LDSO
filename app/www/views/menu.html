@@ -18,15 +18,15 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close class="item item-icon-right" href="#/app/home">
+        <ion-item menu-close class="item item-icon-right" ui-sref="home">
           Sobre nós
           <i class = "icon icon ion-home"></i>
         </ion-item>
-        <ion-item menu-close class="item item-icon-right"  href="#/app/carer">
+        <ion-item menu-close class="item item-icon-right"  ui-sref="carer">
           Sou um Cuidador?
           <i class = "icon icon ion-help"></i>
         </ion-item>
-        <ion-item menu-close class="item item-icon-right"  href="#/app/services">
+        <ion-item menu-close class="item item-icon-right"  ui-sref="services">
           Serviços
           <i class = "icon icon ion-home"></i>
         </ion-item>
@@ -34,7 +34,7 @@
           Calendário
           <i class = "icon icon ion-android-locate"></i>
         </ion-item>
-        <ion-item menu-close class="item item-icon-right"  ng-click="login()">
+        <ion-item menu-close class="item item-icon-right"  ng-click="menu.login()">
           Área Restrita (Membros)
           <i class = "icon icon ion-android-lock"></i>
         </ion-item>
@@ -42,7 +42,7 @@
           Contactos
           <i class = "icon icon ion-ios-telephone"></i>
         </ion-item>
-        <ion-item menu-close class="item item-icon-right"  href="login()">
+        <ion-item menu-close class="item item-icon-right"  ui-sref="community">
           Comunidade Online
           <i class = "icon icon ion-ios-people"></i>
         </ion-item>

@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - simplenews
+id: simplenewssubscription_all
+theme: bartik
+region: sidebar_first
+weight: -7
+provider: null
+plugin: simplenews_subscription_block
+settings:
+  id: simplenews_subscription_block
+  label: 'Simplenews multiple subscriptions'
+  provider: simplenews
+  label_display: visible
+  newsletters:
+    weekly_content_update: weekly_content_update
+    special_offers: special_offers
+    press_releases: press_releases
+    default: default
+  message: 'Stay informed - subscribe to our newsletters.'
+  unique_id: d74b88af-9f36-4c5b-8122-34538c6b172c
+visibility: {  }

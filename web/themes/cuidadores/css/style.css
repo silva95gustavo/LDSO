@@ -52,11 +52,21 @@ body {
     border-radius: 10px 10px 0 0;
 }
 
+.navbar-default .navbar-nav>.active>a:hover {
+	background-color: #FF9A5F;
+}
+
 .top_footer {
 	margin-top: 45px;
 	padding-top: 35px;
 	padding-bottom: 36px;
 	border-top: 1px solid #E5E5E5;
+	border-bottom: 1px solid #E5E5E5;
+	background-color: #4AACC5;
+}
+
+.top_footer_left, .top_footer_right {
+	color: white;
 }
 
 .top_footer_left, .top_footer_right {

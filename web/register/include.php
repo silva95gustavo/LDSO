@@ -72,16 +72,18 @@
 		return $stmt->fetch() != false;
 	}
 
-	function create_user($dbh, $email, $id_site, $id_community) {
+	function create_user($dbh, $email, $id_site, $id_community, $birthday = false) {
 		$query = 'INSERT INTO cuidadores_users (email';
 
 		if($id_site) $query = $query . ',id_site';
 		if($id_community) $query = $query . ',id_community';
+		if($birthday) $query = $query . ',birthday';
 
 		$query = $query . ') VALUES (:email';
 
 		if($id_site) $query = $query . ',:id_site';
 		if($id_community) $query = $query . ',:id_community';
+		if($birthday) $query = $query . ',:birthday';
 
 		$query = $query . ');';
 
@@ -89,21 +91,30 @@
 		$stmt->bindParam(':email', $email);
 		if($id_site) $stmt->bindParam(':id_site', $id_site);
 		if($id_community) $stmt->bindParam(':id_community', $id_community);
-
+		if($birthday) {
+			$birthday_str = $birthday->y . ":" . $birthday->m . ":" . $birthday->d;
+			$stmt->bindParam(':birthday', $birthday_str);
+		}
+		
 		$stmt->execute();
 	}
 
-	function update_user($dbh, $email, $id_site, $id_community) {
+	function update_user($dbh, $email, $id_site, $id_community, $birthday = false) {
 		$query = 'UPDATE cuidadores_users ';
 
 		if($id_site) $query = $query . 'SET id_site = :id_site';
 		if($id_community) $query = $query . 'SET id_community = :id_community';
-
+		if($birthday) $query = $query . 'SET birthday = :birthday';
+		
 		$query = $query . ' WHERE email = :email;';
 
 		$stmt = $dbh->prepare($query);
 		if($id_site) $stmt->bindParam(':id_site', $id_site);
 		if($id_community) $stmt->bindParam(':id_community', $id_community);
+		if($birthday) {
+			$birthday_str = $birthday->y . ":" . $birthday->m . ":" . $birthday->d;
+			$stmt->bindParam(':birthday', $birthday_str);
+		}
 
 		$stmt->bindParam(':email', $email);
 		$stmt->execute();
