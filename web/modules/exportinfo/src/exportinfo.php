@@ -53,6 +53,12 @@
 	  						}
 	  					$string = $string . "</td><td>";
 	  					$string = $string . $row['email'] . "</td><td>";
+						if($row['name'])
+							echo $row['name'];
+						else echo "Nao Disponivel";
+						if($row['associate_nr'])
+							echo $row['associate_nr'];
+						else echo "Nao Disponivel";
 	  					if($row['username'])
 	  						$string = $string . $row['username'];
 	  					else $string = $string . "Nao Disponivel";
