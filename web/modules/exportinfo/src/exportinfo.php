@@ -5,16 +5,20 @@
 	use Drupal\Core\Controller\ControllerBase;
 	use Drupal\Core\Database\Database;
 	use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+	use Symfony\Component\HttpKernel\Exception\HttpException;
+	use Symfony\Component\HttpFoundation\Response;
 	 
 	class exportinfo extends ControllerBase {
+
 	  public function content() {
 
 		$uid = \Drupal::currentUser()->id();
 
 	  	if($uid == 1){
-	  			$dbh = Database::getConnection();
+
+				$dbh = Database::getConnection();
 	  	
-	  			$stmt = $dbh->prepare("	SELECT 1 as type, cuidadores_users.email as email, community_users_groups.group_id as faixa_etaria, community_users.username as username, community_users.is_activated as activada 
+	  			$stmt = db_query("	SELECT 1 as type, cuidadores_users.email as email, community_users_groups.group_id as faixa_etaria, community_users.username as username, community_users.is_activated as activada 
 	  										FROM cuidadores_users, community_users_groups, community_users
 	  										WHERE cuidadores_users.id_community = community_users.id AND community_users_groups.user_id = cuidadores_users.id_community
 	  									UNION 
@@ -26,63 +30,65 @@
 	  										FROM cuidadores_users, community_users_groups, community_users
 	  										WHERE community_users.email NOT IN (SELECT email FROM cuidadores_users) AND community_users_groups.user_id = community_users.id
 	  									");
-	  				$stmt->execute();
+	  				$string;
+	  				$string = $string . "<table>"; // start a table tag in the HTML
+	  				$string = $string . "<tr><th>Tipo de Conta</th><th>Email</th><th>Username</th><th>Faixa Etaria</th><th>Conta Activada</th></tr>";
 	  	
-	  	
-	  				header('Content-type: application/vnd.ms-excel');
-	  				header('Content-Disposition: attachment; filename="userInfo.xlsx"');
-	  				
-	  				echo "<table>"; // start a table tag in the HTML
-	  				echo "<tr><th>Tipo de Conta</th><th>Email</th><th>Username</th><th>Faixa Etaria</th><th>Conta Activada</th></tr>";
-	  	
-	  				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){  
-	  					echo "<tr>";
-	  					echo "<td>";
+	  				while ($row = $stmt->fetchAssoc()){  
+	  					$string = $string . "<tr>";
+	  					$string = $string . "<td>";
 	  					switch($row['type']){
 	  						case 1:
-	  							echo "Ambos";
+	  							$string = $string . "Ambos";
 	  							break;
 	  						case 2:
-	  							echo "Website";
+	  							$string = $string . "Website";
 	  							break;
 	  						case 3:
-	  							echo "Comunidade";
+	  							$string = $string . "Comunidade";
 	  							break;
 	  						default:
-	  							echo "Erro";
+	  							$string = $string . "Erro";
 	  							break;
 	  						}
-	  					echo "</td><td>";
-	  					echo $row['email'] . "</td><td>";
+	  					$string = $string . "</td><td>";
+	  					$string = $string . $row['email'] . "</td><td>";
 	  					if($row['username'])
-	  						echo $row['username'];
-	  					else echo "Nao Disponivel";
-	  					echo "</td><td>";
+	  						$string = $string . $row['username'];
+	  					else $string = $string . "Nao Disponivel";
+	  					$string = $string . "</td><td>";
 	  					switch($row['faixa_etaria']){
 	  						case 1:
-	  							echo "Admin";
+	  							$string = $string . "Admin";
 	  							break;
 	  						case 5:
-	  							echo "Jovem";
+	  							$string = $string . "Jovem";
 	  							break;
 	  						case 6:
-	  							echo "Adulto";
+	  							$string = $string . "Adulto";
 	  							break;
 	  						default:
-	  							echo "Nao Disponivel";
+	  							$string = $string . "Nao Disponivel";
 	  							break;
 	  					}
-	  					echo "</td><td>";
+	  					$string = $string . "</td><td>";
 	  					if($row['activada'] == 1)
-	  						echo "Activada";
-	  					else if ($row['activada'] == 0) echo "Desactivada";
-	  					else echo "Nao Disponivel";
-	  					echo "</td>";
-	  					echo "</tr>";
+	  						$string = $string . "Activada";
+	  					else if ($row['activada'] == 0) $string = $string . "Desactivada";
+	  					else $string = $string . "Nao Disponivel";
+	  					$string = $string . "</td>";
+	  					$string = $string . "</tr>";
 	  					}
-	  	
-	  				echo "</table>";
-	  			}
+		  	
+	  				$string = $string . "</table>";
+
+	  				$response = $string;
+
+					header('Content-type: application/vnd.ms-excel');
+					header('Content-Disposition: attachment; filename="userInfo.xls"');
+	  				
+	  				return new Response($response);
+	  				}
 	  			else
 	  			{
 	  				throw new AccessDeniedHttpException();

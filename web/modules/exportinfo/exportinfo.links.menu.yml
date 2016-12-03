@@ -1,0 +1,6 @@
+exportinfo.admin:
+  title: 'Export User Information'
+  description: 'Exports the user information to an Excel file'
+  parent: system.admin_config_development
+  route_name: exportinfo.content
+  weight: 100
