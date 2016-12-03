@@ -185,6 +185,14 @@ $('#frm_register').on('submit', function(e) {
 
 	if(reg_site) {
 		obj.register_site = true;
+
+		var name = $("#name").val();
+		if(name != "")
+			obj.name = name;
+
+		var associate_nr = $("#associate_nr").val();
+		if(associate_nr != "")
+			obj.associate_nr = associate_nr;
 	}
 
 	if(reg_community) {
@@ -230,7 +238,6 @@ $('#frm_register').on('submit', function(e) {
 			//}
 		},
 		error: function(xhr, textStatus, errorThrown) {
-			console.log(xhr.responseText);
 			if(xhr.responseJSON)
 				registerError(true, xhr.responseJSON.message);
 			else

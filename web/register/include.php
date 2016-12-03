@@ -72,18 +72,22 @@
 		return $stmt->fetch() != false;
 	}
 
-	function create_user($dbh, $email, $id_site, $id_community, $birthday = false) {
+	function create_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr) {
 		$query = 'INSERT INTO cuidadores_users (email';
 
 		if($id_site) $query = $query . ',id_site';
 		if($id_community) $query = $query . ',id_community';
 		if($birthday) $query = $query . ',birthday';
+		if($name) $query = $query . ',name';
+		if($associate_nr) $query = $query . ',associate_nr';
 
 		$query = $query . ') VALUES (:email';
 
 		if($id_site) $query = $query . ',:id_site';
 		if($id_community) $query = $query . ',:id_community';
 		if($birthday) $query = $query . ',:birthday';
+		if($name) $query = $query . ',:name';
+		if($associate_nr) $query = $query . ',:associate_nr';
 
 		$query = $query . ');';
 
@@ -95,16 +99,20 @@
 			$birthday_str = $birthday->y . ":" . $birthday->m . ":" . $birthday->d;
 			$stmt->bindParam(':birthday', $birthday_str);
 		}
+		if($name) $stmt->bindParam(':name', $name);
+		if($associate_nr) $stmt->bindParam(':associate_nr', $associate_nr);
 		
 		$stmt->execute();
 	}
 
-	function update_user($dbh, $email, $id_site, $id_community, $birthday = false) {
+	function update_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr) {
 		$query = 'UPDATE cuidadores_users ';
 
 		if($id_site) $query = $query . 'SET id_site = :id_site';
 		if($id_community) $query = $query . 'SET id_community = :id_community';
 		if($birthday) $query = $query . 'SET birthday = :birthday';
+		if($name) $query = $query . 'SET name = :name';
+		if($associate_nr) $query = $query . 'SET associate_nr = :associate_nr';
 		
 		$query = $query . ' WHERE email = :email;';
 
@@ -115,6 +123,8 @@
 			$birthday_str = $birthday->y . ":" . $birthday->m . ":" . $birthday->d;
 			$stmt->bindParam(':birthday', $birthday_str);
 		}
+		if($name) $stmt->bindParam(':name', $name);
+		if($associate_nr) $stmt->bindParam(':associate_nr', $associate_nr);
 
 		$stmt->bindParam(':email', $email);
 		$stmt->execute();
