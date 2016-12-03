@@ -61,6 +61,12 @@ body {
 	padding-top: 35px;
 	padding-bottom: 36px;
 	border-top: 1px solid #E5E5E5;
+	border-bottom: 1px solid #E5E5E5;
+	background-color: #4AACC5;
+}
+
+.top_footer_left, .top_footer_right {
+	color: white;
 }
 
 .top_footer_left, .top_footer_right {
@@ -110,4 +116,8 @@ body {
 
 .footer {
 	margin-top: 0;
+}
+
+.view-estatisticas > .view-content > div > article > h2:first-child {
+	display: none;
 }

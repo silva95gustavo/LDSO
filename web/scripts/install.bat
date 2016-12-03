@@ -9,11 +9,11 @@ call composer install
 REM call composer update
 cd ../..
 cd sql
-IF "%dbpass%"=="" (
-	call mysql -u %dbuser% %dbname% < cuidadores.sql
-) ELSE (
-	call mysql -u %dbuser% -p %dbpass% %dbname% < cuidadores.sql
-)
+REM IF "%dbpass%"=="" (
+  call mysql -u %dbuser% %dbname% < cuidadores.sql
+REM ) ELSE (
+REM 	call mysql -u %dbuser% -p %dbpass% %dbname% < cuidadores.sql
+REM )
 cd ../web/comunidade
 call php flarum cache:clear
 cd ../scripts

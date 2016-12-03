@@ -1,0 +1,16 @@
+id: press_releases
+name: 'Press releases'
+description: 'This is the press release.'
+format: plain
+priority: 0
+receipt: false
+from_name: ''
+subject: '[[simplenews-newsletter:name]] [node:title]'
+from_address: 'replace@example.org'
+hyperlinks: true
+new_account: none
+opt_inout: double
+weight: 0
+status: true
+langcode: en
+dependencies: {  }
