@@ -122,6 +122,14 @@ AddEncoding gzip svgz
   # uncomment the following line:
   # RewriteBase /
 
+#custom redirects
+
+RewriteRule ^user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
+RewriteRule ^pt-pt/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
+RewriteRule ^en/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
+
+#end custom redirects
+
   # Redirect common PHP files to their new locations.
   RewriteCond %{REQUEST_URI} ^(.*)?/(install.php) [OR]
   RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild.php)
