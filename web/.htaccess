@@ -127,7 +127,7 @@ AddEncoding gzip svgz
 RewriteRule ^user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
 RewriteRule ^pt-pt/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
 RewriteRule ^en/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
-RewriteRule ^bogus-login$ http://staging.cuidadores.tk/user/login [R=301,L]
+RewriteRule ^login-redirect$ http://staging.cuidadores.tk/user/login [R=301,L]
 
 #end custom redirects
 
