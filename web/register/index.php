@@ -43,7 +43,14 @@
 			<div id="register_website">
 				<input type="checkbox" id="chk_register_site"/>
 				<label class="checkbox_label" for="chk_register_site">Registar no WebSite</label>
-				<div class="data empty"></div>
+				<div class="data">
+					<label for="name">Nome</label>
+					<input type="text" id="name">
+					<br><br>
+					<label for="associate_nr">Número de associado</label>
+					<input type="text" id="associate_nr" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+				</div>
+				<br>
 			</div>
 
 			<!-- register community -->

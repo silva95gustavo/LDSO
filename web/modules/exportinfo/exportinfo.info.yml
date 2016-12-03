@@ -1,0 +1,6 @@
+name: Export Info
+description: Exports User Information
+package: Custom
+
+type: module
+core: 8.x
