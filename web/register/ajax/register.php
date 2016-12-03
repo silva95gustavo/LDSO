@@ -30,6 +30,16 @@
 	$register_site = false;
 	if(property_exists($data, 'register_site')) {
 		$register_site = true;
+
+		if(property_exists($data, 'name'))
+			$name = trim($data->name);
+		else
+			$name = false;
+
+		if(property_exists($data, 'associate_nr'))
+			$associate_nr = trim($data->associate_nr);
+		else
+			$associate_nr = false;
 	}
 
 	if(!property_exists($data, 'password'))
@@ -125,9 +135,9 @@
 	}
 
 	if($user) {
-		update_user($dbh, $email, $id_site, $id_community, $birthday);
+		update_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr);
 	} else {
-		create_user($dbh, $email, $id_site, $id_community, $birthday);
+		create_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr);
 	}
 
 	$dbh->commit();
