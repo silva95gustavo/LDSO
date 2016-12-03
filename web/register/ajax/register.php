@@ -115,7 +115,7 @@
 	}
 
 	if($register_site) {
-		$id_site = create_user_drupal($dbh, gen_uuid(), $email, $password);
+		$id_site = create_user_drupal($dbh, $email, $email, $password);
 	} else {
 		$id_site = false;
 	}
