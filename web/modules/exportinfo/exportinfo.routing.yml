@@ -1,7 +1,7 @@
 exportinfo.content:
   path: '/exportinfo'
   defaults:
-    _controller: '\Drupal\exportinfo\Exportinfo::content'
+    _controller: '\Drupal\exportinfo\exportinfo::content'
     _title: 'Export Information'
   requirements:
     _permission: 'access content'
