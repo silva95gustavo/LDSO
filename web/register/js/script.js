@@ -56,6 +56,12 @@ function updateControls(registered_site, registered_community) {
 	updateCheckbox('#chk_register_site', registered_site, registered_site);
 	updateCheckbox('#chk_register_community', registered_community, registered_community);
 
+	if(reg_community && !registered_community) {
+		if(!registered_site)
+			$('#chk_register_site').prop("checked", false);
+		$('#chk_register_community').prop("checked", true);
+	}
+
 	$('#register_btn').show();
 
 	if(registered_site && registered_community) {
@@ -73,9 +79,16 @@ function updateControls(registered_site, registered_community) {
 		else
 			$('#already_registered_msg').html("O email já se encontra registado na comunidade. Por favor, introduza a sua password.");
 		
+		if(reg_community)
+			$("#chk_register_site").prop('checked', true);
+
 		$('#existing_password').show();
 	} else {
-		$("#chk_register_site").prop('checked', true);
+		if(!reg_community)
+			$("#chk_register_site").prop('checked', true);
+		else
+			$('#chk_register_community').prop("checked", true);
+
 		$('#already_registered').hide();
 		$('#not_registered').show();
 	}
