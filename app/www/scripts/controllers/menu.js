@@ -15,7 +15,7 @@ angular.module('starter.controllers.menu', [])
   // Form data for the login modal
   ctrl.loginData = {};
   $scope.$on('$ionicView.enter', function (e) {
-    ctrl.loginData.username = "admin";
+    ctrl.loginData.username = "admin@cuidadores.tk";
     ctrl.loginData.password = "qlamiepho4";
   });
   // Create the login modal that we will use later

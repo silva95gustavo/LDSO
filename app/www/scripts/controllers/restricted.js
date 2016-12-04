@@ -1,6 +1,12 @@
 angular.module('starter.controllers.restricted', [])
 
-.controller('restrictedCtrl', function () {
+.controller('restrictedCtrl', function ($scope) {
 
-    //Import of the links available for the members
+  var ctrl = this;
+
+  ctrl.login = $scope.login();
+
+  localforage.getItem('session').then(function(value){
+    ctrl.session = value;
   })
+})
