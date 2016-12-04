@@ -1,6 +1,6 @@
 angular.module('starter.controllers.menu', [])
 
-.controller('menuCtrl', function ($scope, $ionicModal, $http,$ionicPopup, $timeout, requests) {
+.controller('menuCtrl', function ($scope, $ionicModal, $http, $state, $window, $ionicPopup, $timeout, requests) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -15,7 +15,7 @@ angular.module('starter.controllers.menu', [])
   // Form data for the login modal
   ctrl.loginData = {};
   $scope.$on('$ionicView.enter', function (e) {
-    ctrl.loginData.username = "admin";
+    ctrl.loginData.username = "admin@cuidadores.tk";
     ctrl.loginData.password = "qlamiepho4";
   });
   // Create the login modal that we will use later
@@ -39,9 +39,9 @@ angular.module('starter.controllers.menu', [])
       title: 'Login',
       template: 'Success'
     }).then(function (succ) {
-
       // redirect on login success
       $scope.modal.hide();
+      $window.location.reload(true);
     })
   };
   $scope.loginFail = function() {
@@ -82,7 +82,7 @@ angular.module('starter.controllers.menu', [])
       $ionicPopup.alert({
         title: 'Logged out',
         template: 'Logged out successfully'
-      });
+      }).then($state.go('home'));
     });
   }
 })

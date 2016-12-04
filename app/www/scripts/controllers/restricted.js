@@ -1,6 +1,10 @@
 angular.module('starter.controllers.restricted', [])
 
-.controller('restrictedCtrl', function () {
+.controller('restrictedCtrl', function ($window, $scope, $ionicModal) {
 
-    //Import of the links available for the members
+  var ctrl = this;
+
+  localforage.getItem('session').then(function(value){
+    ctrl.session = value;
   })
+})
