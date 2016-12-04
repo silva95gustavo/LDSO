@@ -66,6 +66,18 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         }
       })
 
+      .state('restricted', {
+        parent: 'menu',
+        url: '/restricted',
+        cache: false,
+        views: {
+          'menuContent': {
+            templateUrl: 'views/restricted.html',
+            controller: 'restrictedCtrl as restricted'
+          }
+        }
+      })
+
       .state('community', {
         parent: 'menu',
         url: '/community',
