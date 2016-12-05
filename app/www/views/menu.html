@@ -20,31 +20,35 @@
       <ion-list>
         <ion-item menu-close class="item item-icon-right" ui-sref="home">
           Sobre nós
-          <i class = "icon icon ion-home"></i>
+          <i class = "icon ion-home"></i>
         </ion-item>
         <ion-item menu-close class="item item-icon-right"  ui-sref="carer">
           Sou um Cuidador?
-          <i class = "icon icon ion-help"></i>
+          <i class = "icon ion-help"></i>
         </ion-item>
         <ion-item menu-close class="item item-icon-right"  ui-sref="services">
           Serviços
-          <i class = "icon icon ion-home"></i>
+          <i class = "icon ion-home"></i>
         </ion-item>
         <ion-item menu-close class="item item-icon-right"  href="#">
           Calendário
-          <i class = "icon icon ion-android-locate"></i>
+          <i class = "icon ion-android-locate"></i>
         </ion-item>
-        <ion-item menu-close class="item item-icon-right"  ng-click="menu.login()">
+        <ion-item menu-close class="item item-icon-right"  ui-sref="restricted">
           Área Restrita (Membros)
-          <i class = "icon icon ion-android-lock"></i>
+          <i class = "icon ion-android-lock"></i>
         </ion-item>
         <ion-item menu-close class="item item-icon-right"  href="#">
           Contactos
-          <i class = "icon icon ion-ios-telephone"></i>
+          <i class = "icon ion-ios-telephone"></i>
         </ion-item>
         <ion-item menu-close class="item item-icon-right"  ui-sref="community">
           Comunidade Online
-          <i class = "icon icon ion-ios-people"></i>
+          <i class = "icon ion-ios-people"></i>
+        </ion-item>
+        <ion-item menu-close ng-show="menu.session" class="item item-icon-right"  ng-click="menu.logout()">
+          Logout
+          <i class = "icon ion-log-out"></i>
         </ion-item>
       </ion-list>
     </ion-content>

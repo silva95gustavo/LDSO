@@ -1,0 +1,15 @@
+id: simplenews_subscriber.subscriptions
+status: true
+langcode: und
+field_name: subscriptions
+entity_type: simplenews_subscriber
+type: simplenews_subscription
+settings:
+  target_type: simplenews_newsletter
+module: simplenews
+locked: false
+cardinality: -1
+indexes: {  }
+dependencies:
+  module:
+    - simplenews
