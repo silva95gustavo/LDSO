@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "39953b075564e094ecb24c791da5c89c",
-    "content-hash": "921add1149f1209fe692a60182d839bc",
+    "hash": "9e0a2af2ec6b0afa3f7f62ea4ac148f9",
+    "content-hash": "4aeeb35c63eab0ea384d0d18c1ef1de6",
     "packages": [
         {
             "name": "components/font-awesome",
@@ -689,7 +689,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/core/zipball/4b8eb5d6e45e8bb850c59a31a9f09b84f6af10f1",
+                "url": "https://api.github.com/repos/flarum/core/zipball/06c32b668d87e88eddd928b470299e308b46fa42",
                 "reference": "4b8eb5d6e45e8bb850c59a31a9f09b84f6af10f1",
                 "shasum": ""
             },
@@ -3494,6 +3494,66 @@
             "time": "2016-03-18 20:34:03"
         },
         {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.7.*"
+            },
+            "suggest": {
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.phpmaileroauth.php",
+                    "class.phpmaileroauthgoogle.php",
+                    "class.smtp.php",
+                    "class.pop3.php",
+                    "extras/EasyPeasyICS.php",
+                    "extras/ntlm_sasl_client.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2016-06-06 09:09:37"
+        },
+        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -3693,6 +3753,56 @@
                 "shortcodes"
             ],
             "time": "2016-08-09 14:16:45"
+        },
+        {
+            "name": "sijad/flarum-ext-pages",
+            "version": "0.1.0-beta.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sijad/flarum-ext-pages.git",
+                "reference": "ea54b0a0440663856911e845530caf82b71ded8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sijad/flarum-ext-pages/zipball/ea54b0a0440663856911e845530caf82b71ded8c",
+                "reference": "ea54b0a0440663856911e845530caf82b71ded8c",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Pages",
+                    "icon": {
+                        "name": "file-text-o",
+                        "backgroundColor": "#4C49A2",
+                        "color": "#B8DC3C"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sijad\\Pages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sajjad Hashemian",
+                    "email": "wolaws@gmail.com"
+                }
+            ],
+            "description": "Create custom page with Flarum",
+            "keywords": [
+                "page",
+                "static"
+            ],
+            "time": "2016-10-23 14:52:44"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4537,7 +4647,8 @@
     "minimum-stability": "beta",
     "stability-flags": {
         "flarum/core": 20,
-        "gtugablue/flarum-ext-portuguese": 10
+        "gtugablue/flarum-ext-portuguese": 10,
+        "sijad/flarum-ext-pages": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,

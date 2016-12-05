@@ -1,6 +1,6 @@
 angular.module('starter.controllers.menu', [])
 
-.controller('menuCtrl', function ($scope, $ionicModal, $http,$ionicPopup, $timeout, requests) {
+.controller('menuCtrl', function ($scope, $ionicModal, $http, $state, $window, $ionicPopup, $timeout, requests) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -8,10 +8,14 @@ angular.module('starter.controllers.menu', [])
 
   var ctrl = this;
 
+  localforage.getItem('session').then(function(value){
+    ctrl.session = value;
+  })
+
   // Form data for the login modal
   ctrl.loginData = {};
   $scope.$on('$ionicView.enter', function (e) {
-    ctrl.loginData.username = "admin";
+    ctrl.loginData.username = "admin@cuidadores.tk";
     ctrl.loginData.password = "qlamiepho4";
   });
   // Create the login modal that we will use later
@@ -22,19 +26,23 @@ angular.module('starter.controllers.menu', [])
   });
 
   // Triggered in the login modal to close it
-  this.closeLogin = function () {
+  ctrl.closeLogin = function () {
     $scope.modal.hide();
   };
 
   // Open the login modal
-  this.login = function () {
+  ctrl.login = function () {
     $scope.modal.show();
   };
   $scope.loginSuccess = function() {
     $ionicPopup.alert({
       title: 'Login',
       template: 'Success'
-    });
+    }).then(function (succ) {
+      // redirect on login success
+      $scope.modal.hide();
+      $window.location.reload(true);
+    })
   };
   $scope.loginFail = function() {
     $ionicPopup.alert({
@@ -43,7 +51,7 @@ angular.module('starter.controllers.menu', [])
     });
   };
   // Perform the login action when the user submits the login form
-  this.doLogin = function () {
+  ctrl.doLogin = function () {
     requests.login(ctrl.loginData.username, ctrl.loginData.password)
     .then(
       function(response){
@@ -57,7 +65,9 @@ angular.module('starter.controllers.menu', [])
           administrator : (response.data.current_user.roles[1] === "administrator"),
         }
         console.log($scope.session);
-         $scope.loginSuccess();
+        localforage.setItem('session', $scope.session);
+        ctrl.session = $scope.session;
+        $scope.loginSuccess();
       },
       function(response){
         console.log(response);
@@ -65,4 +75,14 @@ angular.module('starter.controllers.menu', [])
       }
     );
   };
+
+  ctrl.logout = function() {
+    localforage.removeItem('session').then(function (value) {
+      ctrl.session = null;
+      $ionicPopup.alert({
+        title: 'Logged out',
+        template: 'Logged out successfully'
+      }).then($state.go('home'));
+    });
+  }
 })

@@ -1,0 +1,16 @@
+id: special_offers
+name: 'Special offers'
+description: 'Special offers newsletter.'
+format: plain
+priority: 0
+receipt: false
+from_name: ''
+subject: '[[simplenews-newsletter:name]] [node:title]'
+from_address: 'replace@example.org'
+hyperlinks: true
+new_account: none
+opt_inout: double
+weight: 0
+status: true
+langcode: en
+dependencies: {  }
