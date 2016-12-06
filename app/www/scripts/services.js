@@ -5,18 +5,17 @@
 
  angular.module('starter.services', [])
 
- .factory('requests', function ($http, HOST, IMAGES) {
+ .factory('requests', function ($http, API) {
      return {
          getHomeImage: function () {
-             return $http.get(HOST.domain + IMAGES.url + 'home.png');
+             return $http.get(API.images + 'home.png');
          },
          getHomeText: function () {
-             return $http.get(HOST.domain + '?_format=json');
+             return $http.get(API.domain + '?_format=json');
          },
          login: function (username, password) {
              return $http({
-                 crossDomain: true,
-                 url: HOST.domain + "/user/login",
+                 url: API.login,
                  method: "POST",
                  data: JSON.stringify({
                      name: username,

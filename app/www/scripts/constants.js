@@ -1,8 +1,7 @@
 angular.module('starter.constants', [])
 
-.constant('HOST', {
-  domain: 'http://staging.cuidadores.tk'
-})
-.constant('IMAGES', {
-  url: '/sites/default/files/default_images/'
+.constant('API', {
+  domain: 'http://localhost:8100/api',
+  login: 'http://localhost:8100/api/login',
+  images: 'http://localhost:8100/api/images/'
 })
