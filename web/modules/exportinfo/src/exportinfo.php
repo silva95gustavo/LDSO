@@ -30,8 +30,8 @@
 										FROM cuidadores_users, community_users_groups, community_users
 										WHERE community_users.email NOT IN (SELECT email FROM cuidadores_users) AND community_users_groups.user_id = community_users.id
 									");
-	  				$string;
-	  				$string = $string . "<table>"; // start a table tag in the HTML
+	  				
+	  				$string = "<table>"; // start a table tag in the HTML
 	  				$string = $string . "<tr><th>Tipo de Conta</th><th>Email</th><th>Nome</th><th>Nr Associado</th><th>Username</th><th>Faixa Etaria</th><th>Conta Activada</th></tr>";
 	  	
 	  				while ($row = $stmt->fetchAssoc()){  
