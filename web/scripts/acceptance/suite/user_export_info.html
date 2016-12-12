@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://staging.cuidadores.tk/" />
+<title>User Export Info</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">User Export Info</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/user/logout/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/pt-pt/exportinfo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Acesso negado | Associação Cuidadores</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/pt-pt</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Área restrita (membros)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=edit-name</td>
+	<td>admin@cuidadores.tk</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=edit-pass</td>
+	<td>qlamiepho4</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=edit-submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=toolbar-item-administration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=toolbar-link-system-admin_config</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='block-seven-content']/div/div[2]/div[3]/div/ul/li[5]/a/span</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
