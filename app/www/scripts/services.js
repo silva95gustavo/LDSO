@@ -23,9 +23,12 @@
                      pass: password,
                  }),
                  headers: {
-                     accept: "application/json",
+                     accept: "application/json"
                  }
              });
          },
+         logout: function () {
+             return $http.get(HOST.domain + '/user/logout');
+         }
      }
  });"@@"

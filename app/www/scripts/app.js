@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.constants'])
+angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.constants', 'interceptors'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -22,6 +22,11 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
       }
     });
   })
+
+  /*.config(function ($httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+  })*/
+
 
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
