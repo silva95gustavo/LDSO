@@ -1,19 +1,7 @@
 {
   "name": "Cuidadores",
-  "app_id": "",
-  "proxies": [
-    {
-      "path": "/api/images/",
-      "proxyUrl": "http://staging.cuidadores.tk/sites/default/files/default_images"
-    },
-    {
-      "path": "/api/login",
-      "proxyUrl": "http://staging.cuidadores.tk/user/login"
-    },
-    {
-      "path": "/api",
-      "proxyUrl": "http://staging.cuidadores.tk"
-    }
-  ]
+  "app_id": ""
+
+
 }
 

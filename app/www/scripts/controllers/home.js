@@ -1,24 +1,10 @@
 angular.module('starter.controllers.home', ['ngSanitize'])
 
-  .controller('homeCtrl', function ($scope, API, requests) {
-    var ctrl = this;
-
-    ctrl.text = {};
-
-    requests.getHomeImage()
-      .success(function (response){
-        $('.parallax').css('background', 'url(' + API.images + 'home.png' + ')', 'no-repeat', 'top', 'center');
-        $('.parallax').css('background-size', '100%');
-      })
-
-    requests.getHomeText()
-      .success(function (response) {
-        ctrl.text = response.body[0].value;
-        localforage.setItem('homeText', response.body[0].value);
-      })
-      .error(function (response) {
-        localforage.getItem('homeText').then(function(value){
-          ctrl.text = value;
-        })
-      });
+  .controller('homeCtrl', function ($scope) {
   })
+
+uploadDoneHome = function () {
+  //$('iframe').contents().find("header").html("");
+  $('iframe').contents().find("header").remove();
+  $('iframe').contents().find("div .col-md-8").remove();
+}
