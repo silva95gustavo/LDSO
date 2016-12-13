@@ -22,9 +22,12 @@
                      pass: password,
                  }),
                  headers: {
-                     accept: "application/json",
+                     accept: "application/json"
                  }
              });
          },
+         logout: function () {
+             return $http.get(API.domain + '/user/logout');
+         }
      }
  });"@@"

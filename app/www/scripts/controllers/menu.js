@@ -77,12 +77,14 @@ angular.module('starter.controllers.menu', [])
   };
 
   ctrl.logout = function() {
-    localforage.removeItem('session').then(function (value) {
-      ctrl.session = null;
-      $ionicPopup.alert({
-        title: 'Logged out',
-        template: 'Logged out successfully'
-      }).then($state.go('home'));
-    });
+    requests.logout().then(
+      localforage.removeItem('session').then(function (value) {
+        ctrl.session = null;
+        $ionicPopup.alert({
+          title: 'Logged out',
+          template: 'Logged out successfully'
+        }).then($state.go('home'));
+      }
+    ));
   }
 })
