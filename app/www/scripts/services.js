@@ -27,7 +27,7 @@
              });
          },
          logout: function () {
-             return $http.get(HOST.domain + '/user/logout');
+             return $http.get(API.domain + '/user/logout');
          }
      }
  });"@@"
