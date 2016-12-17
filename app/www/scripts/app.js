@@ -88,7 +88,8 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         url: '/community',
         views: {
           'menuContent': {
-            templateUrl: 'views/community.html'
+            templateUrl: 'views/community.html',
+            controller: 'communityCtrl as community'
           }
         }
       })
