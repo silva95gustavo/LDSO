@@ -1,71 +1,70 @@
 #cuidadores_header {
 	font-size: 10px;
-	height: 13em;
 	width: 100%;
 	background-color: #4AACC5;
-}
-
-#cuidadores_logo_wrapper {
-	display: inline-block;
-	height: 100%;
-	float: left;
 	margin: 0;
 	padding: 0;
-	background-image: url("../../themes/cuidadores/images/cuidadores_logo_separator.png");
-	background-repeat: no-repeat;
-	background-size: auto 100%;
-	background-position: top right;
+}
+
+#cuidadores_secondary_nav {
+	text-align: right;
+	width: 100%;
+	height: 3rem;
+	background-color: #144877;
+	margin: 0;
+	padding: 1em;
+}
+
+#cuidadores_header_main {
+	height: 100%;
+	background-color: white;
 }
 
 #cuidadores_logo {
-	height: 100%;
-	padding: 2em;
-	margin-right: calc(13em * 80 / 333);
+	display: inline-block;
+	height: 13em;
+	margin-left: 2rem;
+	margin-right: 2rem;
 	width: 230px;
 	background-color: white;
-	border-bottom: 4px solid #264A74;
 	background-image: url("../../sites/default/files/logo.png");
-	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center; 
 	background-size: 220px auto;
 }
 
-#cuidadores_nav_wrapper {
-	display: inline-block;
-	height: 100%;
-}
-
-#cuidadores_primary_nav,
-#cuidadores_secondary_nav {
-	color: white;
-}
-
 #cuidadores_primary_nav {
-	margin-top: 5rem;
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 2em;
+	margin-bottom: 2em;
+	padding-top: 3em;
+	padding-bottom: 3em;
+	padding-left: 2rem;
+	border-left: 1px solid #CCC;
 }
 
-#cuidadores_secondary_nav {
-	position: absolute;
-	top: 0;
-	right: 0;
-}
-
-nav > ul > li {
-	list-style-type: none;
+#cuidadores_header nav > ul {
+	padding: 0;
 	margin: 0;
-	padding: 0.5em;
-	float: left;
-	font-size: 14px;
-	padding: 15px 15px;
 }
 
-nav > ul > li > a {
+#cuidadores_header nav > ul > li {
+	display: inline;
+	list-style-type: none;
+	font-size: 20px;
+	padding: 1rem;
+}
+
+#cuidadores_header nav>ul>li.active {
+	color: orange;
+}
+
+#cuidadores_secondary_nav ul > li  > a{
 	color: white;
-	text-decoration: none;
+	font-size: 14px;
 }
 
-nav>ul>li.active {
-	background-color: #144877;
-	border-radius: 10px 10px 0 0;
+#cuidadores_primary_nav nav > ul > li > a {
+	color: black;
 }
