@@ -5,7 +5,7 @@ import org.junit.runner.notification.Failure;
 public class TestRunner {
    public static void main(String[] args) {
 	System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "/./chromedriver.exe");
-      Result result = JUnitCore.runClasses(UserExportInfo.class);
+      Result result = JUnitCore.runClasses(UserExportInfo.class, Slideshow.class, MenuLinks.class);
 		
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

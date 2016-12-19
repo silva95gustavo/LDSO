@@ -7,7 +7,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class UserExportInfo {
+public class Slideshow {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -21,20 +21,10 @@ public class UserExportInfo {
   }
 
   @Test
-  public void testUserExportInfo() throws Exception {
-    driver.get(baseUrl + "/user/logout/");
-    driver.get(baseUrl + "/pt-pt/exportinfo");
-    assertEquals("Acesso negado | Associação Cuidadores", driver.getTitle());
+  public void testSlideshow() throws Exception {
     driver.get(baseUrl + "/pt-pt");
-    driver.findElement(By.linkText("Área restrita")).click();
-    driver.findElement(By.id("edit-name")).clear();
-    driver.findElement(By.id("edit-name")).sendKeys("admin@cuidadores.tk");
-    driver.findElement(By.id("edit-pass")).clear();
-    driver.findElement(By.id("edit-pass")).sendKeys("qlamiepho4");
-    driver.findElement(By.id("edit-submit")).click();
-    driver.findElement(By.id("toolbar-item-administration")).click();
-    driver.findElement(By.id("toolbar-link-system-admin_config")).click();
-    assertTrue(isElementPresent(By.xpath("//div[@id='block-seven-content']/div/div[2]/div[3]/div/ul/li[5]/a/span")));
+    driver.findElement(By.cssSelector("img[alt=\"Início\"]")).click();
+    assertEquals("", driver.findElement(By.xpath("//div[2]/div/div/div/img")).getText());
   }
 
   @After

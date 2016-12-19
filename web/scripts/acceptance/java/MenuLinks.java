@@ -7,7 +7,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class UserExportInfo {
+public class MenuLinks {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -21,20 +21,22 @@ public class UserExportInfo {
   }
 
   @Test
-  public void testUserExportInfo() throws Exception {
-    driver.get(baseUrl + "/user/logout/");
-    driver.get(baseUrl + "/pt-pt/exportinfo");
-    assertEquals("Acesso negado | Associação Cuidadores", driver.getTitle());
-    driver.get(baseUrl + "/pt-pt");
-    driver.findElement(By.linkText("Área restrita")).click();
-    driver.findElement(By.id("edit-name")).clear();
-    driver.findElement(By.id("edit-name")).sendKeys("admin@cuidadores.tk");
-    driver.findElement(By.id("edit-pass")).clear();
-    driver.findElement(By.id("edit-pass")).sendKeys("qlamiepho4");
-    driver.findElement(By.id("edit-submit")).click();
-    driver.findElement(By.id("toolbar-item-administration")).click();
-    driver.findElement(By.id("toolbar-link-system-admin_config")).click();
-    assertTrue(isElementPresent(By.xpath("//div[@id='block-seven-content']/div/div[2]/div[3]/div/ul/li[5]/a/span")));
+  public void testMenuLinks() throws Exception {
+    driver.get(baseUrl + "/pt-pt/node/35");
+    driver.findElement(By.linkText("Sou um cuidador?")).click();
+    driver.findElement(By.linkText("Serviços")).click();
+    assertEquals("Serviços | Associação Cuidadores", driver.getTitle());
+    driver.findElement(By.linkText("Notícias e Eventos")).click();
+    assertEquals("Notícias e Eventos | Associação Cuidadores", driver.getTitle());
+    driver.findElement(By.linkText("Fórum")).click();
+    assertTrue(isElementPresent(By.linkText("Website")));
+    driver.findElement(By.linkText("Website")).click();
+    driver.findElement(By.linkText("Sobre nós")).click();
+    assertEquals("Sobre nós | Associação Cuidadores", driver.getTitle());
+    driver.findElement(By.linkText("Contacte-nos")).click();
+    assertEquals("Contacte-nos | Associação Cuidadores", driver.getTitle());
+    driver.findElement(By.linkText("Donativos")).click();
+    assertEquals("Donativos | Associação Cuidadores", driver.getTitle());
   }
 
   @After
