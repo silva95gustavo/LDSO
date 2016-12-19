@@ -8,7 +8,7 @@ package: 'Bootstrap'
 
 regions:
   logo: 'Logo'
-  navigation_top_collapsible: 'Navigation top (Collapsible)'
+  navigation_top: 'Navigation top'
   navigation_bottom_collapsible: 'Navigation bottom (Collapsible)'
   search: 'Search'
   header: 'Top Bar'
