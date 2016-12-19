@@ -182,8 +182,10 @@ body {
 }
 
 .footer {
+	padding-top: 15px;
+	padding-bottom: 15px;
 	background-color: #4AACC5;
-	margin-top: 0;
+	margin-top: 50px;
 }
 
 .footer ul a {
@@ -200,5 +202,9 @@ body {
 }
 
 .view-estatisticas > .view-content > div > article > h2:first-child {
+	display: none;
+}
+
+.calendar-calendar td .calendar .contents time {
 	display: none;
 }
