@@ -115,6 +115,13 @@ body {
 	margin-bottom: 35px;
 }
 
+.bottom_footer .view-apoiantes .view-content .field-content img {
+	max-height: 150px;
+	height: expression(this.height > 150 ? 150: true);
+	width: auto;
+	margin: auto;
+}
+
 .external_links img, .external_links img, .external_links img {
 	background-size: contain;
 	background-repeat: no-repeat;
