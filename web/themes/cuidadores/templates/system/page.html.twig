@@ -238,6 +238,14 @@
   {% endblock %}
 {% endif %}
 
+{% if page.bottom_footer %}
+  {% block bottom_footer %}
+    <div class="bottom_footer {{ container }}" role="contentinfo">
+      {{ page.bottom_footer }}
+    </div>
+  {% endblock %}
+{% endif %}
+
 {% if page.footer %}
   {% block footer %}
     <footer class="footer {{ container }}" role="contentinfo">
