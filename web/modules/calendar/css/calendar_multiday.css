@@ -443,7 +443,7 @@ table.calendar-legend tr.even .stripe {
 
 .calendar-calendar .month-view .full tr.single-day .no-entry,
 .calendar-calendar .month-view .full tr.single-day .no-entry .inner {
-  height: 44px !important;
+  height: 10px !important;
   line-height: 44px;
 }
 
