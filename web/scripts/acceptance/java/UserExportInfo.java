@@ -26,7 +26,7 @@ public class UserExportInfo {
     driver.get(baseUrl + "/pt-pt/exportinfo");
     assertEquals("Acesso negado | Associação Cuidadores", driver.getTitle());
     driver.get(baseUrl + "/pt-pt");
-    driver.findElement(By.linkText("Área restrita (membros)")).click();
+    driver.findElement(By.linkText("Área restrita")).click();
     driver.findElement(By.id("edit-name")).clear();
     driver.findElement(By.id("edit-name")).sendKeys("admin@cuidadores.tk");
     driver.findElement(By.id("edit-pass")).clear();

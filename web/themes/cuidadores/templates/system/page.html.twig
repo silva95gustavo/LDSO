@@ -58,7 +58,7 @@
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
 {# Navbar #}
-{% if page.logo or page.navigation_top or page.navigation_top_collapsible or page.navigation_bottom or page.navigation_collapsible %}
+{% if page.logo or page.navigation_top or page.navigation_top or page.navigation_bottom or page.navigation_collapsible %}
   {% block navbar %}
     {%
       set navbar_classes = [
@@ -67,41 +67,43 @@
         theme.settings.navbar_position ? 'navbar-' ~ theme.settings.navbar_position|clean_class : container,
       ]
     %}
-    <header{{ navbar_attributes.addClass(navbar_classes) }} id="navbar" role="banner">
+    <header{{ navbar_attributes.addClass(navbar_classes) }} id="cuidadores_header" role="banner">
       {% if not navbar_attributes.hasClass('container') %}
         <div class="{{ container }}">
       {% endif %}
-		<div class="navbar-header">
-			{{ page.logo }}
-			{# .btn-navbar is used as the toggle for collapsed navbar content #}
-			{% if page.navigation_top_collapsible or page.navigation_bottom_collapsible %}
-			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-top-collapse,#navbar-bottom-collapse">
-				<span class="sr-only">{{ 'Toggle navigation'|t }}</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			  </button>
+			{# Navigation top #}
+			{% if page.navigation_top %}
+			  <div id="cuidadores_secondary_nav" class="nav navbar-nav navbar-collapse collapse row navbar-right">
+				{{ page.navigation_top }}
+			  </div>
 			{% endif %}
-		</div>
-
-		{# Navigation top (collapsible) #}
-		{% if page.navigation_top_collapsible %}
-		  <div id="navbar-top-collapse" class="navbar-collapse collapse row navbar-right">
-			{{ page.navigation_top_collapsible }}
-		  </div>
-		{% endif %}
-			
-		{# Navigation bottom (collapsible) #}
-		{% if page.navigation_bottom_collapsible or page.search %}
-		  <div id="navbar-bottom-collapse" class="navbar-collapse collapse row">
-			{% if page.navigation_bottom_collapsible %}
-				{{ page.navigation_bottom_collapsible }}
-			{% endif %}
-			{% if page.search %}
-				{{ page.search }}
-			{% endif %}
-		  </div>
-		{% endif %}
+				
+			<div id="cuidadores_header_main" class="navbar-header">
+				{{ page.logo }}
+				{# .btn-navbar is used as the toggle for collapsed navbar content #}
+				{% if page.navigation_top or page.navigation_bottom_collapsible %}
+				  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cuidadores_primary_nav">
+					<span class="sr-only">{{ 'Toggle navigation'|t }}</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				{% endif %}
+				
+				{# Navigation bottom (collapsible) #}
+				{% if page.navigation_bottom_collapsible or page.search %}
+				  <div id="cuidadores_primary_nav" class="nav navbar-nav navbar-collapse collapse row">
+					{% if page.navigation_bottom_collapsible %}
+						{{ page.navigation_bottom_collapsible }}
+					{% endif %}
+				  </div>
+				{% endif %}
+				<div id="cuidadores_header_search">
+					{% if page.search %}
+						{{ page.search }}
+					{% endif %}
+				</div>
+			</div>
 	  
       {% if not navbar_attributes.hasClass('container') %}
         </div>
