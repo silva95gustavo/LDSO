@@ -18,13 +18,14 @@
 #cuidadores_header_main {
 	height: 100%;
 	background-color: white;
+	height: 13em;
 }
 
 #cuidadores_logo {
 	display: inline-block;
 	height: 13em;
-	margin-left: 2rem;
-	margin-right: 2rem;
+	margin-left: 4em;
+	margin-right: 4em;
 	width: 230px;
 	background-color: white;
 	background-image: url("../../sites/default/files/logo.png");
@@ -42,7 +43,7 @@
 	padding-top: 3em;
 	padding-bottom: 3em;
 	padding-left: 4em;
-	border-left: 1px solid #CCC;
+	border-left: 1px solid #e7e7e7;
 }
 
 #cuidadores_header nav > ul {
@@ -78,7 +79,12 @@
 	padding: 1em
 }
 
-#cuidadores_primary_nav nav > ul > li > a {
-	color: black;
+#cuidadores_primary_nav ul > li > a {
+	color: #4AACC5;
 	font-size: 20px;
+}
+
+#cuidadores_primary_nav ul > li > a:hover {
+	text-decoration: none;
+	color: #144877;
 }
