@@ -1,0 +1,137 @@
+<?php
+
+/**
+ * @file
+ * Provides Slideshow style options for Views.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function views_slideshow_theme() {
+  return [
+    'views_slideshow_main_section' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'slides' => NULL,
+        'plugin' => NULL,
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_pager_widget_render' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'rows' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+      'function' => 'template_preprocess_views_slideshow_pager_widget_render',
+    ],
+    'views_slideshow_pager_fields' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'attributes' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_pager_field_field' => [
+      'variables' => [
+        'view' => NULL,
+        'css_identifier' => NULL,
+        'label' => NULL,
+        'output' => NULL,
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_pager_field_item' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'item' => NULL,
+        'count' => NULL,
+        'location' => NULL,
+        'length' => NULL,
+      ],
+    ],
+    'views_slideshow_controls_widget_render' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'rows' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+      'function' => 'template_preprocess_views_slideshow_controls_widget_render',
+    ],
+    'views_slideshow_controls_text' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'rows' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_controls_text_previous' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_controls_text_pause' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_controls_text_next' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+    'views_slideshow_slide_counter_widget_render' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'rows' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+      'function' => 'template_preprocess_views_slideshow_slide_counter_widget_render',
+    ],
+    'views_slideshow_slide_counter' => [
+      'variables' => [
+        'vss_id' => NULL,
+        'view' => NULL,
+        'settings' => [],
+        'location' => NULL,
+        'rows' => [],
+      ],
+      'file' => 'views_slideshow.theme.inc',
+    ],
+  ];
+}
+
+/**
+ * Views Slideshow: Slideshow.
+ *
+ * As it is a preprocess function, store it with other functions in theme.inc.
+ */
+function template_preprocess_views_view_slideshow(&$vars) {
+  \Drupal::moduleHandler()->loadInclude('views_slideshow', 'inc', 'views_slideshow.theme');
+  _views_slideshow_preprocess_views_view_slideshow($vars);
+}
