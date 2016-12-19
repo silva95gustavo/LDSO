@@ -28,3 +28,18 @@
   border: 2px solid #EAAB00;
   padding: 0px;
 }
+
+.spinner svg {
+ width: 7rem;
+ height: 7rem;
+ stroke: #4AACC5 !important;
+ fill: #4AACC5 !important;
+}
+
+.spinner .stop2 {
+    stop-color: #4AACC5 !important;
+}
+
+.loading-backdrop .loading .ion-loading {
+  color: #4AACC5;
+}
