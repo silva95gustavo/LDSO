@@ -60,7 +60,6 @@ body {
 	float: right;
 }
 
-<<<<<<< HEAD
 #cuidadores_secondary_nav ul > li > a{
 	color: white;
 }
@@ -109,26 +108,6 @@ body {
 		padding-top: 15px;
 		padding-bottom: 15px;
 	}
-=======
-.navbar-default .navbar-nav>.active>a {
-    background-color: #144877;
-}
-
-.navbar-default .navbar-nav>.expanded>a:hover {
-    background-color: rgba(20, 72, 119, 0.5);
-}
-
-.navbar-default .navbar-nav>.active.expanded>a:hover {
-	background-color: #144877 !important;
-}
-
-.navbar-default #navbar-top-collapse .navbar-nav>.expanded>a {
-    border-radius: 0 0 10px 10px;
-}
-
-.navbar-default #navbar-bottom-collapse .navbar-nav>.expanded>a {
-	border-radius: 10px 10px 0 0;
->>>>>>> develop
 }
 
 .top_footer {
