@@ -93,7 +93,10 @@
 
 	$user = get_user($dbh, $email);
 
+	$account_status = 0;
+
 	if($user) {
+		$account_status = 1;
 		// Check if user is not registering if already registered
 		// Also, validate the provided password
 
@@ -115,7 +118,7 @@
 	}
 
 	if($register_site) {
-		$id_site = create_user_drupal($dbh, $email, $email, $password);
+		$id_site = create_user_drupal($dbh, $email, $email, $password, $account_status);
 	} else {
 		$id_site = false;
 	}
@@ -128,7 +131,7 @@
 		$bday = date("md", date("U", mktime(0, 0, 0, $bday_m, $bday_d, $bday_y)));
 		$age = $bday > date("md") ? (date("Y") - $bday_y - 1) : (date("Y") - $bday_y);
 
-		$id_community = create_user_flarum($dbh, $nickname, $email, $password);
+		$id_community = create_user_flarum($dbh, $nickname, $email, $password, $account_status);
 		set_flarum_user_group($dbh, $id_community, get_flarum_group($age));
 	} else {
 		$id_community = false;
