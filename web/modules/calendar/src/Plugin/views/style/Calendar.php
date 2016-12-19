@@ -1296,7 +1296,7 @@ class Calendar extends StylePluginBase {
     // @todo Validate row plugin
     $argument = CalendarHelper::getDateArgumentHandler($this->view, $display_id);
     if (empty($argument)) {
-      $errors[] = $this->t('\Drupal\calendar\Plugin\views\style\CalendarStyle: A calendar date argument is required when using the calendar style, but it is missing or is not using the default date.');
+      //$errors[] = $this->t('\Drupal\calendar\Plugin\views\style\CalendarStyle: A calendar date argument is required when using the calendar style, but it is missing or is not using the default date.');
     }
     return $errors;
 
