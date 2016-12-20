@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['starter.controllers.calendar',
+angular.module('starter.controllers', [
   'starter.controllers.carer',
   'starter.controllers.community',
   'starter.controllers.contacts',

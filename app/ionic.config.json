@@ -1,5 +1,37 @@
 {
-  "name": "app",
-  "app_id": ""
+  "name": "Cuidadores",
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/api/login",
+      "proxyUrl": "http://staging.cuidadores.tk/user/login"
+    },
+    {
+      "path": "/api/home",
+      "proxyUrl": "http://staging.cuidadores.tk/"
+    },
+    {
+      "path": "/api/carer",
+      "proxyUrl": "http://staging.cuidadores.tk/pt-pt/node/35"
+    },
+    {
+      "path": "/api/services",
+      "proxyUrl": "http://staging.cuidadores.tk/pt-pt/node/34"
+    },
+    {
+      "path": "/api/restricted",
+      "proxyUrl": "http://staging.cuidadores.tk/pt-pt/area-restrita"
+    },
+    {
+      "path": "/api/contacts",
+      "proxyUrl": "http://staging.cuidadores.tk/pt-pt/node/33"
+    },
+    {
+      "path": "/api/community",
+      "proxyUrl": "http://staging.cuidadores.tk/sites/"
+    }
+  ]
+
+
 }
 

@@ -10,11 +10,12 @@
 		die();
 	}
 
-	function on_success($reg_site, $reg_community) {
+	function on_success($reg_site, $reg_community, $activated) {
 		$ret = array(
 			'success' => true,
 			'registered_site' => $reg_site,
-			'registered_community' => $reg_community);
+			'registered_community' => $reg_community,
+			'activated' => $activated);
 		echo json_encode($ret);
 		die();
 	}
@@ -29,7 +30,7 @@
 	$user = get_user($dbh, $_POST['email']);
 
 	if(!$user) 
-		on_success(false, false);
+		on_success(false, false, true);
 	else
-		on_success($user['id_site'] != NULL, $user['id_community'] != NULL);
+		on_success($user['id_site'] != NULL, $user['id_community'] != NULL, $user['activate_token'] == NULL);
 ?>

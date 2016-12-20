@@ -1,24 +1,22 @@
 angular.module('starter.controllers.home', ['ngSanitize'])
 
-  .controller('homeCtrl', function ($scope, HOST, IMAGES, requests) {
+  .controller('homeCtrl', function ($scope, $ionicLoading) {
     var ctrl = this;
+    this.loaded = false;
+    $scope.loading = $ionicLoading.show();
 
-    ctrl.text = {};
-
-    requests.getHomeImage()
-      .success(function (response){
-        $('.parallax').css('background', 'url('+ HOST.domain + IMAGES.url + 'home.png' + ')', 'no-repeat', 'top', 'center');
-        $('.parallax').css('background-size', '100%');
-      })
-
-    requests.getHomeText()
-      .success(function (response) {
-        ctrl.text = response.body[0].value;
-        localforage.setItem('homeText', response.body[0].value);
-      })
-      .error(function (response) {
-        localforage.getItem('homeText').then(function(value){
-          ctrl.text = value;
-        })
-      });
+    $('iframe').on('load', function() {
+      $ionicLoading.hide();
+      $('iframe').contents().find("#cuidadores_header").remove();
+     // $('iframe').contents().find("aside").remove();
+      $('iframe').contents().find("#block-cuidadores-footer").remove();
+      $('iframe').contents().find(".external_links").remove();
+      $('iframe').contents().find(".main-container").css("margin-top", "1em");
+      $('iframe').contents().find(".page-header").css({
+        "font-size": "220%",
+        "text-align": "center",
+        "font-weight": "bold",
+        "margin-top": "0.5em "
+    });
+    });
   })
