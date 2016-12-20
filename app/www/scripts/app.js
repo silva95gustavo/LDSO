@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.constants'])
+angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', 'starter.constants', 'interceptors'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -22,6 +22,11 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
       }
     });
   })
+
+  /*.config(function ($httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+  })*/
+
 
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
@@ -66,6 +71,18 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         }
       })
 
+      .state('contacts', {
+        parent: 'menu',
+        url: '/contacts',
+        cache: false,
+        views: {
+          'menuContent': {
+            templateUrl: 'views/contacts.html',
+            controller: 'contactsCtrl as contacts'
+          }
+        }
+      })
+
       .state('restricted', {
         parent: 'menu',
         url: '/restricted',
@@ -83,7 +100,8 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers', '
         url: '/community',
         views: {
           'menuContent': {
-            templateUrl: 'views/community.html'
+            templateUrl: 'views/community.html',
+            controller: 'communityCtrl as community'
           }
         }
       })

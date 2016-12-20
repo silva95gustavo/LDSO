@@ -1,6 +1,10 @@
 angular.module('starter.controllers.community', [])
 
-.controller('communityCtrl', function () {
+.controller('communityCtrl', function ($scope, $ionicLoading) {
 
-    //Import of data from the forum
+    $scope.loading = $ionicLoading.show();
+
+    $('iframe').on('load', function() {
+      $ionicLoading.hide();
+    });
   })
