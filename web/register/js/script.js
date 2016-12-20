@@ -52,54 +52,59 @@ function onCheckboxChange() {
 $("#chk_register_site").change(onCheckboxChange);
 $("#chk_register_community").change(onCheckboxChange);
 
-function updateControls(registered_site, registered_community) {
-	updateCheckbox('#chk_register_site', registered_site, registered_site);
-	updateCheckbox('#chk_register_community', registered_community, registered_community);
+function updateControls(registered_site, registered_community, activated) {
+	if(!activated)
+		$('#not_activated').slideDown();
+	else {
+		updateCheckbox('#chk_register_site', registered_site, registered_site);
+		updateCheckbox('#chk_register_community', registered_community, registered_community);
 
-	if(reg_community && !registered_community) {
-		if(!registered_site)
-			$('#chk_register_site').prop("checked", false);
-		$('#chk_register_community').prop("checked", true);
-	}
-
-	$('#register_btn').show();
-
-	if(registered_site && registered_community) {
-		lockEmailInput(false);
-		$('#already_registered_msg').html("O email já se encontra registado no site e na comunidade.");
-		$('#not_registered').hide();
-		$('#register_website .data').hide();
-		$('#register_community .data').hide();
-		$('#existing_password').hide();
-		$('#register_btn').hide();
-	} else if(registered_site || registered_community) {
-		$('#not_registered').hide();
-		if(registered_site)
-			$('#already_registered_msg').html("O email já se encontra registado no site. Por favor, introduza a sua password.");
-		else
-			$('#already_registered_msg').html("O email já se encontra registado na comunidade. Por favor, introduza a sua password.");
-		
-		if(reg_community)
-			$("#chk_register_site").prop('checked', true);
-
-		$('#existing_password').show();
-	} else {
-		if(!reg_community)
-			$("#chk_register_site").prop('checked', true);
-		else
+		if(reg_community && !registered_community) {
+			if(!registered_site)
+				$('#chk_register_site').prop("checked", false);
 			$('#chk_register_community').prop("checked", true);
+		}
 
-		$('#already_registered').hide();
-		$('#not_registered').show();
+		$('#register_btn').show();
+
+		if(registered_site && registered_community) {
+			lockEmailInput(false);
+			$('#already_registered_msg').html("O email já se encontra registado no site e na comunidade.");
+			$('#not_registered').hide();
+			$('#register_website .data').hide();
+			$('#register_community .data').hide();
+			$('#existing_password').hide();
+			$('#register_btn').hide();
+		} else if(registered_site || registered_community) {
+			$('#not_registered').hide();
+			if(registered_site)
+				$('#already_registered_msg').html("O email já se encontra registado no site. Por favor, introduza a sua password.");
+			else
+				$('#already_registered_msg').html("O email já se encontra registado na comunidade. Por favor, introduza a sua password.");
+			
+			if(reg_community)
+				$("#chk_register_site").prop('checked', true);
+
+			$('#existing_password').show();
+		} else {
+			if(!reg_community)
+				$("#chk_register_site").prop('checked', true);
+			else
+				$('#chk_register_community').prop("checked", true);
+
+			$('#already_registered').hide();
+			$('#not_registered').show();
+		}
+
+		onCheckboxChange();
+
+		$('#frm_register').slideDown();
 	}
-
-	onCheckboxChange();
-
-	$('#frm_register').slideDown();
 }
 
 var registered_site = false;
 var registered_community = false;
+var activated = false;
 
 $('#frm_email').on('submit', function(e) {
 	e.stopPropagation();
@@ -115,17 +120,21 @@ $('#frm_email').on('submit', function(e) {
 		dataType: 'json',
 		data: { 'email': $('#email').val() },
 		success: function(res) {
+			console.log(res);
 			emailLoading(false);
 			if(res.success) {
 				registered_site = res.registered_site;
 				registered_community = res.registered_community;
-				updateControls(registered_site, registered_community);
+				activated = res.activated;
+				console.log(res);
+				updateControls(registered_site, registered_community, activated);
 			} else {
 				emailError(true, res.message);
 				lockEmailInput(false);
 			}
 		},
 		error: function(xhr, textStatus, errorThrown) {
+			console.log(xhr);
 			emailLoading(false);
 			lockEmailInput(false);
 
@@ -236,6 +245,8 @@ $('#frm_register').on('submit', function(e) {
 
 	// Register
 
+	$('#register_btn').attr('disabled', 'disabled');
+
 	$.ajax({
 		url: "ajax/register.php",
 		type: "POST",
@@ -244,17 +255,47 @@ $('#frm_register').on('submit', function(e) {
 		data: JSON.stringify(obj),
 		success: function(res) {
 			console.log(res);
+			$('#register_btn').removeAttr('disabled');
 			$("#register_success").slideDown();
 			$("#frm_register").slideUp();
-			//if(registered_site || registered_community) {
+			if(registered_site || registered_community) {
 				$("#email_activation").hide();
-			//}
+			}
 		},
 		error: function(xhr, textStatus, errorThrown) {
+			console.log(xhr);
+			$('#register_btn').removeAttr('disabled');
 			if(xhr.responseJSON)
 				registerError(true, xhr.responseJSON.message);
 			else
 				registerError(true, "Registo falhou. Tente novamente mais tarde.");
+		}
+	});
+});
+
+$('#activate_btn').on('click', function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+
+	$('#activate_btn').attr('disabled', 'disabled');
+
+	$.ajax({
+		url: "ajax/resend.php",
+		type: "POST",
+		data: {email: $('#email').val() },
+		success: function(res) {
+			console.log(res);
+			$('#not_activated').slideUp();
+			$('#email_resent').slideDown();
+		},
+		error: function(xhr, textStatus, errorThrown) {
+			console.log(xhr);
+			$('#not_activated').slideUp();
+			if(xhr.responseJSON)
+				$("#resend_error").html(xhr.responseJSON.message);
+			else
+				$("#resend_error").html("Envio falhou. Tente novamente mais tarde.");
+			$("#resend_error").slideDown();
 		}
 	});
 });

@@ -27,6 +27,11 @@
 			<img class="loading" src="loading.gif">
 		</form>
 
+		<div id="not_activated" class="hidden">
+			A conta já se encontra registada, mas ainda não foi activada.<br>
+			<input id="activate_btn" class="green" type="submit" value="Reenviar email">
+		</div>
+
 		<form id="frm_register" class="hidden">
 			<!-- for when already registered -->
 			<div id="already_registered">
@@ -112,6 +117,10 @@
 				<br>Irá receber um email com um link para activar a conta.
 			</span>
 		</div>
+		<div id="email_resent">
+			Foi reenviado um email para activação da conta.
+		</div>
+		<div id="resend_error" class="error">Ocorreu um erro.</div>
 	</div>
 	<script>
 		var reg_community = <?=$community?>;
