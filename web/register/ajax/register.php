@@ -29,6 +29,9 @@
 		on_error('Nenhum email especificado.');
 	$email = $data->email;
 
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+		on_error('O email introduzido não é válido.');
+
 	// Register on site
 	$register_site = false;
 	$name = false;
@@ -39,13 +42,22 @@
 		if(property_exists($data, 'name'))
 			$name = trim($data->name);
 
+		if(preg_match("/^[\p{L}0-9 ]*$/ui", $name) == 0)
+			on_error('O nome contém caracteres inválidos.');
+
 		if(property_exists($data, 'associate_nr'))
 			$associate_nr = trim($data->associate_nr);
+
+		if(preg_match("/^[0-9]*$/", $associate_nr) == 0)
+			on_error('O número de associado só pode conter números.');
 	}
 
 	if(!property_exists($data, 'password'))
 		on_error('Nenhuma password especificada.');
 	$password = $data->password;
+
+	if(strlen($password) < 6)
+		on_error('A password deve ter no mínimo 6 caracteres.');
 
 	// Register on community
 	$register_community = false;
@@ -59,6 +71,8 @@
 		$nickname = trim($data->nickname);
 		if($nickname == '')
 			on_error("Nickname inválido");
+		if(preg_match("/^[\p{L}0-9 ]*$/ui", $nickname) == 0)
+			on_error('O Nickname contém caracteres inválidos.');
 
 		// Birthday
 		if(!property_exists($data, 'birthday'))
