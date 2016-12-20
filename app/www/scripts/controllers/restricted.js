@@ -1,6 +1,6 @@
 angular.module('starter.controllers.restricted', [])
 
-  .controller('restrictedCtrl', function ($window, $scope, $ionicModal, $ionicLoading) {
+  .controller('restrictedCtrl', function ($window, $scope, $ionicModal, $ionicLoading, API) {
 
     var ctrl = this;
 
