@@ -8,16 +8,20 @@ angular.module('starter.controllers.menu', [])
 
   var ctrl = this;
 
+  ctrl.reload = function(){
+    $window.location.reload(true);
+  }
+
   localforage.getItem('session').then(function(value){
     ctrl.session = value;
   })
 
   // Form data for the login modal
   ctrl.loginData = {};
-  $scope.$on('$ionicView.enter', function (e) {
+  /*$scope.$on('$ionicView.enter', function (e) {
     ctrl.loginData.username = "admin@cuidadores.tk";
     ctrl.loginData.password = "qlamiepho4";
-  });
+  });*/
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('views/login.html', {
     scope: $scope
@@ -37,7 +41,7 @@ angular.module('starter.controllers.menu', [])
   $scope.loginSuccess = function() {
     $ionicPopup.alert({
       title: 'Login',
-      template: 'Success'
+      template: '<div style="text-align:center;">Login efetuado com sucesso.</div>'
     }).then(function (succ) {
       // redirect on login success
       $scope.modal.hide();
@@ -47,7 +51,7 @@ angular.module('starter.controllers.menu', [])
   $scope.loginFail = function() {
     $ionicPopup.alert({
       title: 'Login',
-      template: 'Fail'
+      template: '<div style="text-align:center;">Algo correu mal.<br>Verifique os seus dados.</div>'
     });
   };
   // Perform the login action when the user submits the login form
