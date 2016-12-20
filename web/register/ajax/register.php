@@ -159,7 +159,7 @@
 		if($user) {
 			update_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr);
 		} else {
-			$token = gen_uuid() . gen_uuid();
+			$token = bin2hex(openssl_random_pseudo_bytes(32));
 			create_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr, $token);
 		}
 
@@ -178,7 +178,6 @@
 
 		$dbh->commit();
 	} catch (Exception $e) {
-		//on_error($e->getMessage());
 		on_error('Ocorreu um erro ao criar a conta. Por favor tente novamente mais tarde.');
 	}
 
