@@ -1,33 +1,32 @@
 <?php
 	include 'include.php';
+	include 'mail_config.php';
 
 	function on_error($msg) {
-		http_response_code($error_code);
-		$ret = array('success' => false, 'message' => $msg);
-		echo json_encode($ret);
+		global $smtp_config;
+		
+		// Error page
+		header('Location: ' . $smtp_config['site_addr'] . "/activacao_falhou");
 		die();
 	}
 
 	function on_success() {
-		$ret = array(
-			'success' => true,
-			'registered_site' => $reg_site,
-			'registered_community' => $reg_community);
-		echo json_encode($ret);
+		global $smtp_config;
+		
+		// Success page
+		header('Location: ' . $smtp_config['site_addr'] . "/activacao_successo");
 		die();
 	}
 
-	$data = json_decode(file_get_contents("php://input"));
-
 	// Token
-	if(!property_exists($data, 'token'))
+	if(!isset($_GET['token']))
 		on_error('Token de activação inválido.');
-	$token = $data->token;
+	$token = $_GET['token'];
 
 	// Email
-	if(!property_exists($data, 'email'))
+	if(!isset($_GET['email']))
 		on_error('Email inválido.');
-	$email = $data->email;
+	$email = $_GET['email'];
 
 	$dbh = get_dbh();
 
@@ -35,7 +34,7 @@
 
 	$res = activate_user($dbh, $email, $token);
 
-	if($res !== true) {
+	if($res !== false) {
 		$dbh->rollBack();
 		on_error($res);
 	} else {

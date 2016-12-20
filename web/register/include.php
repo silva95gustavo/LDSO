@@ -72,7 +72,7 @@
 		return $stmt->fetch() != false;
 	}
 
-	function create_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr) {
+	function create_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr, $activate_token) {
 		$query = 'INSERT INTO cuidadores_users (email';
 
 		if($id_site) $query = $query . ',id_site';
@@ -80,6 +80,7 @@
 		if($birthday) $query = $query . ',birthday';
 		if($name) $query = $query . ',name';
 		if($associate_nr) $query = $query . ',associate_nr';
+		if($activate_token) $query = $query . ',activate_token';
 
 		$query = $query . ') VALUES (:email';
 
@@ -88,6 +89,7 @@
 		if($birthday) $query = $query . ',:birthday';
 		if($name) $query = $query . ',:name';
 		if($associate_nr) $query = $query . ',:associate_nr';
+		if($activate_token) $query = $query . ',:activate_token';
 
 		$query = $query . ');';
 
@@ -101,6 +103,7 @@
 		}
 		if($name) $stmt->bindParam(':name', $name);
 		if($associate_nr) $stmt->bindParam(':associate_nr', $associate_nr);
+		if($activate_token) $stmt->bindParam(':activate_token', $activate_token);
 		
 		$stmt->execute();
 	}
@@ -108,11 +111,18 @@
 	function update_user($dbh, $email, $id_site, $id_community, $birthday, $name, $associate_nr) {
 		$query = 'UPDATE cuidadores_users ';
 
-		if($id_site) $query = $query . 'SET id_site = :id_site';
-		if($id_community) $query = $query . 'SET id_community = :id_community';
-		if($birthday) $query = $query . 'SET birthday = :birthday';
-		if($name) $query = $query . 'SET name = :name';
-		if($associate_nr) $query = $query . 'SET associate_nr = :associate_nr';
+		$set = false;
+
+		if($id_site) $query = $query . ($set ? ',' : 'SET') . ' id_site = :id_site';
+		$set = $set || $id_site;
+		if($id_community) $query = $query . ($set ? ',' : 'SET') . ' id_community = :id_community';
+		$set = $set || $id_community;
+		if($birthday) $query = $query . ($set ? ',' : 'SET') . ' birthday = :birthday';
+		$set = $set || $birthday;
+		if($name) $query = $query . ($set ? ',' : 'SET') . ' name = :name';
+		$set = $set || $name;
+		if($associate_nr) $query = $query . ($set ? ',' : 'SET') . ' associate_nr = :associate_nr';
+		$set = $set || $associate_nr;
 		
 		$query = $query . ' WHERE email = :email;';
 
@@ -194,7 +204,7 @@
 		return $age >= 18 ? $FLARUM_ADULT : $FLARUM_YOUNG;
 	}
 
-	function activate_user($dbh, $email, $token) {
+	function activate_user($dbh, $email, $activate_token) {
 		if(!$dbh->inTransaction())
 			throw new Exception("dbh is not in transaction");
 
@@ -204,7 +214,7 @@
 			return "User not found.";
 
 		// Check token
-		if($user['activate_token'] !== $token)
+		if($user['activate_token'] !== $activate_token)
 			return "Invalid activation token";
 
 		// Remove token
@@ -215,7 +225,7 @@
 
 		// Activate Drupal
 		if($user['id_site']) {
-			$stmt = $dbh->prepare("UPDATE user_field_data SET status = 1 WHERE uid = :uid");
+			$stmt = $dbh->prepare("UPDATE users_field_data SET status = 1 WHERE uid = :uid");
 			$stmt->bindParam(':uid', $user['id_site']);
 			$stmt->execute();
 		}
@@ -227,7 +237,7 @@
 			$stmt->execute();
 		}
 
-		return true;
+		return false;
 	}
 
 	// http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
