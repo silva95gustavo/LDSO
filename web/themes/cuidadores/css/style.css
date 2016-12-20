@@ -64,6 +64,14 @@ body {
 	color: white;
 }
 
+#cuidadores_secondary_nav ul > li.active > a {
+	background-color: #4AACC5;
+}
+
+#cuidadores_secondary_nav ul > li:not(.active) > a:hover {
+	background-color: rgba(74, 172, 197, 0.5);
+}
+
 #cuidadores_primary_nav ul > li {
 	font-size: 20px;
 	padding: 0.8em;
@@ -80,8 +88,13 @@ body {
 	color: #144877;
 }
 
+#cuidadores_primary_nav ul > li:last-child > a {
+	color: #FF9A5F;
+}
+
 #cuidadores_primary_nav ul > li.active > a{
 	background-color: transparent;
+	font-weight: bold;
 }
 
 #cuidadores_header_search {
@@ -190,7 +203,7 @@ body {
 
 .footer ul a {
 	color: white;
-	border-radius: 10px;
+	border-radius: 0px;
 }
 
 .footer ul .is-active, .footer ul .is-active:hover {

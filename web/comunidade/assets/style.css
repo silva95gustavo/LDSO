@@ -64,7 +64,8 @@
 }
 
 #cuidadores_header nav>ul>li.active {
-	color: orange;
+	font-weight: bold;
+	color: #FF9A5F;
 }
 
 #cuidadores_header #cuidadores_secondary_nav ul > li {
