@@ -123,6 +123,10 @@ body {
 	}
 }
 
+.block-simplenews-subscription-block label::after {
+	display: none;
+}
+
 .top_footer {
 	margin-top: 45px;
 	padding-top: 35px;
