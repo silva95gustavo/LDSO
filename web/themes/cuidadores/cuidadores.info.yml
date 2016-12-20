@@ -8,7 +8,7 @@ package: 'Bootstrap'
 
 regions:
   logo: 'Logo'
-  navigation_top_collapsible: 'Navigation top (Collapsible)'
+  navigation_top: 'Navigation top'
   navigation_bottom_collapsible: 'Navigation bottom (Collapsible)'
   search: 'Search'
   header: 'Top Bar'
@@ -21,6 +21,7 @@ regions:
   top_footer_center: 'Top Footer (Center)'
   top_footer_right: 'Top Footer (Right)'
   mid_footer: 'Mid Footer'
+  bottom_footer: 'Bottom Footer'
   external_links: 'External Links'
   footer: 'Footer'
   page_top: 'Page top'

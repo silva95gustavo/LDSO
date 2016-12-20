@@ -4,6 +4,8 @@
 	$dbh = get_dbh();
 	if(!$dbh) die();
 
+	$community = isset($_GET['community']) ? "true" : "false";
+
 	$style = get_style($dbh);
 	$css = $style[1]['value'];
 	$body = $style[0]['value'];
@@ -24,6 +26,11 @@
 			<input class="blue" type="submit" value="Continuar"><br>
 			<img class="loading" src="loading.gif">
 		</form>
+
+		<div id="not_activated" class="hidden">
+			A conta já se encontra registada, mas ainda não foi activada.<br>
+			<input id="activate_btn" class="green" type="submit" value="Reenviar email">
+		</div>
 
 		<form id="frm_register" class="hidden">
 			<!-- for when already registered -->
@@ -58,8 +65,17 @@
 				<input type="checkbox" id="chk_register_community"/>
 				<label class="checkbox_label" for="chk_register_community">Registar na Comunidade</label>
 				<div class="data">
+					<div id="welcome_msg">
+						<p>Bem-vindo à comunidade on-line.</p>
+						<p>Se toma conta de alguém querido, é nosso convidado!</p>
+						<p>Esta é uma plataforma para partilhar ideias entre cuidadores e/ou procurar apoio.</p>
+						<p>Para os mais jovens (idade &lt18 anos) criámos um espaço próprio. Participe numa das comunidades, de acordo com a sua idade.</p>
+						<p>Esperamos que este espaço seja, para todos, um espaço agradável e útil, utilizado de forma responsável.</p>
+						<p>E se tiver sugestões, não hesite – a sua opinião é importante.</p>
+						<p>Até breve. Vemo-nos por aqui!</p>
+					</div>
 					<label for="nickname">Nickname público</label>
-					<input type="text" id="nickname"><img src="help.png">
+					<input type="text" id="nickname"><!--<img src="help.png">-->
 					<br><br>
 					<label>Data de nascimento</label>
 					<select id="day">
@@ -88,8 +104,8 @@
 						<?php for($i = date("Y"); $i > 1900; $i--) { ?>
 							<option value="<?=$i?>"><?=$i?></option>
 						<?php } ?>
-					</select>
-					<img src="help.png">
+					</select><br>
+					<!--<img src="help.png">-->
 				</div>
 			</div>
 			<div id="reg_error" class="error">Ocorreu um erro.</div>
@@ -101,7 +117,14 @@
 				<br>Irá receber um email com um link para activar a conta.
 			</span>
 		</div>
+		<div id="email_resent">
+			Foi reenviado um email para activação da conta.
+		</div>
+		<div id="resend_error" class="error">Ocorreu um erro.</div>
 	</div>
+	<script>
+		var reg_community = <?=$community?>;
+	</script>
 	<script src="js/jquery.js"></script>
 	<!--<script src="js/materialize.js"></script>-->
 	<script src="js/script.js"></script>
