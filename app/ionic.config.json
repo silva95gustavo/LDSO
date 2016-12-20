@@ -23,8 +23,12 @@
       "proxyUrl": "http://staging.cuidadores.tk/pt-pt/area-restrita"
     },
     {
+      "path": "/api/contacts",
+      "proxyUrl": "http://staging.cuidadores.tk/pt-pt/node/33"
+    },
+    {
       "path": "/api/community",
-      "proxyUrl": "http://staging.cuidadores.tk/comunidade/"
+      "proxyUrl": "http://staging.cuidadores.tk/sites/"
     },
     {
       "path": "/sites/",

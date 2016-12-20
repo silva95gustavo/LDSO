@@ -43,3 +43,7 @@
 .loading-backdrop .loading .ion-loading {
   color: #4AACC5;
 }
+
+.backdrop {
+  background-color: rgba(256, 256, 256, 256);
+  }
