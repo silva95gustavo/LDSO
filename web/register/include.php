@@ -218,7 +218,7 @@
 			return "Invalid activation token";
 
 		// Remove token
-		$stmt = $dbh->prepare("UPDATE cuidadores_users SET activate_token = NULL WHERE email = :email AND activate_token = :activate_token");
+		$stmt = $dbh->prepare("UPDATE cuidadores_users SET activate_token = '' WHERE email = :email AND activate_token = :activate_token");
 		$stmt->bindParam(':email', $email);
 		$stmt->bindParam(':activate_token', $activate_token);
 		$stmt->execute();
