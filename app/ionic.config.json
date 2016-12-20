@@ -29,10 +29,6 @@
     {
       "path": "/api/community",
       "proxyUrl": "http://staging.cuidadores.tk/sites/"
-    },
-    {
-      "path": "/sites/",
-      "proxyUrl": "http://staging.cuidadores.tk/sites/"
     }
   ]
 
