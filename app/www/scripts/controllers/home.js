@@ -2,7 +2,7 @@ angular.module('starter.controllers.home', ['ngSanitize'])
 
   .controller('homeCtrl', function ($scope, $ionicLoading) {
     var ctrl = this;
-    this.loaded = false;
+    ctrl.loaded = false;
     $scope.loading = $ionicLoading.show();
 
     $('iframe').on('load', function() {

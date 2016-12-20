@@ -1,11 +1,11 @@
 <ion-view view-title="Área Restrita">
     <ion-content ng-show="restricted.session">
-        <iframe class='webPage' src="http://staging.cuidadores.tk/pt-pt/area-restrita">
+        <iframe class='webPage' src="http://cuidadores.tk/pt-pt/area-restrita">
         </iframe>
     </ion-content>
     <ion-content ng-hide="restricted.session">
       <label class="item item-text-wrap" style="position:relative; top:50%; text-align:center; margin-top:-7rem;">
-        Precisa de fazer login para ver a Área Restrita a Membros
+        É necessário fazer login para aceder à<br>Área Restrita a Membros
         <br>
         <br>
           <button class="button button-block button-positive" ng-click="menu.login()">Log in</button>
