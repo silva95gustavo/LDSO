@@ -52,7 +52,7 @@ body {
 	font-size: 14px;
 	width: 100%;
 	height: 3.5em !important;
-	background-color: #144877;
+	background-color: #4AACC5;
 }
 
 #cuidadores_secondary_nav ul {
@@ -65,11 +65,11 @@ body {
 }
 
 #cuidadores_secondary_nav ul > li.active > a {
-	background-color: #4AACC5;
+	background-color: #144877;
 }
 
 #cuidadores_secondary_nav ul > li:not(.active) > a:hover {
-	background-color: rgba(74, 172, 197, 0.5);
+	background-color: rgba(20, 72, 119, 0.5);
 }
 
 #cuidadores_primary_nav ul > li {
@@ -201,7 +201,7 @@ body {
 .footer {
 	padding-top: 15px;
 	padding-bottom: 15px;
-	background-color: #4AACC5;
+	background-color: #144877;
 	margin-top: 50px;
 }
 
@@ -211,11 +211,11 @@ body {
 }
 
 .footer ul .is-active, .footer ul .is-active:hover {
-	background-color: #144877;
+	background-color: #4AACC5;
 }
 
 .footer ul a:hover {
-	background-color: rgba(20, 72, 119, 0.5);
+	background-color: rgba(74, 172, 197, 0.5);
 }
 
 .view-estatisticas > .view-content > div > article > h2:first-child {
