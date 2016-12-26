@@ -124,12 +124,11 @@ AddEncoding gzip svgz
 
 #custom redirects
 
-RewriteRule ^user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
-RewriteRule ^pt-pt/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
-RewriteRule ^en/user/register$ http://staging.cuidadores.tk/node/31 [R=301,L]
-RewriteRule ^login-redirect$ http://staging.cuidadores.tk/user/login [R=301,L]
-RewriteRule ^pt-pt/login-redirect$ http://staging.cuidadores.tk/user/login [R=301,L]
-RewriteRule ^en/login-redirect$ http://staging.cuidadores.tk/user/login [R=301,L]
+RewriteCond %{REQUEST_URI} ^(/[^/]+/([^/]+/)*) [NC]
+RewriteRule ^.*user/register$ http%{ENV:protossl}://%{HTTP_HOST}%1../node/31 [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^(/[^/]+/([^/]+/)*) [NC]
+RewriteRule ^.*login-redirect$ http%{ENV:protossl}://%{HTTP_HOST}%1user/login/ [R=301,L]
 
 #end custom redirects
 
