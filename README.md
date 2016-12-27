@@ -1,8 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Associação Cuidadores](#associa%C3%A7%C3%A3o-cuidadores)
+- [Associação Cuidadores](#associação-cuidadores)
   - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -15,8 +11,6 @@
     - [Technological architecture](#technological-architecture)
   - [Versioning](#versioning)
   - [Credits](#credits)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Associação Cuidadores
 
