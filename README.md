@@ -25,6 +25,8 @@
 ## Usage
 
 ## Built width
+- Drupal 8.2.4
+- Ionic
 
 ## Versioning
 
