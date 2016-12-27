@@ -39,9 +39,9 @@
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gtugablue/LDSO/tags). 
 
 ## Credits
-André Lago (@andrelago13)
-Diogo Carvalho (@DiogoVazC)
-Gustavo Silva (@gtugablue)
-José Rebelo (@joserebelo)
-Pedro Castro (@F0lha)
-Ricardo Cerqueira (@ricardocerq)
+- André Lago ([@andrelago13](https://github.com/andrelago13))
+- Diogo Carvalho ([@DiogoVazC](https://github.com/DiogoVazC))
+- Gustavo Silva ([@gtugablue](https://github.com/gtugablue))
+- José Rebelo ([@joserebelo](https://github.com/joserebelo))
+- Pedro Castro ([@F0lha](https://github.com/F0lha))
+- Ricardo Cerqueira ([@ricardocerq](https://github.com/ricardocerq))
