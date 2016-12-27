@@ -12,12 +12,9 @@
  */
 #}
 {% if children %}
-  {% spaceless %}
-    <div id="main-canvas-wrapper">
-      <div id="main-canvas">
-        {{ children }}
-      </div>
+  <div id="main-canvas-wrapper">
+    <div id="main-canvas">
+      {{ children }}
     </div>
-    <div class="offcanvas-lining"></div>
-  {% endspaceless %}
+  </div>
 {% endif %}
