@@ -4,6 +4,11 @@
 
 ### Prerequisites
 
+- Apache web server.
+- PHP 5.5.9 or higher.
+- Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
+- MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
+
 ### Installation
 
 #### Website
