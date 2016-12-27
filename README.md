@@ -30,10 +30,24 @@
 
 ## Usage
 
-## Built width
+## System architecture
+
+### Built width
 - Drupal 8.2.4
 - Flarum 0.1.0
 - Ionic
+
+### Technological architecture
+The project has three main components, each based on a different technological framework. The institutional website is built on Drupal, the forum on Flarum and the mobile app on Ionic.
+The choice of Drupal for the website was made due to the requirement that pages should be easily added without the need to alter the source code. Taking into consideration that the Product Owner wanted the final product to be similar to the website [carers.org](http://carers.org), the same content management system (CMS) was chosen.
+Flarum was chosen to provide a robust, intuitive and appealing forum to the client, with an interesting interaction, making it enjoyable to communicate with others.
+Ionic is used to keep a single codebase to deploy to both Android and iOS platforms so that it is possible to cover as many users as possible.
+All frameworks used are open-source, since that property is also a requirement of the project.
+The languages used are the following:
+- **Server:** PHP;
+- **Client:** HTML, CSS, Javascript;
+- **Mobile app:** HTML, CSS, AngularJS.
+
 
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gtugablue/LDSO/tags). 
