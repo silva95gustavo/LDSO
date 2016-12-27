@@ -8,6 +8,7 @@
 - PHP 5.5.9 or higher.
 - Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
 - MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
+- SSH (command-line) access to the server folders.
 
 ### Installation
 
@@ -31,8 +32,16 @@
 
 ## Built width
 - Drupal 8.2.4
+- Flarum 0.1.0
 - Ionic
 
 ## Versioning
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gtugablue/LDSO/tags). 
 
 ## Credits
+André Lago (@andrelago13)
+Diogo Carvalho (@DiogoVazC)
+Gustavo Silva (@gtugablue)
+José Rebelo (@joserebelo)
+Pedro Castro (@F0lha)
+Ricardo Cerqueira (@ricardocerq)
