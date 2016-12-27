@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
@@ -48,7 +48,7 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
    */
   public function loadDraft(YamlFormInterface $yamlform, EntityInterface $source_entity = NULL, AccountInterface $account = NULL) {
     $query = $this->getQuery();
-    $query->condition('in_draft', 1);
+    $query->condition('in_draft', TRUE);
     $query->condition('yamlform_id', $yamlform->id());
     $query->condition('uid', $account->id());
     if ($source_entity) {
@@ -120,7 +120,8 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
    * {@inheritdoc}
    */
   public function getTotal(YamlFormInterface $yamlform = NULL, EntityInterface $source_entity = NULL, AccountInterface $account = NULL) {
-    $query = $this->getQuery()->count();
+    $query = $this->getQuery();
+    $query->condition('in_draft', FALSE);
     if ($yamlform) {
       $query->condition('yamlform_id', $yamlform->id());
     }
@@ -131,7 +132,11 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
     if ($account) {
       $query->condition('uid', $account->id());
     }
-    return $query->execute();
+
+    // Issue: Query count method is not working for SQL Lite.
+    // return $query->count()->execute();
+    // Work-around: Manually count the number of entity ids.
+    return count($query->execute());
   }
 
   /**
@@ -200,7 +205,7 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
       ->execute()
       ->fetchCol();
 
-    $entity_type_labels = \Drupal::entityManager()->getEntityTypeLabels();
+    $entity_type_labels = \Drupal::service('entity_type.repository')->getEntityTypeLabels();
     ksort($entity_type_labels);
 
     return array_intersect_key($entity_type_labels, array_flip($entity_types));
@@ -212,6 +217,7 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
   protected function getTerminusSubmission(YamlFormInterface $yamlform, EntityInterface $source_entity = NULL, AccountInterface $account = NULL, $sort = 'DESC') {
     $query = $this->getQuery();
     $query->condition('yamlform_id', $yamlform->id());
+    $query->condition('in_draft', FALSE);
     $query->range(0, 1);
     if ($source_entity) {
       $query->condition('entity_type', $source_entity->getEntityTypeId());
@@ -318,54 +324,53 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
 
     // Serial number.
     $columns['serial'] = [
-      'title' => t('#'),
+      'title' => $this->t('#'),
     ];
 
     // Submission ID.
     $columns['sid'] = [
-      'title' => t('SID'),
-      'default' => FALSE,
+      'title' => $this->t('SID'),
     ];
 
     // UUID.
     $columns['uuid'] = [
-      'title' => t('UUID'),
+      'title' => $this->t('UUID'),
       'default' => FALSE,
     ];
 
     // Sticky (Starred/Unstarred).
     if (empty($account)) {
       $columns['sticky'] = [
-        'title' => t('Starred'),
+        'title' => $this->t('Starred'),
       ];
 
       // Notes.
       $columns['notes'] = [
-        'title' => t('Notes'),
+        'title' => $this->t('Notes'),
       ];
     }
 
     // Created.
     $columns['created'] = [
-      'title' => t('Created'),
+      'title' => $this->t('Created'),
     ];
 
     // Completed.
     $columns['completed'] = [
-      'title' => t('Completed'),
+      'title' => $this->t('Completed'),
       'default' => FALSE,
     ];
 
     // Changed.
     $columns['changed'] = [
-      'title' => t('Changed'),
+      'title' => $this->t('Changed'),
       'default' => FALSE,
     ];
 
     // Source entity.
     if ($view_any && empty($source_entity)) {
       $columns['entity'] = [
-        'title' => t('Submitted to'),
+        'title' => $this->t('Submitted to'),
         'sort' => FALSE,
       ];
     }
@@ -373,26 +378,26 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
     // Submitted by.
     if (empty($account)) {
       $columns['uid'] = [
-        'title' => t('User'),
+        'title' => $this->t('User'),
       ];
     }
 
     // Submission language.
     if ($view_any && \Drupal::moduleHandler()->moduleExists('language')) {
       $columns['langcode'] = [
-        'title' => t('Language'),
+        'title' => $this->t('Language'),
       ];
     }
 
     // Remote address.
     $columns['remote_addr'] = [
-      'title' => t('IP address'),
+      'title' => $this->t('IP address'),
     ];
 
     // Form.
     if (empty($yamlform) && empty($source_entity)) {
       $columns['yamlform_id'] = [
-        'title' => t('Form'),
+        'title' => $this->t('Form'),
       ];
     }
 
@@ -412,7 +417,7 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
     // Operations.
     if (empty($account)) {
       $columns['operations'] = [
-        'title' => t('Operations'),
+        'title' => $this->t('Operations'),
         'sort' => FALSE,
       ];
     }
@@ -525,19 +530,19 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
     ];
     switch ($entity->getState()) {
       case YamlFormSubmissionInterface::STATE_DRAFT;
-        \Drupal::logger('yamlform')->notice('@form:Submission #@id draft saved.', $context);
+        \Drupal::logger('yamlform')->notice('@form: Submission #@id draft saved.', $context);
         break;
 
       case YamlFormSubmissionInterface::STATE_UPDATED;
-        \Drupal::logger('yamlform')->notice('@form:Submission #@id updated.', $context);
+        \Drupal::logger('yamlform')->notice('@form: Submission #@id updated.', $context);
         break;
 
       case YamlFormSubmissionInterface::STATE_COMPLETED;
         if ($result === SAVED_NEW) {
-          \Drupal::logger('yamlform')->notice('@form:Submission #@id created.', $context);
+          \Drupal::logger('yamlform')->notice('@form: Submission #@id created.', $context);
         }
         else {
-          \Drupal::logger('yamlform')->notice('@form:Submission #@id completed.', $context);
+          \Drupal::logger('yamlform')->notice('@form: Submission #@id completed.', $context);
         }
         break;
     }
@@ -609,7 +614,7 @@ class YamlFormSubmissionStorage extends SqlContentEntityStorage implements YamlF
     // Log deleted.
     foreach ($entities as $entity) {
       \Drupal::logger('yamlform')
-        ->notice('Deleted @form:Submission #@id.', [
+        ->notice('Deleted @form: Submission #@id.', [
           '@id' => $entity->id(),
           '@form' => $entity->getYamlForm()->label(),
         ]);

@@ -27,7 +27,7 @@ class YamlFormNodeAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkYamlFormAccess($operation, $entity_access, NodeInterface $node, AccountInterface $account) {
+  public static function checkYamlFormAccess($operation, $entity_access, NodeInterface $node, AccountInterface $account) {
     return self::checkAccess($operation, $entity_access, $node, NULL, $account);
   }
 
@@ -48,7 +48,7 @@ class YamlFormNodeAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkYamlFormSubmissionAccess($operation, $entity_access, NodeInterface $node, YamlFormSubmissionInterface $yamlform_submission, AccountInterface $account) {
+  public static function checkYamlFormSubmissionAccess($operation, $entity_access, NodeInterface $node, YamlFormSubmissionInterface $yamlform_submission, AccountInterface $account) {
     return self::checkAccess($operation, $entity_access, $node, $yamlform_submission, $account);
   }
 
@@ -69,7 +69,7 @@ class YamlFormNodeAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static protected function checkAccess($operation, $entity_access, NodeInterface $node, YamlFormSubmissionInterface $yamlform_submission = NULL, AccountInterface $account = NULL) {
+  protected static function checkAccess($operation, $entity_access, NodeInterface $node, YamlFormSubmissionInterface $yamlform_submission = NULL, AccountInterface $account = NULL) {
     // Check that the node has a valid form reference.
     if (!$node->hasField('yamlform') || !$node->yamlform->entity) {
       return AccessResult::forbidden();

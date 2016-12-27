@@ -21,6 +21,7 @@ class Email extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form validation.
       'size' => '',
       'maxlength' => '',
       'placeholder' => '',

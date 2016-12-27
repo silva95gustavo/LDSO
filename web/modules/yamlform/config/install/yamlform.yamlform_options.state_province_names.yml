@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - yamlform
 id: state_province_names
 label: 'State/Province names'
 options: |

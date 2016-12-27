@@ -63,4 +63,35 @@ interface YamlFormElementManagerInterface extends PluginManagerInterface, Cached
    */
   public function getElementInstance(array $element);
 
+  /**
+   * Gets sorted plugin definitions.
+   *
+   * @param array[]|null $definitions
+   *   (optional) The plugin definitions to sort. If omitted, all plugin
+   *   definitions are used.
+   * @param string $sort_by
+   *   The property to sort plugin definitions by. Only 'label' and 'category'
+   *   are supported. Defaults to label.
+   *
+   * @return array[]
+   *   An array of plugin definitions, sorted by category and label.
+   */
+  public function getSortedDefinitions(array $definitions = NULL, $sort_by = 'label');
+
+  /**
+   * Get all translatable properties from all elements.
+   *
+   * @return array
+   *   An array of translatable properties.
+   */
+  public function getTranslatableProperties();
+
+  /**
+   * Get all properties for all elements.
+   *
+   * @return array
+   *   An array of all properties.
+   */
+  public function getAllProperties();
+
 }

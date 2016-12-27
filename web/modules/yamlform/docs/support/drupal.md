@@ -15,6 +15,6 @@ Please create new tickets when you find bugs or would like to request a feature.
 
 ### [Contact Me - Jacob Rockowitz](https://www.drupal.org/user/371407/contact)
 
-If want to hire me please email me using my Drupal.org [contact form](https://www.drupal.org/user/371407/contact)
-and please visit my website, [thebigbluehouse.com](http://thebigbluehouse.com)
+If want to hire me please email me using my Drupal.org [contact form](https://www.drupal.org/user/371407/contact),
+or please visit my website [thebigbluehouse.com](http://thebigbluehouse.com).
 

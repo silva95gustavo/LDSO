@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - yamlform
 id: likert_satisfaction
 label: 'Likert: Satisfaction'
 options: |

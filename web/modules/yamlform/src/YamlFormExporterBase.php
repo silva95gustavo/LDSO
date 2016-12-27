@@ -4,6 +4,7 @@ namespace Drupal\yamlform;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,6 +17,74 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see plugin_api
  */
 abstract class YamlFormExporterBase extends PluginBase implements YamlFormExporterInterface {
+
+  /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Form submission storage.
+   *
+   * @var \Drupal\yamlform\YamlFormSubmissionStorageInterface
+   */
+  protected $entityStorage;
+
+  /**
+   * The form element manager.
+   *
+   * @var \Drupal\yamlform\YamlFormElementManagerInterface
+   */
+  protected $elementManager;
+
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\yamlform\YamlFormElementManagerInterface $element_manager
+   *   The form element manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, YamlFormElementManagerInterface $element_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->setConfiguration($configuration);
+    $this->logger = $logger;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityStorage = $entity_type_manager->getStorage('yamlform_submission');
+    $this->elementManager = $element_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('logger.factory')->get('yamlform'),
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.yamlform.element')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -39,32 +108,17 @@ abstract class YamlFormExporterBase extends PluginBase implements YamlFormExport
   }
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->setConfiguration($configuration);
-    $this->logger = $logger;
+  public function isArchive() {
+    return $this->pluginDefinition['archive'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('logger.factory')->get('yamlform')
-    );
+  public function hasOptions() {
+    return $this->pluginDefinition['options'];
   }
 
   /**
@@ -139,27 +193,27 @@ abstract class YamlFormExporterBase extends PluginBase implements YamlFormExport
   /**
    * {@inheritdoc}
    */
-  public function createFile() {}
+  public function createExport() {}
 
   /**
    * {@inheritdoc}
    */
-  public function openFile() {}
+  public function openExport() {}
 
   /**
    * {@inheritdoc}
    */
-  public function closeFile() {}
+  public function closeExport() {}
 
   /**
    * {@inheritdoc}
    */
-  public function writeHeader(array $header) {}
+  public function writeHeader() {}
 
   /**
    * {@inheritdoc}
    */
-  public function writeRecord(array $record) {}
+  public function writeSubmission(YamlFormSubmissionInterface $yamlform_submission) {}
 
   /**
    * {@inheritdoc}
@@ -171,6 +225,26 @@ abstract class YamlFormExporterBase extends PluginBase implements YamlFormExport
    */
   public function getFileTempDirectory() {
     return file_directory_temp();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubmissionBaseName(YamlFormSubmissionInterface $yamlform_submission) {
+    $export_options = $this->getConfiguration();
+    $file_name = $export_options['file_name'];
+    $token_data = [
+      'yamlform' => $yamlform_submission->getYamlForm(),
+      'yamlform_submission' => $yamlform_submission,
+    ];
+    $token_options = ['clear' => TRUE];
+    $file_name = \Drupal::token()->replace($file_name, $token_data, $token_options);
+
+    // Sanitize file name.
+    // @see http://stackoverflow.com/questions/2021624/string-sanitizer-for-filename
+    $file_name  = preg_replace('([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})', '', $file_name);
+    $file_name = preg_replace('/\s+/', '-', $file_name);
+    return $file_name;
   }
 
   /**
@@ -206,6 +280,20 @@ abstract class YamlFormExporterBase extends PluginBase implements YamlFormExport
    */
   public function getExportFilePath() {
     return $this->getFileTempDirectory() . '/' . $this->getExportFileName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getArchiveFilePath() {
+    return $this->getFileTempDirectory() . '/' . $this->getArchiveFileName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getArchiveFileName() {
+    return $this->getBaseFileName() . '.tar.gz';
   }
 
 }

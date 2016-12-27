@@ -16,6 +16,7 @@ abstract class NumericBase extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form validation.
       'size' => '',
       'maxlength' => '',
       'placeholder' => '',
@@ -37,21 +38,26 @@ abstract class NumericBase extends YamlFormElementBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    $form['form']['min'] = [
+
+    $form['number'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Number settings'),
+    ];
+    $form['number']['min'] = [
       '#type' => 'number',
       '#title' => $this->t('Min'),
       '#description' => $this->t('Specifies the minimum value.'),
       '#step' => 'any',
       '#size' => 4,
     ];
-    $form['form']['max'] = [
+    $form['number']['max'] = [
       '#type' => 'number',
       '#title' => $this->t('Max'),
       '#description' => $this->t('Specifies the maximum value.'),
       '#step' => 'any',
       '#size' => 4,
     ];
-    $form['form']['step'] = [
+    $form['number']['step'] = [
       '#type' => 'number',
       '#title' => $this->t('Steps'),
       '#description' => $this->t('Specifies the legal number intervals. Leave blank to support any number interval.'),

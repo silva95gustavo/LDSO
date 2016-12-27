@@ -23,6 +23,7 @@ class Color extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return [
+      // Color settings.
       'color_size' => 'medium',
     ] + parent::getDefaultProperties();
   }
@@ -93,9 +94,8 @@ class Color extends YamlFormElementBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['color'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Color settings'),
-      '#open' => FALSE,
     ];
     $form['color']['color_size'] = [
       '#type' => 'select',

@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Form\FormState;
@@ -84,11 +84,6 @@ class YamlFormEntityElementsValidator {
       return [$message];
     }
 
-    // Validate translation.
-    if ($message = $this->validateTranslation()) {
-      return [$message];
-    }
-
     // Validate duplicate element name.
     if ($messages = $this->validateDuplicateNames()) {
       return $messages;
@@ -159,8 +154,8 @@ class YamlFormEntityElementsValidator {
   /**
    * Validate elements does not contain duplicate names.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If not valid an error message.
+   * @return array|null
+   *   If not valid, an array of error messages.
    */
   protected function validateDuplicateNames() {
     $duplicate_names = [];
@@ -209,8 +204,8 @@ class YamlFormEntityElementsValidator {
   /**
    * Validate that elements are not using ignored properties.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If not valid an error message.
+   * @return array|null
+   *   If not valid, an array of error messages.
    */
   protected function validateProperties() {
     $ignored_properties = YamlFormElementHelper::getIgnoredProperties($this->elements);
@@ -233,8 +228,8 @@ class YamlFormEntityElementsValidator {
   /**
    * Validate that element are not deleted when the form has submissions.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If not valid an error message.
+   * @return array|null
+   *   If not valid, an array of error messages.
    */
   protected function validateSubmissions() {
     if (!$this->yamlform->hasSubmissions()) {
@@ -303,8 +298,8 @@ class YamlFormEntityElementsValidator {
   /**
    * Validate element hierarchy.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If not valid an error message.
+   * @return array|null
+   *   If not valid, an array of error messages.
    */
   protected function validateHierarchy() {
     $elements = $this->yamlform->getElementsInitializedAndFlattened();
@@ -331,81 +326,9 @@ class YamlFormEntityElementsValidator {
   }
 
   /**
-   * Validate translated form are not altered.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If not valid an error message.
-   */
-  protected function validateTranslation() {
-    if (!$this->yamlform->hasTranslations() || !$this->originalElements) {
-      return NULL;
-    }
-
-    $messages = [];
-    $this->validateTranslationElements($messages, $this->elements, $this->originalElements);
-    if ($messages) {
-      $t_args = [
-        ':translation_href' => $this->yamlform->toUrl('config-translation-overview')->toString(),
-        '%title' => $this->yamlform->label(),
-      ];
-      $build = [
-        'title' => [
-          '#markup' => $this->t('The %title form has <a href=":translation_href">translations</a> and its elements and properties can not be changed.', $t_args),
-        ],
-        'items' => [
-          '#theme' => 'item_list',
-          '#items' => $messages,
-        ],
-      ];
-      return \Drupal::service('renderer')->renderPlain($build);
-    }
-    else {
-      return NULL;
-    }
-  }
-
-  /**
-   * Loop elements and original elements and make sure that nothing has changed.
-   *
-   * @param array $messages
-   *   Array of missing elements.
-   * @param array $elements
-   *   The updated form elements.
-   * @param array $elements_original
-   *   The original form elements.
-   */
-  public function validateTranslationElements(array &$messages, array $elements, array $elements_original, $path = '') {
-    if ($items = array_diff(array_keys($elements_original), array_keys($elements))) {
-      foreach ($items as $item) {
-        $t_args = [
-          '%name' => $path . $item,
-          '@type' => ($item[0] == '#') ? $this->t('property') : $this->t('element'),
-        ];
-        $messages[] = $this->t('The %name @type can not be removed.', $t_args);
-      }
-    }
-    if ($items = array_diff(array_keys($elements), array_keys($elements_original))) {
-      foreach ($items as $item) {
-        $t_args = [
-          '%name' => $path . $item,
-          '@type' => ($item[0] == '#') ? $this->t('property') : $this->t('element'),
-        ];
-        $messages[] = $this->t('The %name @type can not be added.', $t_args);
-      }
-    }
-
-    foreach (array_keys($elements_original) as $key) {
-      if (!is_array($elements_original[$key]) || !isset($elements[$key]) || !is_array($elements[$key])) {
-        continue;
-      }
-      $this->validateTranslationElements($messages, $elements[$key], $elements_original[$key], $path . $key . '.');
-    }
-  }
-
-  /**
    * Validate that elements are a valid render array.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
    *   If not valid an error message.
    *
    * @see \Drupal\Core\Entity\EntityFormBuilder
@@ -415,17 +338,17 @@ class YamlFormEntityElementsValidator {
     set_error_handler('_yamlform_entity_element_validate_rendering_error_handler');
 
     try {
-      /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-      $entity_manager = \Drupal::service('entity.manager');
+      /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+      $entity_type_manager = \Drupal::service('entity_type.manager');
       /** @var \Drupal\Core\Form\FormBuilderInterface $form_builder */
       $form_builder = \Drupal::service('form_builder');
 
       /** @var \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission */
-      $yamlform_submission = $entity_manager
+      $yamlform_submission = $entity_type_manager
         ->getStorage('yamlform_submission')
         ->create(['yamlform' => $this->yamlform]);
 
-      $form_object = $entity_manager->getFormObject('yamlform_submission', 'default');
+      $form_object = $entity_type_manager->getFormObject('yamlform_submission', 'default');
       $form_object->setEntity($yamlform_submission);
       $form_state = (new FormState())->setFormState([]);
       $form_builder->buildForm($form_object, $form_state);
@@ -440,7 +363,7 @@ class YamlFormEntityElementsValidator {
     if ($message) {
       $build = [
         'title' => [
-          '#markup' => $this->t('Unable to render elements, please view the below message and the error log.'),
+          '#markup' => $this->t('Unable to render elements, please view the below message(s) and the error log.'),
         ],
         'items' => [
           '#theme' => 'item_list',

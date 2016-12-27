@@ -21,6 +21,7 @@ class YamlFormEmailConfirm extends Email {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Email confirm settings.
       'confirm__title' => '',
       'confirm__description' => '',
       'confirm__placeholder' => '',

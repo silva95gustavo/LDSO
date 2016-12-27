@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
 
 /**
- * Base for controller for form access.
+ * Provides a form to manage access.
  */
 class YamlFormEntityAccessForm extends EntityForm {
 
@@ -18,7 +18,6 @@ class YamlFormEntityAccessForm extends EntityForm {
     /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
     $yamlform = $this->entity;
     $access = $yamlform->getAccessRules();
-    $roles = array_map('\Drupal\Component\Utility\Html::escape', user_role_names());
     $permissions = [
       'create' => $this->t('Create form submissions'),
       'view_any' => $this->t('View all form submissions'),
@@ -31,28 +30,20 @@ class YamlFormEntityAccessForm extends EntityForm {
     ];
     $form['access']['#tree'] = TRUE;
     foreach ($permissions as $name => $title) {
-      $access_roles = $roles;
-      // Only allow 'anonymous' users to create submissions.
-      if ($name != 'create') {
-        unset($access_roles['anonymous']);
-      }
-
       $form['access'][$name] = [
-        '#type' => 'details',
+        '#type' => ($name === 'create') ? 'fieldset' : 'details',
         '#title' => $title,
         '#open' => ($access[$name]['roles'] || $access[$name]['users']) ? TRUE : FALSE,
       ];
       $form['access'][$name]['roles'] = [
-        '#type' => 'checkboxes',
+        '#type' => 'yamlform_roles',
         '#title' => $this->t('Roles'),
-        '#options' => $access_roles,
+        '#include_anonymous' => ($name == 'create') ? TRUE : FALSE,
         '#default_value' => $access[$name]['roles'],
       ];
       $form['access'][$name]['users'] = [
-        '#type' => 'entity_autocomplete',
+        '#type' => 'yamlform_users',
         '#title' => $this->t('Users'),
-        '#target_type' => 'user',
-        '#tags' => TRUE,
         '#default_value' => $access[$name]['users'] ? User::loadMultiple($access[$name]['users']) : [],
       ];
     }
@@ -75,21 +66,6 @@ class YamlFormEntityAccessForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $access = $form_state->getValue('access');
-
-    // Cleanup roles and users.
-    foreach ($access as &$settings) {
-      // Filter roles.
-      $settings['roles'] = array_values(array_filter($settings['roles']));
-      // Convert target_ids to a simple list of uids.
-      if ($settings['users']) {
-        foreach ($settings['users'] as $index => $item) {
-          $settings['users'][$index] = $item['target_id'];
-        }
-      }
-      else {
-        $settings['users'] = [];
-      }
-    }
 
     /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
     $yamlform = $this->getEntity();

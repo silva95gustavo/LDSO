@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform\Entity;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\yamlform\Utility\YamlFormOptionsHelper;
@@ -104,7 +104,7 @@ class YamlFormOptions extends ConfigEntityBase implements YamlFormOptionsInterfa
   public function hasAlterHooks() {
     $hook_name = 'yamlform_options_' . $this->id() . '_alter';
     $alter_hooks = \Drupal::moduleHandler()->getImplementations($hook_name);
-    return (count($alter_hooks)) ? TRUE :FALSE;
+    return (count($alter_hooks)) ? TRUE : FALSE;
   }
 
   /**
@@ -137,7 +137,7 @@ class YamlFormOptions extends ConfigEntityBase implements YamlFormOptionsInterfa
   /**
    * {@inheritdoc}
    */
-  static public function getElementOptions(array $element, $property_name = '#options') {
+  public static function getElementOptions(array $element, $property_name = '#options') {
     // If element already has #options return them.
     if (is_array($element[$property_name])) {
       return $element[$property_name];

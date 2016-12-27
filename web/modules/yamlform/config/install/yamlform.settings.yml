@@ -1,38 +1,60 @@
 settings:
   default_page_base_path: form
   default_form_closed_message: 'Sorry...This form is closed to new submissions.'
-  default_form_submit_label: Submit
   default_form_exception_message: 'Unable to display this form. Please contact the site administrator.'
+  default_form_submit_label: Submit
   default_form_confidential_message: 'This form is confidential. You must <a href="[site:login-url]/logout?destination=[current-page:url:relative]">Log out</a> to submit it.'
+  default_form_disable_back: false
+  default_form_unsaved: false
   default_form_novalidate: false
   default_form_details_toggle: true
+  form_classes: |
+    container-inline clearfix
+    form--inline clearfix
+    messages messages--error
+    messages messages--warning
+    messages messages--status
+  button_classes: ''
   default_wizard_prev_button_label: '< Previous Page'
   default_wizard_next_button_label: 'Next Page >'
-  default_preview_next_button_label: Preview
-  default_preview_prev_button_label: '< Previous'
   default_wizard_start_label: Start
   default_wizard_complete_label: Complete
+  default_preview_next_button_label: Preview
+  default_preview_prev_button_label: '< Previous'
   default_preview_message: 'Please review your submission. Your submission is not complete until you press the "Submit" button!'
   default_draft_button_label: 'Save Draft'
   default_draft_saved_message: 'Submission saved. You may return to this form later and it will restore the current values.'
   default_draft_loaded_message: 'A partially-completed form was found. Please complete the remaining portions.'
   default_confirmation_message: 'New submission added to [yamlform:title].'
+  default_confirmation_back_label: 'Back to form'
+  confirmation_classes: |
+    messages messages--error
+    messages messages--warning
+    messages messages--status
+  confirmation_back_classes: |
+    button
   default_limit_total_message: 'No more submissions are permitted.'
   default_limit_user_message: 'No more submissions are permitted.'
 export:
+  exporter: delimited
   delimiter: ','
+  excel: false
+  file_name: 'submission-[yamlform_submission:serial]'
   header_format: label
   header_prefix: true
   header_prefix_label_delimiter: ': '
   header_prefix_key_delimiter: __
-  entity_reference_format: link
+  composite_element_item_format: label
   options_format: compact
   options_item_format: label
+  entity_reference_format: link
+  likert_answers_format: label
 batch:
   default_batch_export_size: 500
   default_batch_update_size: 500
   default_batch_delete_size: 500
 elements:
+  allowed_tags: admin
   wrapper_classes: |
     container-inline clearfix
     form--inline clearfix
@@ -45,105 +67,33 @@ elements:
     messages messages--error
     messages messages--warning
     messages messages--status
-  allowed_tags: admin
-  file_public: true
   default_description_display: ''
+  default_google_maps_api_key: ''
+  excluded_types: {  }
+file:
+  file_public: false
   default_max_filesize: ''
-  default_file_extensions: 'gif jpg png bmp eps tif pict psd txt rtf html odf pdf doc docx ppt pptx xls xlsx xml avi mov mp3 ogg wav bz2 dmg gz jar rar sit svg tar zip'
-  default_google_maps_api_key: AIzaSyALfB3DSht4ApU6B_7gJQzuHTn6JraPs8Q
-  types:
-    captcha: captcha
-    checkbox: checkbox
-    checkboxes: checkboxes
-    color: color
-    container: container
-    date: date
-    datelist: datelist
-    datetime: datetime
-    details: details
-    email: email
-    entity_autocomplete: entity_autocomplete
-    fieldset: fieldset
-    hidden: hidden
-    item: item
-    label: label
-    language_select: language_select
-    machine_name: machine_name
-    managed_file: managed_file
-    number: number
-    password: password
-    password_confirm: password_confirm
-    processed_text: processed_text
-    radios: radios
-    range: range
-    search: search
-    select: select
-    table: table
-    tableselect: tableselect
-    tel: tel
-    text_format: text_format
-    textarea: textarea
-    textfield: textfield
-    url: url
-    value: value
-    yamlform_address: yamlform_address
-    yamlform_autocomplete: yamlform_autocomplete
-    yamlform_checkboxes_other: yamlform_checkboxes_other
-    yamlform_codemirror: yamlform_codemirror
-    yamlform_contact: yamlform_contact
-    yamlform_creditcard: yamlform_creditcard
-    yamlform_creditcard_number: yamlform_creditcard_number
-    yamlform_element: yamlform_element
-    yamlform_email_confirm: yamlform_email_confirm
-    yamlform_email_multiple: yamlform_email_multiple
-    yamlform_entity_checkboxes: yamlform_entity_checkboxes
-    yamlform_entity_radios: yamlform_entity_radios
-    yamlform_entity_select: yamlform_entity_select
-    yamlform_flexbox: yamlform_flexbox
-    yamlform_likert: yamlform_likert
-    yamlform_location: yamlform_location
-    yamlform_markup: yamlform_markup
-    yamlform_message: yamlform_message
-    yamlform_name: yamlform_name
-    yamlform_radios_other: yamlform_radios_other
-    yamlform_rating: yamlform_rating
-    yamlform_select_other: yamlform_select_other
-    yamlform_signature: yamlform_signature
-    yamlform_tableselect_sort: yamlform_tableselect_sort
-    yamlform_time: yamlform_time
-    yamlform_toggle: yamlform_toggle
-    yamlform_wizard_page: yamlform_wizard_page
-format:
-  checkboxes: ''
-  color: ''
-  date: ''
-  datelist: ''
-  datetime: ''
-  email: ''
-  entity_autocomplete: ''
-  language_select: ''
-  managed_file: ''
-  password_confirm: ''
-  select: ''
-  tableselect: ''
-  tel: ''
-  text_format: ''
-  url: ''
+  default_managed_file_extensions: 'gif jpg png bmp eps tif pict psd txt rtf html odf pdf doc docx ppt pptx xls xlsx xml avi mov mp3 ogg wav bz2 dmg gz jar rar sit svg tar zip'
+  default_audio_file_extensions: 'mp3 ogg wav'
+  default_document_file_extensions: 'txt rtf pdf doc docx odt ppt pptx odp xls xlsx ods'
+  default_image_file_extensions: 'gif jpg png svg'
+  default_video_file_extensions: 'avi mov mp4 ogg wav webm'
+format: {  }
 mail:
   default_from_mail: '[site:mail]'
   default_from_name: '[site:name]'
-  default_subject: 'Form submission from: [yamlform-submission:source-entity]'
+  default_subject: 'Form submission from: [yamlform_submission:source-entity]'
   default_body_text: |
-    Submitted on [yamlform-submission:created]
-    Submitted by: [yamlform-submission:user]
-    
+    Submitted on [yamlform_submission:created]
+    Submitted by: [yamlform_submission:user]
+
     Submitted values are:
-    [yamlform-submission:values]
+    [yamlform_submission:values]
   default_body_html: |
-    <p>Submitted on [yamlform-submission:created]</p>
-    <p>Submitted by: [yamlform-submission:user]</p>
+    <p>Submitted on [yamlform_submission:created]</p>
+    <p>Submitted by: [yamlform_submission:user]</p>
     <p>Submitted values are:</p>
-    [yamlform-submission:values]
+    [yamlform_submission:values]
 test:
   types: |
     checkbox:
@@ -239,9 +189,11 @@ test:
       - 'Oratione'
       - 'Dixisset'
 ui:
+  video_display: dialog
   details_save: true
   dialog_disabled: false
   html_editor_disabled: false
-  video_display: dialog
+library:
+  cdn: false
 langcode: en
 third_party_settings: {  }

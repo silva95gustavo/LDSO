@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform_ui;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -77,12 +77,9 @@ class YamlFormUiEntityForm extends YamlFormEntityForm {
       $is_container = $yamlform_element->isContainer($element);
       $is_root = $yamlform_element->isRoot();
 
+      // If disabled, display warning.
       if ($yamlform_element->isDisabled()) {
-        $t_args = [
-          '%title' => $yamlform_element->getLabel($element),
-          '%type' => $yamlform_element->getPluginLabel(),
-        ];
-        drupal_set_message($this->t('%title is a %type element, which has been disabled and will not be rendered.', $t_args), 'warning');
+        $yamlform_element->displayDisabledWarning($element);
       }
 
       // Get row class names.
@@ -114,9 +111,9 @@ class YamlFormUiEntityForm extends YamlFormEntityForm {
 
       $rows[$key]['title'] = [
         '#markup' => $element['#admin_title'] ?: $element['#title'],
-        '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
+        '#prefix' => !empty($indentation) ? $this->renderer->render($indentation) : '',
       ];
-      if ($is_container && !$yamlform->hasTranslations()) {
+      if ($is_container) {
         $route_parameters = [
           'yamlform' => $yamlform->id(),
         ];
@@ -204,57 +201,53 @@ class YamlFormUiEntityForm extends YamlFormEntityForm {
         if ($yamlform_element->getPluginId() == 'processed_text') {
           unset($rows[$key]['operations']['#links']['edit']['attributes']);
         }
-        if (!$yamlform->hasTranslations()) {
-          $rows[$key]['operations']['#links']['duplicate'] = [
-            'title' => $this->t('Duplicate'),
-            'url' => new Url('entity.yamlform_ui.element.duplicate_form', [
-              'yamlform' => $yamlform->id(),
-              'key' => $key,
-            ]),
-            'attributes' => $dialog_attributes,
-          ];
-          $rows[$key]['operations']['#links']['delete'] = [
-            'title' => $this->t('Delete'),
-            'url' => new Url('entity.yamlform_ui.element.delete_form', [
-              'yamlform' => $yamlform->id(),
-              'key' => $key,
-            ]),
-          ];
-        }
+        $rows[$key]['operations']['#links']['duplicate'] = [
+          'title' => $this->t('Duplicate'),
+          'url' => new Url('entity.yamlform_ui.element.duplicate_form', [
+            'yamlform' => $yamlform->id(),
+            'key' => $key,
+          ]),
+          'attributes' => $dialog_attributes,
+        ];
+        $rows[$key]['operations']['#links']['delete'] = [
+          'title' => $this->t('Delete'),
+          'url' => new Url('entity.yamlform_ui.element.delete_form', [
+            'yamlform' => $yamlform->id(),
+            'key' => $key,
+          ]),
+        ];
       }
     }
 
     // Must manually add local actions to the form because we can't alter local
     // actions and add the needed dialog attributes.
     // @see https://www.drupal.org/node/2585169
-    if (!$yamlform->hasTranslations()) {
-      $local_action_attributes = YamlFormDialogHelper::getModalDialogAttributes(800, ['button', 'button-action', 'button--primary', 'button--small']);
-      $form['local_actions'] = [
-        '#prefix' => '<div class="yamlform-ui-local-actions">',
-        '#suffix' => '</div>',
-      ];
-      $form['local_actions']['add_element'] = [
+    $local_action_attributes = YamlFormDialogHelper::getModalDialogAttributes(800, ['button', 'button-action', 'button--primary', 'button--small']);
+    $form['local_actions'] = [
+      '#prefix' => '<div class="yamlform-ui-local-actions">',
+      '#suffix' => '</div>',
+    ];
+    $form['local_actions']['add_element'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Add element'),
+      '#url' => new Url('entity.yamlform_ui.element', ['yamlform' => $yamlform->id()]),
+      '#attributes' => $local_action_attributes,
+    ];
+    if ($this->elementManager->createInstance('yamlform_wizard_page')->isEnabled()) {
+      $form['local_actions']['add_page'] = [
         '#type' => 'link',
-        '#title' => $this->t('Add element'),
-        '#url' => new Url('entity.yamlform_ui.element', ['yamlform' => $yamlform->id()]),
+        '#title' => $this->t('Add page'),
+        '#url' => new Url('entity.yamlform_ui.element.add_form', ['yamlform' => $yamlform->id(), 'type' => 'wizard_page']),
         '#attributes' => $local_action_attributes,
       ];
-      if ($this->elementManager->createInstance('yamlform_wizard_page')->isEnabled()) {
-        $form['local_actions']['add_page'] = [
-          '#type' => 'link',
-          '#title' => $this->t('Add page'),
-          '#url' => new Url('entity.yamlform_ui.element.add_form', ['yamlform' => $yamlform->id(), 'type' => 'wizard_page']),
-          '#attributes' => $local_action_attributes,
-        ];
-      }
-      if ($yamlform->hasFlexboxLayout()) {
-        $form['local_actions']['add_layout'] = [
-          '#type' => 'link',
-          '#title' => $this->t('Add layout'),
-          '#url' => new Url('entity.yamlform_ui.element.add_form', ['yamlform' => $yamlform->id(), 'type' => 'flexbox']),
-          '#attributes' => $local_action_attributes,
-        ];
-      }
+    }
+    if ($yamlform->hasFlexboxLayout()) {
+      $form['local_actions']['add_layout'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Add layout'),
+        '#url' => new Url('entity.yamlform_ui.element.add_form', ['yamlform' => $yamlform->id(), 'type' => 'flexbox']),
+        '#attributes' => $local_action_attributes,
+      ];
     }
 
     $form['elements_reordered'] = [
@@ -281,13 +274,9 @@ class YamlFormUiEntityForm extends YamlFormEntityForm {
       ],
     ] + $rows;
 
+    // Must preload libraries required by (modal) dialogs.
+    $form['#attached']['library'][] = 'yamlform/yamlform.admin.dialog';
     $form['#attached']['library'][] = 'yamlform_ui/yamlform_ui';
-
-    // Must preload CKEditor and CodeMirror library so that the
-    // window.dialog:aftercreate trigger is set before any dialogs are opened.
-    // @see js/yamlform.element.codemirror.js
-    $form['#attached']['library'][] = 'yamlform/yamlform.element.codemirror.yaml';
-    $form['#attached']['library'][] = 'yamlform/yamlform.element.html_editor';
 
     return $form;
   }
@@ -433,7 +422,7 @@ class YamlFormUiEntityForm extends YamlFormEntityForm {
           $element['#title'] = Unicode::truncate(strip_tags($element['#markup']), 100, TRUE, TRUE);
         }
         else {
-          $element['#title'] = '&lt;' . ((string) t('blank')) . '&gt;';
+          $element['#title'] = '[' . t('blank') . ']';
         }
       }
     }

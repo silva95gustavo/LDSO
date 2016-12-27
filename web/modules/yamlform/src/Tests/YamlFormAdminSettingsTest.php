@@ -2,6 +2,9 @@
 
 namespace Drupal\yamlform\Tests;
 
+use Drupal\Component\Serialization\Yaml;
+use Drupal\yamlform\Utility\YamlFormTidy;
+
 /**
  * Tests for form entity.
  *
@@ -14,7 +17,7 @@ class YamlFormAdminSettingsTest extends YamlFormTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'block', 'node', 'user', 'yamlform', 'yamlform_ui', 'yamlform_test'];
+  protected static $modules = ['system', 'block', 'node', 'user', 'yamlform', 'yamlform_ui', 'yamlform_test'];
 
   /**
    * Tests form admin settings.
@@ -23,6 +26,23 @@ class YamlFormAdminSettingsTest extends YamlFormTestBase {
     global $base_path;
 
     $this->drupalLogin($this->adminFormUser);
+
+    /* Settings Form */
+
+    // Get 'yamlform.settings'.
+    $original_data = \Drupal::configFactory()->getEditable('yamlform.settings')->getRawData();
+
+    // Update 'settings.default_form_closed_message'.
+    $this->drupalPostForm('admin/structure/yamlform/settings', [], t('Save configuration'));
+    \Drupal::configFactory()->reset('yamlform.settings');
+    $updated_data = \Drupal::configFactory()->getEditable('yamlform.settings')->getRawData();
+
+    // Check the updating 'Settings' via the UI did not lose or change any data.
+    $this->assertEqual($updated_data, $original_data, 'Updated admin settings via the UI did not lose or change any data');
+
+    // DEBUG:
+    $this->verbose('<pre>' . YamlFormTidy::tidy(Yaml::encode($original_data)) . '</pre>');
+    $this->verbose('<pre>' . YamlFormTidy::tidy(Yaml::encode($updated_data)) . '</pre>');
 
     /* Elements */
 
@@ -42,14 +62,14 @@ class YamlFormAdminSettingsTest extends YamlFormTestBase {
 
     // Check that dialogs are enabled.
     $this->drupalGet('admin/structure/yamlform');
-    $this->assertRaw('<a href="' . $base_path . 'admin/structure/yamlform/add" class="button button-action button--primary button--small use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:400}">Add form</a>');
+    $this->assertRaw('<a href="' . $base_path . 'admin/structure/yamlform/add" class="button button-action button--primary button--small use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:640}">Add form</a>');
 
     // Disable dialogs.
     $this->drupalPostForm('admin/structure/yamlform/settings', ['ui[dialog_disabled]' => TRUE], t('Save configuration'));
 
     // Check that dialogs are disabled. (ie use-ajax is not included)
     $this->drupalGet('admin/structure/yamlform');
-    $this->assertNoRaw('<a href="' . $base_path . 'admin/structure/yamlform/add" class="button button-action button--primary button--small use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:400}">Add form</a>');
+    $this->assertNoRaw('<a href="' . $base_path . 'admin/structure/yamlform/add" class="button button-action button--primary button--small use-ajax" data-dialog-type="modal" data-dialog-options="{&quot;width&quot;:640}">Add form</a>');
     $this->assertRaw('<a href="' . $base_path . 'admin/structure/yamlform/add" class="button button-action button--primary button--small">Add form</a>');
 
     /* UI disable html editor */

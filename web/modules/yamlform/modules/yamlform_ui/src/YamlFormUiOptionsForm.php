@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform_ui;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\yamlform\Element\YamlFormOptions;
@@ -25,7 +25,7 @@ class YamlFormUiOptionsForm extends YamlFormOptionsForm {
       '#empty_options' => 10,
       '#add_more' => 10,
       '#required' => TRUE,
-      '#default_value' => $this->getOptions(),
+      '#default_value' => $this->getOptions($form, $form_state),
     ];
     return $form;
   }

@@ -21,6 +21,7 @@ class Details extends ContainerBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form display.
       'open' => FALSE,
     ];
   }
@@ -31,7 +32,9 @@ class Details extends ContainerBase {
   public function prepare(array &$element, YamlFormSubmissionInterface $yamlform_submission) {
     parent::prepare($element, $yamlform_submission);
 
-    $element['#attributes']['data-yamlform-key'] = $element['#yamlform_key'];
+    if (isset($element['#yamlform_key'])) {
+      $element['#attributes']['data-yamlform-key'] = $element['#yamlform_key'];
+    }
   }
 
   /**

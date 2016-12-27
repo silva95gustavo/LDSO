@@ -6,7 +6,6 @@ use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\file\Entity\File;
 use Drupal\yamlform\Entity\YamlForm;
 use Drupal\yamlform\Entity\YamlFormSubmission;
-use Drupal\yamlform\YamlFormInterface;
 
 /**
  * Tests for form results export.
@@ -20,7 +19,7 @@ class YamlFormResultsExportTest extends YamlFormTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'block', 'node', 'user', 'locale', 'yamlform', 'yamlform_test'];
+  protected static $modules = ['system', 'block', 'node', 'user', 'locale', 'yamlform', 'yamlform_test'];
 
   /**
    * Tests download files.
@@ -41,30 +40,64 @@ class YamlFormResultsExportTest extends YamlFormTestBase {
     $sids[] = $this->postSubmissionTest($yamlform_managed_file);
     $sids[] = $this->postSubmissionTest($yamlform_managed_file);
 
-    // Download tar ball archive.
+    /* Download CSV */
+
+    // Download tar ball archive with CSV.
     $edit = ['export[download][files]' => TRUE];
     $this->drupalPostForm('admin/structure/yamlform/manage/test_element_managed_file/results/download', $edit, t('Download'));
 
     // Load the tar and get a list of files.
-    $tar = new ArchiveTar($submission_exporter->getArchiveFilePath([]), 'gz');
+    $tar = new ArchiveTar($submission_exporter->getArchiveFilePath(), 'gz');
     $files = [];
     $content_list = $tar->listContent();
     foreach ($content_list as $file) {
       $files[$file['filename']] = $file['filename'];
     }
 
-    // Check CSV files.
+    // Check that CSV file exists.
     $this->assert(isset($files['test_element_managed_file/test_element_managed_file.csv']));
 
     // Check submission file directories.
     /** @var \Drupal\yamlform\YamlFormSubmissionInterface[] $submissions */
     $submissions = YamlFormSubmission::loadMultiple($sids);
-    foreach ($submissions as $sid => $submission) {
+    foreach ($submissions as $submission) {
+      $serial = $submission->serial();
       $fid = $submission->getData('managed_file_single');
       $filename = File::load($fid)->getFilename();
 
-      $this->assert(isset($files["test_element_managed_file/$sid"]));
-      $this->assert(isset($files["test_element_managed_file/$sid/$filename"]));
+      $this->assert(isset($files["submission-$serial/$filename"]));
+    }
+
+    /* Download YAML */
+
+    // Download tar ball archive with YAML documents.
+    $edit = [
+      'export[download][files]' => TRUE,
+      'export[format][exporter]' => 'yaml',
+    ];
+    $this->drupalPostForm('admin/structure/yamlform/manage/test_element_managed_file/results/download', $edit, t('Download'));
+
+    // Load the tar and get a list of files.
+    $tar = new ArchiveTar($submission_exporter->getArchiveFilePath(), 'gz');
+    $files = [];
+    $content_list = $tar->listContent();
+    foreach ($content_list as $file) {
+      $files[$file['filename']] = $file['filename'];
+    }
+
+    // Check that CSV file does not exists.
+    $this->assert(!isset($files['test_element_managed_file/test_element_managed_file.csv']));
+
+    // Check submission file directories.
+    /** @var \Drupal\yamlform\YamlFormSubmissionInterface[] $submissions */
+    $submissions = YamlFormSubmission::loadMultiple($sids);
+    foreach ($submissions as $submission) {
+      $serial = $submission->serial();
+      $fid = $submission->getData('managed_file_single');
+      $filename = File::load($fid)->getFilename();
+
+      $this->assert(isset($files["submission-$serial.yml"]));
+      $this->assert(isset($files["submission-$serial/$filename"]));
     }
   }
 
@@ -217,12 +250,12 @@ class YamlFormResultsExportTest extends YamlFormTestBase {
 
     // Check changing default export (delimiter) settings.
     $this->drupalLogin($this->adminFormUser);
-    $this->drupalPostForm('admin/structure/yamlform/settings', ['export[format][configuration][delimiter]' => '|'], t('Save configuration'));
+    $this->drupalPostForm('admin/structure/yamlform/settings', ['export[format][delimiter]' => '|'], t('Save configuration'));
     $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', [], t('Download'));
     $this->assertRaw('"Submission ID"|"Submission URI"');
 
     // Check saved form export (delimiter) settings.
-    $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', ['export[format][configuration][delimiter]' => '.'], t('Save settings'));
+    $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', ['export[format][delimiter]' => '.'], t('Save settings'));
     $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', [], t('Download'));
     $this->assertRaw('"Submission ID"."Submission URI"');
 
@@ -230,21 +263,6 @@ class YamlFormResultsExportTest extends YamlFormTestBase {
     $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', [], t('Reset settings'));
     $this->drupalPostForm('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', [], t('Download'));
     $this->assertRaw('"Submission ID"|"Submission URI"');
-  }
-
-  /**
-   * Request a form results export CSV.
-   *
-   * @param \Drupal\yamlform\YamlFormInterface $yamlform
-   *   A form.
-   * @param array $options
-   *   An associative array of export options.
-   */
-  protected function getExport(YamlFormInterface $yamlform, array $options = []) {
-    /** @var \Drupal\yamlform\YamlFormSubmissionExporterInterface $exporter */
-    $exporter = \Drupal::service('yamlform_submission.exporter');
-    $options += $exporter->getDefaultExportOptions();
-    $this->drupalGet('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', ['query' => $options]);
   }
 
 }

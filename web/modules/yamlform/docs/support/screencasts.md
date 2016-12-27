@@ -39,7 +39,7 @@ The Results page lists all incoming submissions for all forms.
 
 ### Defining default settings
 
-The Settings page allows administrators to manage global form and UI configuration settings, including updating default labels & descriptions, settings default format, and defining test dataset.
+The Settings page allows administrators to manage global form and UI configuration settings, including updating default labels and descriptions, setting default formats, and defining test dataset.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/UWxlfu7PEQg" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
@@ -57,7 +57,7 @@ The Options page lists predefined options which are used to build select menus, 
 
 ### Form element plugins
 
-The Elements page  lists all available form element plugins. Form element plugins are used to enhance existing render/form elements. Form element plugins provide default properties, data normalization, custom validation, element configuration form, and customizable display formats.
+The Elements page lists all available form element plugins. Form element plugins are used to enhance existing render/form elements. Form element plugins provide default properties, data normalization, custom validation, element configuration, and customizable display formats.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/WSNGzJwnpeQ" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
@@ -66,7 +66,7 @@ The Elements page  lists all available form element plugins. Form element plugin
 
 ### Form handler plugins
 
-The Handler page  lists all available form handler plugins. Handlers are used to route submitted data to external applications and send notifications & confirmations.
+The Handler page lists all available form handler plugins. Handlers are used to route submitted data to external applications and send notifications and confirmations.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/v5b4sOsUtn4" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
@@ -93,7 +93,7 @@ The Form elements page allows users to add, update, duplicate, and delete form e
 
 ### Editing YAML source
 
-The (View) Source page allows developers to edit a form's render array using YAML markup. Developers can use the (View) Source page to quickly alter a form's labels, cut-n-paste multiple elements, reorder elements, and add customize properties and markup to elements.
+The (View) Source page allows developers to edit a form's render array using YAML markup. Developers can use the (View) Source page to quickly alter a form's labels, cut-n-paste multiple elements, reorder elements, and add customized properties and markup to elements.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/BQS5YdUWo5k" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
@@ -174,7 +174,7 @@ The Table page provides a customizable table of a form's submissions. This page 
 
 ### Downloading results
 
-The Download page allows a form's submissions to be exported in to a customizable CSV (Comma Separated Values) file.
+The Download page allows a form's submissions to be exported into a customizable CSV (Comma Separated Values) file.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/xHVXjhhVtHg" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>

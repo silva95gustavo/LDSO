@@ -17,10 +17,11 @@ abstract class DateBase extends YamlFormElementBase {
    * {@inheritdoc}
    */
   public function getDefaultProperties() {
-    return parent::getDefaultProperties() + [
+    return [
+      // Form validation.
       'min' => '',
       'max' => '',
-    ];
+    ] + parent::getDefaultProperties();
   }
 
   /**
@@ -69,7 +70,7 @@ abstract class DateBase extends YamlFormElementBase {
       return $value;
     }
 
-    $format = $this->getFormat($element) ?: $this->getHtmlDateFormat($element);
+    $format = $this->getFormat($element) ?: 'html_' . $this->getDateType($element);
     if (DateFormat::load($format)) {
       return \Drupal::service('date.formatter')->format($timestamp, $format);
     }
@@ -112,27 +113,41 @@ abstract class DateBase extends YamlFormElementBase {
   /**
    * {@inheritdoc}
    */
+  public function buildExportRecord(array $element, $value, array $export_options) {
+    $element['#format'] = ($this->getDateType($element) === 'datetime') ? 'Y-m-d H:i:s' : 'Y-m-d';
+    return [$this->formatText($element, $value, $export_options)];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     // Append supported date input format to #default_value description.
-    $form['general']['default_value']['#description'] .= '<br />' . $this->t('Accepts any date in any <a href="https://www.gnu.org/software/tar/manual/html_chapter/tar_7.html#Date-input-formats">GNU Date Input Format</a>. Strings such as today, +2 months, and Dec 9 2004 are all valid.');
+    $form['element']['default_value']['#description'] .= '<br />' . $this->t('Accepts any date in any <a href="https://www.gnu.org/software/tar/manual/html_chapter/tar_7.html#Date-input-formats">GNU Date Input Format</a>. Strings such as today, +2 months, and Dec 9 2004 are all valid.');
 
     // Allow custom date formats to be entered.
     $form['display']['format']['#type'] = 'yamlform_select_other';
     $form['display']['format']['#other__option_label'] = $this->t('Custom date format...');
     $form['display']['format']['#other__description'] = $this->t('A user-defined date format. See the <a href="http://php.net/manual/function.date.php">PHP manual</a> for available options.');
 
-    // Add min/max validation.
-    $form['validation']['min'] = [
+    $form['date'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Date settings'),
+    ];
+
+    $form['date']['min'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Min'),
       '#description' => $this->t('Specifies the minimum date.') . '<br />' . $this->t('Accepts any date in any <a href="https://www.gnu.org/software/tar/manual/html_chapter/tar_7.html#Date-input-formats">GNU Date Input Format</a>. Strings such as today, +2 months, and Dec 9 2004 are all valid.'),
+      '#weight' => 10,
     ];
-    $form['validation']['max'] = [
+    $form['date']['max'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Max'),
       '#description' => $this->t('Specifies the maximum date.') . '<br />' . $this->t('Accepts any date in any <a href="https://www.gnu.org/software/tar/manual/html_chapter/tar_7.html#Date-input-formats">GNU Date Input Format</a>. Strings such as today, +2 months, and Dec 9 2004 are all valid.'),
+      '#weight' => 10,
     ];
 
     return $form;
@@ -146,7 +161,7 @@ abstract class DateBase extends YamlFormElementBase {
 
     // Validate #default_value GNU Date Input Format.
     if ($properties['#default_value'] && strtotime($properties['#default_value']) === FALSE) {
-      $this->setInputFormatError($form['properties']['general']['default_value'], $form_state);
+      $this->setInputFormatError($form['properties']['element']['default_value'], $form_state);
     }
 
     // Validate #min and #max GNU Date Input Format.
@@ -161,20 +176,25 @@ abstract class DateBase extends YamlFormElementBase {
   }
 
   /**
-   * Get an HTML date/time format for an element.
+   * Get the type of date/time element.
    *
    * @param array $element
    *   An element.
    *
    * @return string
-   *   An HTML date/time format string.
+   *   The type of date/time element which be either a 'date' or 'datetime'.
    */
-  protected function getHtmlDateFormat(array $element) {
-    if ($element['#type'] == 'datelist') {
-      return (isset($element['#date_part_order']) && !in_array('hour', $element['#date_part_order'])) ? 'html_date' : 'html_datetime';
-    }
-    else {
-      return 'html_' . $element['#type'];
+  protected function getDateType(array $element) {
+    switch ($element['#type']) {
+      case 'datelist':
+        return (isset($element['#date_part_order']) && !in_array('hour', $element['#date_part_order'])) ? 'date' : 'datetime';
+
+      case 'datetime':
+        return 'datetime';
+
+      case 'date':
+      default:
+        return 'date';
     }
   }
 
@@ -196,7 +216,7 @@ abstract class DateBase extends YamlFormElementBase {
       $element[$property] = NULL;
     }
     else {
-      $element[$property] = \Drupal::service('date.formatter')->format($timestamp, $this->getHtmlDateFormat($element));
+      $element[$property] = \Drupal::service('date.formatter')->format($timestamp, 'html_' . $this->getDateType($element));
     }
   }
 

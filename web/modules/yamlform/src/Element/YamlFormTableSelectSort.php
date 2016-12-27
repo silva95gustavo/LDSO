@@ -26,10 +26,10 @@ class YamlFormTableSelectSort extends Table {
       '#sticky' => FALSE,
       '#pre_render' => [
         [$class, 'preRenderTable'],
-        [$class, 'preRenderTableselectSort'],
+        [$class, 'preRenderYamlFormTableSelectSort'],
       ],
       '#process' => [
-        [$class, 'processTableselectSort'],
+        [$class, 'processYamlFormTableSelectSort'],
       ],
       '#options' => [],
       '#empty' => '',
@@ -74,7 +74,7 @@ class YamlFormTableSelectSort extends Table {
    * @return array
    *   The processed element.
    */
-  public static function preRenderTableselectSort($element) {
+  public static function preRenderYamlFormTableSelectSort($element) {
     $rows = [];
     $header = $element['#header'];
 
@@ -135,11 +135,16 @@ class YamlFormTableSelectSort extends Table {
 
     // Append weight to header.
     $header[] = t('Weight');
-    $element['#attributes']['class'][] = 'js-tableselect-sort';
-    $element['#attributes']['class'][] = 'tableselect-sort';
+
+    // Set header and rows.
     $element['#header'] = $header;
     $element['#rows'] = $rows;
+
+    // Attach table sort.
+    $element['#attributes']['class'][] = 'js-tableselect-sort';
+    $element['#attributes']['class'][] = 'tableselect-sort';
     $element['#attached']['library'][] = 'yamlform/yamlform.element.tableselect_sort';
+
     return $element;
   }
 
@@ -157,15 +162,15 @@ class YamlFormTableSelectSort extends Table {
    * @return array
    *   The processed element.
    */
-  public static function processTableselectSort(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function processYamlFormTableSelectSort(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = is_array($element['#value']) ? $element['#value'] : [];
 
     // Add validate callback that extracts the associative array of options.
     if (isset($element['#element_validate'])) {
-      array_unshift($element['#element_validate'], [get_called_class(), 'validateTableSelectOrder']);
+      array_unshift($element['#element_validate'], [get_called_class(), 'validateYamlFormTableSelectOrder']);
     }
     else {
-      $element['#element_validate'][] = [get_called_class(), 'validateTableSelectOrder'];
+      $element['#element_validate'][] = [get_called_class(), 'validateYamlFormTableSelectOrder'];
     }
 
     $element['#tree'] = TRUE;
@@ -250,7 +255,7 @@ class YamlFormTableSelectSort extends Table {
   /**
    * Validates yamlform_tableselect_other.
    */
-  public static function validateTableSelectOrder(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function validateYamlFormTableSelectOrder(&$element, FormStateInterface $form_state, &$complete_form) {
     // Get and sort checked values.
     $checked_values = [];
     foreach (Element::children($element) as $key) {
@@ -265,7 +270,7 @@ class YamlFormTableSelectSort extends Table {
 
     // Set values.
     $values = [];
-    foreach ($checked_values as $index => $item) {
+    foreach ($checked_values as $item) {
       $values[$item['value']] = $item['value'];
     }
 

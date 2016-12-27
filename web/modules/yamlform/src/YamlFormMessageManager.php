@@ -2,12 +2,12 @@
 
 namespace Drupal\yamlform;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Utility\Token;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 
@@ -17,6 +17,13 @@ use Psr\Log\LoggerInterface;
 class YamlFormMessageManager implements YamlFormMessageManagerInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
 
   /**
    * The configuration object factory.
@@ -54,6 +61,13 @@ class YamlFormMessageManager implements YamlFormMessageManagerInterface {
   protected $requestHandler;
 
   /**
+   * The token manager.
+   *
+   * @var \Drupal\yamlform\YamlFormTranslationManagerInterface
+   */
+  protected $tokenManager;
+
+  /**
    * A form.
    *
    * @var \Drupal\yamlform\YamlFormInterface
@@ -77,23 +91,26 @@ class YamlFormMessageManager implements YamlFormMessageManagerInterface {
   /**
    * Constructs a YamlFormMessageManager object.
    *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration object factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\Core\Utility\Token $token
-   *   The token service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\yamlform\YamlFormRequestInterface $request_handler
    *   The form request handler.
+   * @param \Drupal\yamlform\YamlFormTokenManagerInterface $token_manager
+   *   The token manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Token $token, LoggerInterface $logger, YamlFormRequestInterface $request_handler) {
+  public function __construct(AccountInterface $current_user, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, YamlFormRequestInterface $request_handler, YamlFormTokenManagerInterface $token_manager) {
+    $this->currentUser = $current_user;
     $this->configFactory = $config_factory;
-    $this->entityStorage = $entity_manager->getStorage('yamlform_submission');
-    $this->token = $token;
+    $this->entityStorage = $entity_type_manager->getStorage('yamlform_submission');
     $this->logger = $logger;
     $this->requestHandler = $request_handler;
+    $this->tokenManager = $token_manager;
   }
 
   /**
@@ -153,13 +170,14 @@ class YamlFormMessageManager implements YamlFormMessageManagerInterface {
    */
   public function get($key) {
     $yamlform_settings = ($this->yamlform) ? $this->yamlform->getSettings() : [];
+    $entity = $this->yamlformSubmission ?: $this->yamlform;
     if (!empty($yamlform_settings[$key])) {
-      return $this->replaceTokens($yamlform_settings[$key]);
+      return $this->tokenManager->replace($yamlform_settings[$key], $entity);
     }
 
     $default_settings = $this->configFactory->get('yamlform.settings')->get('settings');
     if (!empty($default_settings['default_' . $key])) {
-      return $this->replaceTokens($default_settings['default_' . $key]);
+      return $this->tokenManager->replace($default_settings['default_' . $key], $entity);
     }
 
     $yamlform = $this->yamlform;
@@ -183,7 +201,7 @@ class YamlFormMessageManager implements YamlFormMessageManagerInterface {
         return $this->t('This form is currently not saving any submitted data. Please enable the <a href=":settings_href">saving of results</a> or add a <a href=":handlers_href">submission handler</a> to the form.', $t_args);
 
       case YamlFormMessageManagerInterface::SUBMISSION_PREVIOUS:
-        $yamlform_submission = $this->entityStorage->getLastSubmission($yamlform, $source_entity);
+        $yamlform_submission = $this->entityStorage->getLastSubmission($yamlform, $source_entity, $this->currentUser);
         $submission_route_name = $this->requestHandler->getRouteName($yamlform_submission, $source_entity, 'yamlform.user.submission');
         $submission_route_parameters = $this->requestHandler->getRouteParameters($yamlform_submission, $source_entity);
         $t_args[':submission_href'] = Url::fromRoute($submission_route_name, $submission_route_parameters)->toString();
@@ -232,30 +250,6 @@ class YamlFormMessageManager implements YamlFormMessageManagerInterface {
     }
 
     $this->logger->$type($message, $context);
-  }
-
-  /**
-   * Replace tokens in text.
-   *
-   * @param string $text
-   *   A string of text that main contain tokens.
-   *
-   * @return string
-   *   Text will tokens replaced.
-   */
-  protected function replaceTokens($text) {
-    // Most strings won't contain tokens so lets check and return ASAP.
-    if (!is_string($text) || strpos($text, '[') === FALSE) {
-      return $text;
-    }
-
-    $token_data = [
-      'yamlform' => $this->yamlform,
-      'yamlform-submission' => $this->yamlformSubmission,
-    ];
-    $token_options = ['clear' => TRUE];
-
-    return $this->token->replace($text, $token_data, $token_options);
   }
 
 }

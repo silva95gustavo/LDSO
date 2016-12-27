@@ -15,6 +15,7 @@ trait YamlFormEntityOptionsTrait {
    */
   public function getDefaultProperties() {
     $properties = parent::getDefaultProperties() + [
+      // Entity reference settings.
       'target_type' => '',
       'selection_handler' => '',
       'selection_settings' => [],

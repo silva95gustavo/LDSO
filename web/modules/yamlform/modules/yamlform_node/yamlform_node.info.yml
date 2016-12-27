@@ -4,13 +4,15 @@ description: 'Provides a form content type which allows forms to be integrated i
 package: 'YAML Form'
 # core: 8.x
 dependencies:
-    - node
-    - path
-    - text
-    - yamlform
+  - 'drupal:field'
+  - 'drupal:node'
+  - 'drupal:path'
+  - 'drupal:text'
+  - 'drupal:user'
+  - yamlform
 
-# Information added by Drupal.org packaging script on 2016-10-19
-version: '8.x-1.0-beta21'
+# Information added by Drupal.org packaging script on 2016-12-26
+version: '8.x-1.0-beta29'
 core: '8.x'
 project: 'yamlform'
-datestamp: 1476877490
+datestamp: 1482752287

@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines the interface for form elements.
@@ -57,6 +58,14 @@ interface YamlFormElementInterface extends PluginInspectionInterface, PluginForm
    *   An associative array containing default element properties.
    */
   public function getDefaultProperties();
+
+  /**
+   * Get translatable properties.
+   *
+   * @return array
+   *   An associative array containing translatable element properties.
+   */
+  public function getTranslatableProperties();
 
   /**
    * Determine if an element supports a specified property.
@@ -216,6 +225,33 @@ interface YamlFormElementInterface extends PluginInspectionInterface, PluginForm
    *   A form submission.
    */
   public function prepare(array &$element, YamlFormSubmissionInterface $yamlform_submission);
+
+  /**
+   * Check element access (rules).
+   *
+   * @param string $operation
+   *   The operation access should be checked for.
+   *   Usually "create", "update", or "view".
+   * @param array $element
+   *   An element.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user session for which to check access.
+   *
+   * @return bool
+   *   TRUE is the element can be accessed by the user.
+   *
+   * @see \Drupal\yamlform\Entity\YamlForm::checkAccessRules
+   * @see \Drupal\yamlform\Entity\YamlForm::checkAccessRule
+   */
+  public function checkAccessRules($operation, array $element, AccountInterface $account = NULL);
+
+  /**
+   * Display element disabled warning.
+   *
+   * @param array $element
+   *   An element.
+   */
+  public function displayDisabledWarning(array $element);
 
   /**
    * Set an element's default value using saved data.

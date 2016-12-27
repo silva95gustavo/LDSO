@@ -14,8 +14,7 @@
    */
   Drupal.behaviors.yamlFormLocation = {
     attach: function (context) {
-
-      $(context).find('div.js-yamlform-location').once().each(function () {
+      $(context).find('div.js-yamlform-location').once('yamlform-location').each(function () {
         var $element = $(this);
         var $geocomplete = $element.find('.yamlform-location-geocomplete').geocomplete({
           details: $element,
@@ -49,7 +48,6 @@
           });
         }
       })
-
     }
   };
 

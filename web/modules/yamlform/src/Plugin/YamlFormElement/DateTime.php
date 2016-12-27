@@ -27,17 +27,18 @@ class DateTime extends DateBase {
     $time_format = '';
     // Date formats cannot be loaded during install or update.
     if (!defined('MAINTENANCE_MODE')) {
-      /** @var $date_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+      /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
       if ($date_format_entity = DateFormat::load('html_date')) {
         $date_format = $date_format_entity->getPattern();
       }
-      /** @var $time_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+      /** @var \Drupal\Core\Datetime\DateFormatInterface $time_format_entity */
       if ($time_format_entity = DateFormat::load('html_time')) {
         $time_format = $time_format_entity->getPattern();
       }
     }
 
     return parent::getDefaultProperties() + [
+      // Date settings.
       'date_date_format' => $date_format,
       'date_date_element' => 'date',
       'date_time_format' => $time_format,
@@ -93,11 +94,10 @@ class DateTime extends DateBase {
     $form = parent::form($form, $form_state);
     // Date.
     $form['date'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Date/time settings'),
       '#description' => $this->t('Datetime element is designed to have sane defaults so any or all can be omitted.') . ' ' .
       $this->t('Both the date and time components are configurable so they can be output as HTML5 datetime elements or not, as desired.'),
-      '#open' => FALSE,
     ];
     $form['date']['date_date_element'] = [
       '#type' => 'select',

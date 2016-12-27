@@ -18,9 +18,9 @@ class Checkbox extends BooleanBase {
    * {@inheritdoc}
    */
   public function getDefaultProperties() {
-    $properties = parent::getDefaultProperties();
-    $properties['title_display'] = 'after';
-    return $properties;
+    return [
+      'title_display' => 'after',
+    ] + parent::getDefaultProperties();
   }
 
 }

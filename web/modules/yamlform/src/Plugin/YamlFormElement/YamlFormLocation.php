@@ -45,21 +45,19 @@ class YamlFormLocation extends YamlFormCompositeBase {
   public function getDefaultProperties() {
     $properties = [
       'title' => '',
+      // General settings.
       'description' => '',
-
       'default_value' => [],
-      'required' => FALSE,
-
+      // For display.
       'title_display' => '',
       'description_display' => '',
-
-      'flex' => 1,
-      'states' => [],
-
+      // Form validation.
+      'required' => FALSE,
+      // Location settings.
       'geolocation' => FALSE,
       'hidden' => FALSE,
       'api_key' => '',
-    ];
+    ] + $this->getDefaultBaseProperties();
 
     $composite_elements = $this->getCompositeElements();
     foreach ($composite_elements as $composite_key => $composite_element) {
@@ -124,7 +122,7 @@ class YamlFormLocation extends YamlFormCompositeBase {
       $form['composite']['api_key']['#required'] = TRUE;
       if (\Drupal::currentUser()->hasPermission('administer yamlform')) {
         $t_args = [':href' => UrlGenerator::fromRoute('yamlform.settings')->toString()];
-        $form['composite']['api_key']['#description'] .= '<br/>' . $this->t('You either enter an element specific API key here or set the <a href=":href">default site-wide API key</a>.', $t_args);
+        $form['composite']['api_key']['#description'] .= '<br/>' . $this->t('You can either enter an element specific API key here or set the <a href=":href">default site-wide API key</a>.', $t_args);
       }
     }
 

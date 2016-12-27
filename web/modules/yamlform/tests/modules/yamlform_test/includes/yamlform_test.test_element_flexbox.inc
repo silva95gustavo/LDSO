@@ -5,7 +5,7 @@
  * Generate test elements with Flexbox wrappers.
  */
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Generate test elements with Flexbox wrappers.
@@ -60,7 +60,7 @@ function yamlform_test_test_element_flexbox() {
       foreach ($issues[$element_type] as $issue_number => $issue_title) {
         $items[$issue_number] = "<a href=\"https://www.drupal.org/node/$issue_number\">Issue #$issue_number: $issue_title</a>";
       }
-      $element['#description'] = '<b>Known Issues:</b><br/>' . implode('<br/>', $items);
+      $element['#description'] = '<b>' . t('Known Issues:') . '</b><br/>' . implode('<br/>', $items);
     }
 
     // Set default element properties.

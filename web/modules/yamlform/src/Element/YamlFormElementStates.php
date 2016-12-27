@@ -3,7 +3,7 @@
 namespace Drupal\yamlform\Element;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\Form\FormStateInterface;
@@ -27,7 +27,7 @@ class YamlFormElementStates extends FormElement {
       '#selector_options' => [],
       '#empty_states' => 3,
       '#process' => [
-        [$class, 'processStates'],
+        [$class, 'processYamlFormStates'],
       ],
       '#theme_wrappers' => ['form_element'],
     ];
@@ -62,7 +62,7 @@ class YamlFormElementStates extends FormElement {
   /**
    * Expand an email confirm field into two HTML5 email elements.
    */
-  public static function processStates(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function processYamlFormStates(&$element, FormStateInterface $form_state, &$complete_form) {
     // Define default #state_options and #trigger_options.
     // There are also defined by \Drupal\yamlform\YamlFormElementBase::form.
     $element += [
@@ -92,7 +92,7 @@ class YamlFormElementStates extends FormElement {
     $element['#tree'] = TRUE;
 
     // Add validate callback that extracts the associative array of states.
-    $element['#element_validate'] = [[get_called_class(), 'validateStates']];
+    $element['#element_validate'] = [[get_called_class(), 'validateYamlFormElementStates']];
 
     // For customized #states display a CodeMirror YAML editor.
     if ($warning_message = self::isDefaultValueCustomizedFormApiStates($element)) {
@@ -136,10 +136,10 @@ class YamlFormElementStates extends FormElement {
     // Build header.
     $header = [
       ['data' => t('State'), 'width' => '20%'],
-      ['data' => t('Element/Selector'), 'width' => '30%'],
+      ['data' => t('Element/Selector'), 'width' => '45%'],
       ['data' => t('Trigger'), 'width' => '20%'],
       ['data' => t('Value'), 'width' => '10%'],
-      ['data' => '', 'width' => '10%'],
+      ['data' => ''],
     ];
 
     // Get states and number of rows.
@@ -153,7 +153,7 @@ class YamlFormElementStates extends FormElement {
     // Build state and conditions rows.
     $row_index = 0;
     $rows = [];
-    foreach ($states as $state => $state_settings) {
+    foreach ($states as $state_settings) {
       $rows[$row_index] = self::buildStateRow($element, $state_settings, $table_id, $row_index, $ajax_settings);
       $row_index++;
       foreach ($state_settings['conditions'] as $condition) {
@@ -191,6 +191,7 @@ class YamlFormElementStates extends FormElement {
     ];
 
     $element['#attached']['library'][] = 'yamlform/yamlform.element.states';
+    $element['#attached']['library'][] = 'yamlform/yamlform.element.select2';
 
     return $element;
   }
@@ -225,6 +226,7 @@ class YamlFormElementStates extends FormElement {
       '#default_value' => $state['state'],
       '#empty_option' => '',
       '#empty_value' => '',
+      '#attributes' => ['class' => ['js-yamlform-select2', 'yamlform-select2']],
     ];
     $row['operator'] = [
       '#type' => 'select',
@@ -276,6 +278,7 @@ class YamlFormElementStates extends FormElement {
       '#default_value' => $condition['selector'],
       '#empty_option' => '',
       '#empty_value' => '',
+      '#attributes' => ['class' => ['js-yamlform-select2', 'yamlform-select2']],
     ];
     $row['trigger'] = [
       '#type' => 'select',
@@ -283,6 +286,7 @@ class YamlFormElementStates extends FormElement {
       '#default_value' => $condition['trigger'],
       '#empty_option' => '',
       '#empty_value' => '',
+      '#attributes' => ['class' => ['js-yamlform-select2', 'yamlform-select2']],
     ];
     $row['value'] = [
       '#type' => 'textfield',
@@ -469,7 +473,7 @@ class YamlFormElementStates extends FormElement {
   /**
    * Validates form states element.
    */
-  public static function validateStates(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function validateYamlFormElementStates(&$element, FormStateInterface $form_state, &$complete_form) {
     if (isset($element['states']['#value']) && is_string($element['states']['#value'])) {
       $states = Yaml::decode($element['states']['#value']);
     }

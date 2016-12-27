@@ -2,6 +2,7 @@
 
 namespace Drupal\yamlform\Plugin\YamlFormElement;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\yamlform\Utility\YamlFormArrayHelper;
@@ -15,13 +16,63 @@ use Drupal\yamlform\YamlFormSubmissionInterface;
 abstract class OptionsBase extends YamlFormElementBase {
 
   /**
+   * Export delta for multiple options.
+   *
+   * @var bool
+   */
+  protected $exportDelta = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function getDefaultProperties() {
-    return parent::getDefaultProperties() + [
+    $default_properties = parent::getDefaultProperties();
+
+    // Issue #2836374: Wrapper attributes are not supported by composite
+    // elements, this includes radios, checkboxes, and buttons.
+    if (preg_match('/(radios|checkboxes|buttons)/', $this->getPluginId())) {
+      unset($default_properties['wrapper_attributes']);
+    }
+
+    return $default_properties + [
+      // Options settings.
       'options' => [],
       'options_randomize' => FALSE,
     ];
+  }
+
+  /**
+   * Get option (option) properties.
+   *
+   * @return array
+   *   An associative array containing other (option) properties.
+   */
+  public function getOtherProperties() {
+    return [
+      'other__option_label' => $this->t('Other...'),
+      'other__type' => 'textfield',
+      'other__title' => '',
+      'other__placeholder' => $this->t('Enter other...'),
+      'other__description' => '',
+      // Text field or textarea.
+      'other__size' => '',
+      'other__maxlength' => '',
+      'other__field_prefix' => '',
+      'other__field_suffix' => '',
+      // Textarea.
+      'other__rows' => '',
+      // Number.
+      'other__min' => '',
+      'other__max' => '',
+      'other__step' => '',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslatableProperties() {
+    return array_merge(parent::getTranslatableProperties(), ['options', 'empty_option', 'option_label']);
   }
 
   /**
@@ -53,8 +104,8 @@ abstract class OptionsBase extends YamlFormElementBase {
 
     $is_wrapper_fieldset = in_array($element['#type'], ['checkboxes', 'radios']);
     if ($is_wrapper_fieldset) {
-      // Issue #2396145: Option #description_display for form element fieldset is
-      // not changing anything.
+      // Issue #2396145: Option #description_display for form element fieldset
+      // is not changing anything.
       // @see core/modules/system/templates/fieldset.html.twig
       $is_description_display = (isset($element['#description_display'])) ? TRUE : FALSE;
       $has_description = (!empty($element['#description'])) ? TRUE : FALSE;
@@ -80,7 +131,7 @@ abstract class OptionsBase extends YamlFormElementBase {
    * {@inheritdoc}
    */
   public function hasMultipleValues(array $element) {
-    return (!empty($element['#multiple'])) ? TRUE : parent::hasMultipleValues($element);
+    return (isset($element['#multiple'])) ? $element['#multiple'] : parent::hasMultipleValues($element);
   }
 
   /**
@@ -276,7 +327,7 @@ abstract class OptionsBase extends YamlFormElementBase {
       '#title' => $this->t('Options format'),
       '#options' => [
         'compact' => $this->t('Compact; with the option values delimited by commas in one column.') . '<div class="description">' . $this->t('Compact options are more suitable for importing data into other systems.') . '</div>',
-        'separate' => $this->t('Separate; with each possible option value in its own column.') . '<div class="description">' . $this->t('Separate options are more suitable for building reports, graphs, and statistics in a spreadsheet application.') . '</div>',
+        'separate' => $this->t('Separate; with each possible option value in its own column.') . '<div class="description">' . $this->t('Separate options are more suitable for building reports, graphs, and statistics in a spreadsheet application. Ranking will be included for sortable option elements.') . '</div>',
       ],
       '#default_value' => $export_options['options_format'],
     ];
@@ -298,7 +349,10 @@ abstract class OptionsBase extends YamlFormElementBase {
     if ($options['options_format'] == 'separate' && isset($element['#options'])) {
       $header = [];
       foreach ($element['#options'] as $option_value => $option_text) {
-        $header[] = ($options['options_item_format'] == 'key') ? $option_value : $option_text;
+        // Note: If $option_text is an array (typically a tableselect row)
+        // always use $option_value.
+        $title = ($options['options_item_format'] == 'key' || is_array($option_text)) ? $option_value : $option_text;
+        $header[] = $title;
       }
       return $this->prefixExportHeader($header, $element, $options);
     }
@@ -314,19 +368,19 @@ abstract class OptionsBase extends YamlFormElementBase {
     $element_options = $element['#options'];
 
     $record = [];
+
     if ($export_options['options_format'] == 'separate') {
       // Combine the values so that isset can be used instead of in_array().
       // http://stackoverflow.com/questions/13483219/what-is-faster-in-array-or-isset
+      $deltas = FALSE;
       if (is_array($value)) {
         $value = array_combine($value, $value);
+        $deltas = ($this->exportDelta) ? array_flip(array_values($value)) : FALSE;
       }
       // Separate multiple values (ie options).
       foreach ($element_options as $option_value => $option_text) {
-        if (is_array($value) && isset($value[$option_value])) {
-          $record[] = 'X';
-        }
-        elseif ($value == $option_value) {
-          $record[] = 'X';
+        if ((is_array($value) && isset($value[$option_value])) || ($value == $option_value)) {
+          $record[] = ($deltas) ? ($deltas[$option_value] + 1) : 'X';
         }
         else {
           $record[] = '';
@@ -345,6 +399,9 @@ abstract class OptionsBase extends YamlFormElementBase {
       elseif ($export_options['options_item_format'] == 'label') {
         $record[] = YamlFormOptionsHelper::getOptionText($value, $element_options);
       }
+      else {
+        $record[] = $value;
+      }
     }
 
     return $record;
@@ -356,7 +413,10 @@ abstract class OptionsBase extends YamlFormElementBase {
   public static function validateMultipleOptions(array &$element, FormStateInterface $form_state) {
     $name = $element['#name'];
     $values = $form_state->getValue($name);
-    $values = array_filter($values);
+    // Filter unchecked/unselected options whose value is 0.
+    $values = array_filter($values, function ($value) {
+      return $value !== 0;
+    });
     $values = array_values($values);
     $form_state->setValue($name, $values);
   }
@@ -366,7 +426,7 @@ abstract class OptionsBase extends YamlFormElementBase {
    */
   protected function getElementSelectorInputsOptions(array $element) {
     $plugin_id = $this->getPluginId();
-    if (preg_match('/yamlform_(select|radios|checkboxes)_other$/', $plugin_id, $match)) {
+    if (preg_match('/yamlform_(select|radios|checkboxes|buttons)_other$/', $plugin_id, $match)) {
       $title = $this->getAdminLabel($element);
       list($element_type) = explode(' ', $this->getPluginLabel());
 
@@ -387,11 +447,21 @@ abstract class OptionsBase extends YamlFormElementBase {
     $form = parent::form($form, $form_state);
 
     $form['general']['default_value']['#description'] = $this->t('The default value of the field identified by its key.');
-    $form['general']['default_value']['#description'] .= ' ' . $this->t('For multiple options use commas to separate multiple defaults.');
+    $form['general']['default_value']['#description'] .= ' ' . $this->t('For multiple options, use commas to separate multiple defaults.');
 
+    // Issue #2836374: Wrapper attributes are not supported by composite
+    // elements, this includes radios, checkboxes, and buttons.
+    if (preg_match('/(radios|checkboxes|buttons)/', $this->getPluginId())) {
+      $t_args = [
+        '@name' => Unicode::strtolower($this->getPluginLabel()),
+        ':href' => 'https://www.drupal.org/node/2836364',
+      ];
+      $form['element_attributes']['#description'] = $this->t('Please note: That the below custom element attributes will also be applied to the @name fieldset wrapper. (<a href=":href">Issue #2836374</a>)', $t_args);
+    }
+    // Options.
     $form['options'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Options'),
+      '#type' => 'fieldset',
+      '#title' => $this->t('Element options'),
       '#open' => TRUE,
     ];
     $form['options']['options'] = [
@@ -419,6 +489,12 @@ abstract class OptionsBase extends YamlFormElementBase {
       '#title' => $this->t('Empty option value'),
       '#description' => $this->t('The value for the initial option denoting no selection in a select element, which is used to determine whether the user submitted a value or not.'),
     ];
+    $form['options']['multiple'] = [
+      '#title' => $this->t('Multiple'),
+      '#type' => 'checkbox',
+      '#return_value' => TRUE,
+      '#description' => $this->t('Check this option if the user should be allowed to choose multiple values.'),
+    ];
     $form['options']['options_randomize'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Randomize options'),
@@ -426,10 +502,36 @@ abstract class OptionsBase extends YamlFormElementBase {
       '#return_value' => TRUE,
     ];
 
+    // Other.
+    $states_textfield_or_number = [
+      'visible' => [
+        [':input[name="properties[other__type]"]' => ['value' => 'textfield']],
+        'or',
+        [':input[name="properties[other__type]"]' => ['value' => 'number']],
+      ],
+    ];
+    $states_textarea = [
+      'visible' => [
+        ':input[name="properties[other__type]"]' => ['value' => 'textarea'],
+      ],
+    ];
+    $states_number = [
+      'visible' => [
+        ':input[name="properties[other__type]"]' => ['value' => 'number'],
+      ],
+    ];
     $form['options_other'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Other option'),
-      '#open' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => $this->t('Other option settings'),
+    ];
+    $form['options_other']['other__type'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Other type'),
+      '#options' => [
+        'textfield' => $this->t('Text field'),
+        'textarea' => $this->t('Textarea'),
+        'number' => $this->t('Number'),
+      ],
     ];
     $form['options_other']['other__option_label'] = [
       '#type' => 'textfield',
@@ -453,6 +555,7 @@ abstract class OptionsBase extends YamlFormElementBase {
       '#description' => $this->t('Leaving blank will use the default size.'),
       '#min' => 1,
       '#size' => 4,
+      '#states' => $states_textfield_or_number,
     ];
     $form['options_other']['other__maxlength'] = [
       '#type' => 'number',
@@ -460,8 +563,54 @@ abstract class OptionsBase extends YamlFormElementBase {
       '#description' => $this->t('Leaving blank will use the default maxlength.'),
       '#min' => 1,
       '#size' => 4,
+      '#states' => $states_textfield_or_number,
     ];
-
+    $form['options_other']['other__field_prefix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Other field prefix'),
+      '#description' => $this->t('Text or code that is placed directly in front of the input. This can be used to prefix an input with a constant string. Examples: $, #, -.'),
+      '#size' => 10,
+      '#states' => $states_textfield_or_number,
+    ];
+    $form['options_other']['other__field_suffix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Other field suffix'),
+      '#description' => $this->t('Text or code that is placed directly after the input. This can be used to add a unit to an input. Examples: lb, kg, %.'),
+      '#size' => 10,
+      '#states' => $states_textfield_or_number,
+    ];
+    $form['options_other']['other__rows'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Other rows'),
+      '#description' => $this->t('Leaving blank will use the default rows.'),
+      '#min' => 1,
+      '#size' => 4,
+      '#states' => $states_textarea,
+    ];
+    $form['options_other']['other__min'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Other min'),
+      '#description' => $this->t('Specifies the minimum value.'),
+      '#step' => 'any',
+      '#size' => 4,
+      '#states' => $states_number,
+    ];
+    $form['options_other']['other__max'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Other max'),
+      '#description' => $this->t('Specifies the maximum value.'),
+      '#step' => 'any',
+      '#size' => 4,
+      '#states' => $states_number,
+    ];
+    $form['options_other']['other__step'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Other steps'),
+      '#description' => $this->t('Specifies the legal number intervals. Leave blank to support any number interval.'),
+      '#step' => 'any',
+      '#size' => 4,
+      '#states' => $states_number,
+    ];
     return $form;
   }
 

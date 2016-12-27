@@ -58,4 +58,18 @@ class YamlFormExporter extends Plugin {
    */
   public $description = '';
 
+  /**
+   * Generates zipped archive.
+   *
+   * @var bool
+   */
+  public $archive = FALSE;
+
+  /**
+   * Using export options.
+   *
+   * @var bool
+   */
+  public $options = TRUE;
+
 }

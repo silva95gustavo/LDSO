@@ -43,7 +43,7 @@ class MachineName extends YamlFormElementBase {
    * @return bool
    *   Always returns TRUE.
    */
-  static public function exists() {
+  public static function exists() {
     return FALSE;
   }
 

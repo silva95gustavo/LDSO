@@ -1,11 +1,14 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - yamlform_test
 uid: null
 template: false
 id: test_element
 title: 'Test: Elements'
-description: 'Test instance of all supported form elements.'
+description: 'Test instances of all supported form elements.'
 elements: |
   hidden:
     '#type': hidden
@@ -52,7 +55,7 @@ elements: |
       '#default_value': |
         {textarea line 1}
         {textarea line 2}
-
+  
     textfield:
       '#type': textfield
       '#title': 'textfield'
@@ -220,7 +223,6 @@ elements: |
     tableselect:
       '#type': tableselect
       '#title': 'tableselect'
-      '#js_select': true
       '#options':
         1: one
         2: two
@@ -228,11 +230,14 @@ elements: |
       '#default_value':
         - 1
         - 2
+css: ''
+javascript: ''
 settings:
   page: true
   page_submit_path: ''
   page_confirm_path: ''
   form_submit_label: ''
+  form_submit_attributes: {  }
   form_exception_message: ''
   form_closed_message: ''
   form_confidential: false
@@ -240,28 +245,39 @@ settings:
   form_prepopulate: false
   form_prepopulate_source_entity: false
   form_novalidate: false
+  form_unsaved: false
+  form_disable_back: false
   form_autofocus: false
   form_details_toggle: false
   wizard_progress_bar: true
   wizard_progress_pages: false
   wizard_progress_percentage: false
   wizard_next_button_label: ''
+  wizard_next_button_attributes: {  }
   wizard_prev_button_label: ''
+  wizard_prev_button_attributes: {  }
   wizard_start_label: ''
   wizard_complete: true
   wizard_complete_label: ''
   preview: 1
   preview_next_button_label: ''
+  preview_next_button_attributes: {  }
   preview_prev_button_label: ''
+  preview_prev_button_attributes: {  }
   preview_message: ''
   draft: false
   draft_auto_save: false
   draft_button_label: ''
+  draft_button_attributes: {  }
   draft_saved_message: ''
   draft_loaded_message: ''
   confirmation_type: page
   confirmation_message: ''
   confirmation_url: ''
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  confirmation_back_attributes: {  }
   limit_total: null
   limit_total_message: ''
   limit_user: null

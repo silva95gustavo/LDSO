@@ -37,6 +37,6 @@ interface YamlFormOptionsInterface extends ConfigEntityInterface {
    * @return array
    *   An associative array of options.
    */
-  static public function getElementOptions(array $element, $property_name = '#options');
+  public static function getElementOptions(array $element, $property_name = '#options');
 
 }
