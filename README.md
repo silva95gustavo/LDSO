@@ -1,3 +1,24 @@
-# LDSO
+# Associação Cuidadores
 
-https://docs.google.com/document/d/1_zVa_cccw9vPXK-RXaOPp066oSho4J5ejqYBJTFOyo8/edit#heading=h.aapgkrhv0gx
+## Getting started
+
+### Prerequisites
+
+### Installation
+
+1. Open a command line on folder `/web/scripts/`.
+2. Copy the file `/web/sites/default/settings.local.example.php` to `/web/sites/default/settings.local.php` and update it with the configurations of your database, as well as the folder where the temporary files will be stored.
+3. Copy the file `/web/comunidade/config.local.example.php` to `/web/comunidade/config.local.php` and update it with your database configurations, as well as the path to the online community page.
+4. Open a command line in folder `/web/scripts/`.
+5. Run the command `install.bat <dbuser> <dbpass> <dbname>`. If the database has no _password_ write `""` in the `<dbpass>` field.
+6. In order for the admin to be automatically notified when a community user becomes an adult, a cronjob must be set up. This means adding the following line to the crontab file: `0 0 * * * php -q /var/www/staging/comunidade/young_adult/notify_admin.php`
+
+### Running the tests
+
+## Usage
+
+## Built width
+
+## Versioning
+
+## Credits
