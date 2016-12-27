@@ -1,18 +1,17 @@
-- [Associação Cuidadores](#associação-cuidadores)
-  - [Getting started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-      - [Website](#website)
-      - [Mobile app](#mobile-app)
-    - [Running the tests](#running-the-tests)
-  - [Usage](#usage)
-  - [System architecture](#system-architecture)
-    - [Built width](#built-width)
-    - [Technological architecture](#technological-architecture)
-  - [Versioning](#versioning)
-  - [Credits](#credits)
-
 # Associação Cuidadores
+
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Website](#website)
+    - [Mobile app](#mobile-app)
+  - [Running the tests](#running-the-tests)
+- [Usage](#usage)
+- [System architecture](#system-architecture)
+  - [Built width](#built-width)
+  - [Technological architecture](#technological-architecture)
+- [Versioning](#versioning)
+- [Credits](#credits)
 
 ## Getting started
 
