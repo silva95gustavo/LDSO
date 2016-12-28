@@ -9,6 +9,7 @@
 - [Usage](#usage)
   - [Account system](#account-system)
   - [Charts](#charts)
+  - [Forms](#forms)
   - [Newsletter](#newsletter)
 - [System architecture](#system-architecture)
   - [Built width](#built-width)
@@ -63,8 +64,14 @@ The system allows the creation of charts with custom data, using EasyChart. Here
 
 ![Creating a chart](images/create_chart.gif)
 
-### Newsletter
+### Forms
+The module chosen to display customizable forms was YAMLForms. It has two important features that were requirements of the project: the administrator is able to easily customize it and to export the results to an Excel spreadsheet, by choosing the following options in the form export page:
 
+![Export form results](images/export_form_results.png)
+
+In order to edit the input fields of a form, the administrator must go to Structure > Forms > Edit (in the line corresponding to the form to be edited).
+
+### Newsletter
 The newsletter system allows the subscription of guests or logged-in users. It also allows the administrator to manually specify custom e-mails that he wants to send the newsletter to:
 
 ![Newsletter subscription](images/newsletter_subscription.gif)
