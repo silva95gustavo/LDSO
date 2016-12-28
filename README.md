@@ -7,6 +7,9 @@
     - [Mobile app](#mobile-app)
   - [Running the tests](#running-the-tests)
 - [Usage](#usage)
+  - [Account system](#account-system)
+  - [Charts](#charts)
+  - [Newsletter](#newsletter)
 - [System architecture](#system-architecture)
   - [Built width](#built-width)
   - [Technological architecture](#technological-architecture)
@@ -44,6 +47,27 @@ The website unit tests use PHPUnit and can be run with the following command: `/
 The website acceptance tests use Selenium and Google Chrome as the browser. They can be run with the following command: `/web/scripts/acceptance/compile_and_run.bat`.
 
 ## Usage
+In this section, the usage of specific parts of the website will be explained.
+
+### Account system
+To create an account, one can access the "Reserved area" in the top menu of the website or click the "Sign up" button located in the forum's header.
+
+After choosing an email address, the user will be asked what parts of the system he wants to be registered to: website and/or forum.
+
+If the website checkbox is ticked, he will be asked his name and associate number (both are optional fields). If the forum checkbox is ticked he will be asked to enter an username and his birth date. According to that birth date, he will be automatically assigned to the young (17-) or adult (18+) forum.
+
+This way, the user is able to fully separate his website and forum accounts while still keeping a small connection between them (e-mail and password are shared between both accounts).
+
+### Charts
+The system allows the creation of charts with custom data, using EasyChart. Here is an example of how a chart can be created (in this case a pie chart imported from an Excel spreadsheet):
+
+![Creating a chart](images/create_chart.gif)
+
+### Newsletter
+
+The newsletter system allows the subscription of guests or logged-in users. It also allows the administrator to manually specify custom e-mails that he wants to send the newsletter to:
+
+![Newsletter subscription](images/newsletter_subscription.gif)
 
 ## System architecture
 
