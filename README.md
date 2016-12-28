@@ -40,6 +40,8 @@
 3. Run `npm install -g cordova ionic`.
 
 ### Running the tests
+The website unit tests use PHPUnit and can be run with the following command: `/web/core/vendor/bin/phpunit --testsuite=unit`.
+The website acceptance tests use Selenium and Google Chrome as the browser. They can be run with the following command: `/web/scripts/acceptance/compile_and_run.bat`.
 
 ## Usage
 
