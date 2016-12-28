@@ -11,6 +11,7 @@
   - [Charts](#charts)
   - [Forms](#forms)
   - [Newsletter](#newsletter)
+  - [Export user info](#export-user-info)
 - [System architecture](#system-architecture)
   - [Built width](#built-width)
   - [Technological architecture](#technological-architecture)
@@ -75,6 +76,16 @@ In order to edit the input fields of a form, the administrator must go to Struct
 The newsletter system allows the subscription of guests or logged-in users. It also allows the administrator to manually specify custom e-mails that he wants to send the newsletter to:
 
 ![Newsletter subscription](images/newsletter_subscription.gif)
+
+### Export user info
+The administrator is able to export a list of all users of both the website and community to an Excel spreadsheet. In order to do that, one must acess the Configuration page and click "Export User Information" in the development section. The generated spreadsheet contains the following columns:
+- **Account type:** - Can be one of three values: "Website", "Community" or "Both". The value depends on where the user is registered.
+- **Email:** - The email of the user.
+- **Name:** - The name of the user (optional field).
+- **Associate number:** - The associate number of the user (optional field).
+- **Username:** - The username of the user (if registered in the forum).
+- **Age group:** - Young (17-) or Adult (18+).
+- **Account activated:** - Activated or Not Activated, depending on whether or not the user has activated the email associated to the account.
 
 ## System architecture
 
