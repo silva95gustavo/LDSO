@@ -112,9 +112,19 @@
   {% endblock %}
 {% endif %}
 
+{# Top #}
+{% if page.top %}
+  {% block top %}
+	<div class="container-fluid">
+		{{ page.top }}
+	</div>
+  {% endblock %}
+{% endif %}
+
 {# Main #}
 {% block main %}
   <div role="main" class="main-container container js-quickedit-main-content">
+	
     <div class="row">
 
       {# Header #}
