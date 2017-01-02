@@ -231,3 +231,13 @@ body {
 .calendar-calendar td .calendar .contents time {
 	display: none;
 }
+
+#block-responsiveslideshow{
+	margin-top:-20px;
+	background:cover;
+	margin-bottom:20px;
+}
+
+div#top.container-fluid { padding: 0 }
+
+#block-responsiveslideshow > div.col-md-12 { padding: 0 }
