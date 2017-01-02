@@ -4,7 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class Slideshow {
@@ -22,9 +22,10 @@ public class Slideshow {
 
   @Test
   public void testSlideshow() throws Exception {
-    driver.get(baseUrl + "/pt-pt");
+    driver.get(baseUrl + "/");
     driver.findElement(By.cssSelector("img[alt=\"Início\"]")).click();
-    assertEquals("", driver.findElement(By.xpath("//div[2]/div/div/div/img")).getText());
+    driver.findElement(By.cssSelector("a.right.carousel-control")).click();
+    assertTrue(isElementPresent(By.cssSelector("div.item.active > img.home-img-slideshow")));
   }
 
   @After

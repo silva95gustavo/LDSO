@@ -4,16 +4,16 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://staging.cuidadores.tk/" />
-<title>slideshow_test</title>
+<title>slideshow</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">slideshow_test</td></tr>
+<tr><td rowspan="1" colspan="3">slideshow</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/pt-pt</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -22,10 +22,16 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>//div[2]/div/div/div/img</td>
+	<td>click</td>
+	<td>css=a.right.carousel-control</td>
 	<td></td>
 </tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=div.item.active &gt; img.home-img-slideshow</td>
+	<td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
