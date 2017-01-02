@@ -127,6 +127,12 @@ body {
 	display: none;
 }
 
+.evento.teaser img, .noticia.teaser img {
+	margin: auto;
+    max-height: 200px;
+    width: auto;
+}
+
 .top_footer {
 	margin-top: 45px;
 	padding-top: 35px;
