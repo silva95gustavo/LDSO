@@ -52,16 +52,26 @@ class YamlFormExporterManager extends DefaultPluginManager implements YamlFormEx
   /**
    * {@inheritdoc}
    */
+  public function getInstances(array $configuration = []) {
+    $instances = [];
+    $plugin_definitions = $this->getDefinitions();
+    $plugin_definitions = $this->getSortedDefinitions($plugin_definitions);
+    foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+      $instances[$plugin_id] = $this->createInstance($plugin_id, $configuration);
+    }
+    return $instances;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getOptions() {
-    $definitions = $this->getDefinitions();
-    $definitions = $this->getSortedDefinitions($definitions);
+    $plugin_definitions = $this->getDefinitions();
+    $plugin_definitions = $this->getSortedDefinitions($plugin_definitions);
 
     $options = [];
-    foreach ($definitions as $plugin_id => $definition) {
-      $exporter = $this->createInstance($plugin_id);
-      if ($exporter->getStatus()) {
-        $options[$plugin_id] = $definition['label'];
-      }
+    foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+      $options[$plugin_id] = $plugin_definition['label'];
     }
     return $options;
   }

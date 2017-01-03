@@ -27,6 +27,7 @@ class TextFormat extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Text format settings.
       'allowed_formats' => [],
       'hide_help' => FALSE,
     ];
@@ -59,7 +60,7 @@ class TextFormat extends YamlFormElementBase {
    * @return array
    *   The element.
    */
-  static public function afterBuild(array $element, FormStateInterface $form_state) {
+  public static function afterBuild(array $element, FormStateInterface $form_state) {
     if (empty($element['format'])) {
       return $element;
     }
@@ -171,9 +172,8 @@ class TextFormat extends YamlFormElementBase {
       $options[$filter->id()] = $filter->label();
     }
     $form['text_format'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Text format settings'),
-      '#open' => FALSE,
     ];
     $form['text_format']['allowed_formats'] = [
       '#type' => 'checkboxes',

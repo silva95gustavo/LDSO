@@ -4,7 +4,6 @@ namespace Drupal\yamlform\Plugin\YamlFormElement;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\yamlform\YamlFormSubmissionInterface;
 
 /**
  * Provides a 'datelist' element.
@@ -23,6 +22,7 @@ class DateList extends DateBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Date settings.
       'date_part_order' => [
         'year',
         'month',
@@ -77,9 +77,8 @@ class DateList extends DateBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['date'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Date list settings'),
-      '#open' => FALSE,
     ];
     $form['date']['date_part_order_label'] = [
       '#type' => 'item',
@@ -143,11 +142,11 @@ class DateList extends DateBase {
   /**
    * {@inheritdoc}
    */
-  protected function setConfigurationFormDefaultValue(array &$form, array &$element, array &$property_element, $property_name) {
+  protected function setConfigurationFormDefaultValue(array &$form, array &$element_properties, array &$property_element, $property_name) {
     if (in_array($property_name, ['date_text_parts', 'date_part_order'])) {
-      $element[$property_name] = array_combine($element[$property_name], $element[$property_name]);
+      $element_properties[$property_name] = array_combine($element_properties[$property_name], $element_properties[$property_name]);
     }
-    parent::setConfigurationFormDefaultValue($form, $element, $property_element, $property_name);
+    parent::setConfigurationFormDefaultValue($form, $element_properties, $property_element, $property_name);
   }
 
 }

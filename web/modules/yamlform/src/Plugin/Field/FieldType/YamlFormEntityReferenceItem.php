@@ -2,23 +2,23 @@
 
 namespace Drupal\yamlform\Plugin\Field\FieldType;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Defines the 'entity_reference' entity field type.
+ * Defines the 'yamlform_entity_reference' entity field type.
  *
- * Supported settings (below the definition's 'settings' key) are:
- * - target_type: The entity type to reference. Required.
+ * Extends EntityReferenceItem and only support targeting form entities.
  *
  * @FieldType(
  *   id = "yamlform",
  *   label = @Translation("Form"),
  *   description = @Translation("A form containing default submission values."),
  *   category = @Translation("Reference"),
- *   default_widget = "yamlform_entity_reference_autocomplete",
+ *   default_widget = "yamlform_entity_reference_select",
  *   default_formatter = "yamlform_entity_reference_entity_view",
  *   list_class = "\Drupal\yamlform\Plugin\Field\FieldType\YamlFormEntityReferenceFieldItemList",
  * )
@@ -53,7 +53,7 @@ class YamlFormEntityReferenceItem extends EntityReferenceItem {
         'target_id' => [
           'description' => 'The ID of the form entity.',
           'type' => 'varchar_ascii',
-          'length' => 255,
+          'length' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
         ],
         'default_data' => [
           'description' => 'Default submission data.',
@@ -93,13 +93,6 @@ class YamlFormEntityReferenceItem extends EntityReferenceItem {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     return [];
   }
 

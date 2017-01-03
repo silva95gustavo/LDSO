@@ -3,6 +3,7 @@
 namespace Drupal\yamlform\Element;
 
 use Drupal\Core\Form\OptGroup;
+use Drupal\Component\Utility\Html;
 
 /**
  * Trait for entity reference elements.
@@ -32,14 +33,14 @@ trait YamlFormEntityTrait {
    * @see \Drupal\system\Controller\EntityAutocompleteController
    */
   public static function setOptions(array &$element) {
-    if (isset($element['#options'])) {
+    if (!empty($element['#options'])) {
       return;
     }
 
     $selection_handler_options = [
       'target_type' => $element['#target_type'],
       'handler' => $element['#selection_handler'],
-      'handler_settings' => $element['#selection_settings'],
+      'handler_settings' => (isset($element['#selection_settings'])) ? $element['#selection_settings'] : [],
     ];
 
     /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_manager */
@@ -50,13 +51,18 @@ trait YamlFormEntityTrait {
     // Flatten all bundle grouping since they are not applicable to
     // YamlFormEntity elements.
     $options = [];
-    foreach ($referenceable_entities as $bundle => $bundle_options) {
+    foreach ($referenceable_entities as $bundle_options) {
       $options += $bundle_options;
     }
 
     // Only select menu can support optgroups.
     if ($element['#type'] !== 'yamlform_entity_select') {
       $options = OptGroup::flattenOptions($options);
+    }
+
+    // Issue #2826451: TermSelection returning HTML characters in select list.
+    foreach ($options as $key => $value) {
+      $options[$key] = Html::decodeEntities($value);
     }
 
     $element['#options'] = $options;

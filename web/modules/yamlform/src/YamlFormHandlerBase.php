@@ -98,7 +98,7 @@ abstract class YamlFormHandlerBase extends PluginBase implements YamlFormHandler
   /**
    * Get the form that this handler is attached to.
    *
-   * @return \Drupal\yamlform\Entity\YamlForm
+   * @return \Drupal\yamlform\YamlFormInterface
    *   A form.
    */
   public function getYamlForm() {

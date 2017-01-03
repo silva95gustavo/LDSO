@@ -22,6 +22,7 @@ class Checkboxes extends OptionsBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Options settings.
       'options_display' => 'one_column',
     ];
   }
@@ -39,7 +40,7 @@ class Checkboxes extends OptionsBase {
    */
   protected function getElementSelectorInputsOptions(array $element) {
     $selectors = $element['#options'];
-    foreach ($selectors as $value => &$text) {
+    foreach ($selectors as &$text) {
       $text .= ' [' . $this->t('Checkbox') . ']';
     }
     return $selectors;

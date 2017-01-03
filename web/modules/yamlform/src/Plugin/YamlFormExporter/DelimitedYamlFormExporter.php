@@ -3,6 +3,7 @@
 namespace Drupal\yamlform\Plugin\YamlFormExporter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\yamlform\YamlFormSubmissionInterface;
 
 /**
  * Defines a delimited text exporter.
@@ -13,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   description = @Translation("Exports results as delimited text file."),
  * )
  */
-class DelimitedYamlFormExporter extends FileHandleBaseYamlFormExporter {
+class DelimitedYamlFormExporter extends TabularBaseYamlFormExporter {
 
   /**
    * {@inheritdoc}
@@ -39,10 +40,20 @@ class DelimitedYamlFormExporter extends FileHandleBaseYamlFormExporter {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    if (isset($form['delimiter'])) {
+      return $form;
+    }
+
+    $states = [
+      'visible' => [
+        [':input.js-yamlform-exporter' => ['value' => 'delimited']],
+      ],
+    ];
     $form['warning'] = [
       '#type' => 'yamlform_message',
       '#message_type' => 'warning',
       '#message_message' => $this->t('<strong>Warning:</strong> Opening delimited text files with spreadsheet applications may expose you to <a href=":href">formula injection</a> or other security vulnerabilities. When the submissions contain data from untrusted users and the downloaded file will be used with spreadsheets, use Microsoft Excel format.', [':href' => 'https://www.google.com/search?q=spreadsheet+formula+injection']),
+      '#states' => $states,
     ];
     $form['delimiter'] = [
       '#type' => 'select',
@@ -58,6 +69,7 @@ class DelimitedYamlFormExporter extends FileHandleBaseYamlFormExporter {
         '.'  => $this->t('Period (.)'),
         ' '  => $this->t('Space ( )'),
       ],
+      '#states' => $states,
       '#default_value' => $this->configuration['delimiter'],
     ];
     return $form;
@@ -79,14 +91,16 @@ class DelimitedYamlFormExporter extends FileHandleBaseYamlFormExporter {
   /**
    * {@inheritdoc}
    */
-  public function writeHeader(array $header) {
+  public function writeHeader() {
+    $header = $this->buildHeader();
     fputcsv($this->fileHandle, $header, $this->configuration['delimiter']);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function writeRecord(array $record) {
+  public function writeSubmission(YamlFormSubmissionInterface $yamlform_submission) {
+    $record = $this->buildRecord($yamlform_submission);
     fputcsv($this->fileHandle, $record, $this->configuration['delimiter']);
   }
 

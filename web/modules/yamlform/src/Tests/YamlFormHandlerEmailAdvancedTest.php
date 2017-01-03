@@ -11,7 +11,7 @@ use Drupal\yamlform\Entity\YamlForm;
  */
 class YamlFormHandlerEmailAdvancedTest extends YamlFormTestBase {
 
-  public static $modules = ['system', 'block', 'filter', 'node', 'user', 'file', 'yamlform', 'yamlform_test'];
+  protected static $modules = ['system', 'block', 'filter', 'node', 'user', 'file', 'yamlform', 'yamlform_test'];
 
   /**
    * Create form test users.
@@ -79,7 +79,7 @@ class YamlFormHandlerEmailAdvancedTest extends YamlFormTestBase {
     $this->assertContains($sent_mail['params']['body'], '<b>Message</b><br/><p><em>Please enter a message.</em> Test that double "quotes" are not encoded.</p><br/><br/>');
 
     // Check email has attachment.
-    $this->assertEqual($sent_mail['params']['attachments'][0]['filecontent'], '{empty}');
+    $this->assertEqual($sent_mail['params']['attachments'][0]['filecontent'], "this is a sample txt file\nit has two lines\n");
     $this->assertEqual($sent_mail['params']['attachments'][0]['filename'], 'file.txt');
     $this->assertEqual($sent_mail['params']['attachments'][0]['filemime'], 'text/plain');
 
@@ -95,7 +95,7 @@ class YamlFormHandlerEmailAdvancedTest extends YamlFormTestBase {
     $this->assertEqual($sent_mail['params']['body'], 'Testing 123...');
 
     // Check resent email has the same attachment.
-    $this->assertEqual($sent_mail['params']['attachments'][0]['filecontent'], '{empty}');
+    $this->assertEqual($sent_mail['params']['attachments'][0]['filecontent'], "this is a sample txt file\nit has two lines\n");
     $this->assertEqual($sent_mail['params']['attachments'][0]['filename'], 'file.txt');
     $this->assertEqual($sent_mail['params']['attachments'][0]['filemime'], 'text/plain');
   }

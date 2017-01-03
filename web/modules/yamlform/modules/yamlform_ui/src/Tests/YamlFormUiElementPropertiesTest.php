@@ -37,7 +37,7 @@ class YamlFormUiElementPropertiesTest extends YamlFormTestBase {
     // the element's render array has not be altered.
     // This verifies that the edit element form is not unexpectedly altering
     // an element's render array.
-    $yamlform_ids = ['example_layout_basic', 'test_element', 'test_element_extras', 'test_form_states_triggers'];
+    $yamlform_ids = ['example_layout_basic', 'test_element', 'test_element_access', 'test_element_extras', 'test_form_states_triggers'];
     foreach ($yamlform_ids as $yamlform_id) {
       /** @var \Drupal\yamlform\YamlFormInterface $yamlform_elements */
       $yamlform_elements = YamlForm::load($yamlform_id);

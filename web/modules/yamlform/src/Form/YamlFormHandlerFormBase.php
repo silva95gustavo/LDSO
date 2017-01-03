@@ -21,7 +21,7 @@ abstract class YamlFormHandlerFormBase extends FormBase {
   /**
    * The form.
    *
-   * @var \Drupal\yamlform\Entity\YamlForm
+   * @var \Drupal\yamlform\YamlFormInterface
    */
   protected $yamlform;
 
@@ -195,7 +195,7 @@ abstract class YamlFormHandlerFormBase extends FormBase {
     drupal_set_message($this->t('The form handler was successfully applied.'));
 
     // Redirect.
-    return $this->redirectForm($form, $form_state, $this->yamlform->urlInfo('handlers-form'));
+    return $this->redirectForm($form, $form_state, $this->yamlform->toUrl('handlers-form'));
   }
 
   /**

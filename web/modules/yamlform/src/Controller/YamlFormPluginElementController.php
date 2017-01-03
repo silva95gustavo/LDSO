@@ -3,10 +3,11 @@
 namespace Drupal\yamlform\Controller;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
-use Drupal\yamlform\Utility\YamlFormElementHelper;
 use Drupal\yamlform\Utility\YamlFormReflectionHelper;
 use Drupal\yamlform\YamlFormElementManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,7 +15,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Controller for all form elements.
  */
-class YamlFormPluginElementController extends ControllerBase {
+class YamlFormPluginElementController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * A element info manager.
@@ -33,12 +41,15 @@ class YamlFormPluginElementController extends ControllerBase {
   /**
    * Constructs a YamlFormPluginBaseController object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
    *   A element info plugin manager.
    * @param \Drupal\yamlform\YamlFormElementManagerInterface $element_manager
    *   A form element plugin manager.
    */
-  public function __construct(ElementInfoManagerInterface $element_info, YamlFormElementManagerInterface $element_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ElementInfoManagerInterface $element_info, YamlFormElementManagerInterface $element_manager) {
+    $this->moduleHandler = $module_handler;
     $this->elementInfo = $element_info;
     $this->elementManager = $element_manager;
   }
@@ -48,6 +59,7 @@ class YamlFormPluginElementController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('module_handler'),
       $container->get('plugin.manager.element_info'),
       $container->get('plugin.manager.yamlform.element')
     );
@@ -61,25 +73,44 @@ class YamlFormPluginElementController extends ControllerBase {
     $element_rows = [];
 
     $default_properties = [
-      '#title',
-      '#description',
-      '#required',
-      '#default_value',
-      '#title_display',
-      '#description_display',
-      '#prefix',
-      '#suffix',
-      '#field_prefix',
-      '#field_suffix',
-      '#private',
-      '#unique',
-      '#format',
-    ];
+      // Element settings.
+      'title',
+      'description',
+      'default_value',
+      // Form display.
+      'title_display',
+      'description_display',
+      'field_prefix',
+      'field_suffix',
+      // Form validation.
+      'required',
+      'required_error',
+      'unique',
+      // Submission display.
+      'format',
+      // Attributes.
+      'wrapper_attributes',
+      'attributes',
+      // Administration.
+      'admin_title',
+      'private',
+      // Flexbox.
+      'flex',
+      // Conditional logic.
+      'states',
+      // Element access.
+      'access_create_roles',
+      'access_create_users',
+      'access_update_roles',
+      'access_update_users',
+      'access_view_roles',
+      'access_view_users',
+    ];;
     $default_properties = array_combine($default_properties, $default_properties);
 
     // Test element is only enabled if the YAML Form Devel and UI module are
     // enabled.
-    $test_element_enabled = (\Drupal::moduleHandler()->moduleExists('yamlform_devel') && \Drupal::moduleHandler()->moduleExists('yamlform_ui')) ? TRUE : FALSE;
+    $test_element_enabled = ($this->moduleHandler->moduleExists('yamlform_devel') && $this->moduleHandler->moduleExists('yamlform_ui')) ? TRUE : FALSE;
 
     // Define a default element used to get default properties.
     $element = ['#type' => 'element'];
@@ -128,15 +159,22 @@ class YamlFormPluginElementController extends ControllerBase {
           $element_info[] = '<b>' . $key . '</b>: ' . $value;
         }
 
-        $properties = array_keys(YamlFormElementHelper::addPrefix($yamlform_element->getDefaultProperties()));
-        foreach ($properties as &$property) {
-          if (!isset($default_properties[$property])) {
-            $property = '<b>' . $property . '</b>';
+        $properties = [];
+        $element_default_properties = array_keys($yamlform_element->getDefaultProperties());
+        foreach ($element_default_properties as $key => $value) {
+          if (!isset($default_properties[$value])) {
+            $properties[$key] = '<b>#' . $value . '</b>';
+            unset($element_default_properties[$key]);
+          }
+          else {
+            $element_default_properties[$key] = '#' . $value;
           }
         }
+        $properties += $element_default_properties;
         if (count($properties) >= 20) {
           $properties = array_slice($properties, 0, 20) + ['...' => '...'];
         }
+
         $operations = [];
         if ($test_element_enabled) {
           $operations['test'] = [
@@ -185,7 +223,7 @@ class YamlFormPluginElementController extends ControllerBase {
       '#attributes' => [
         'class' => ['yamlform-form-filter-text'],
         'data-element' => '.yamlform-element-plugin',
-        'title' => $this->t('Enter a part of the handler name to filter by.'),
+        'title' => $this->t('Enter a part of the element type to filter by.'),
         'autofocus' => 'autofocus',
       ],
     ];
@@ -216,7 +254,7 @@ class YamlFormPluginElementController extends ControllerBase {
     $build['elements'] = [
       '#type' => 'details',
       '#title' => $this->t('Additional elements'),
-      '#description' => $this->t('Below are elements that available but do not have a YAML Form Element integration plugin.'),
+      '#description' => $this->t('Below are elements that are available but do not have a YAML Form Element integration plugin.'),
       'table' => [
         '#type' => 'table',
         '#header' => [
@@ -225,6 +263,32 @@ class YamlFormPluginElementController extends ControllerBase {
         ],
         '#rows' => $element_rows,
         '#sticky' => TRUE,
+      ],
+    ];
+
+    $all_translatable_properties = $this->elementManager->getTranslatableProperties();
+    $all_properties = $this->elementManager->getAllProperties();
+    foreach ($all_translatable_properties as $key => $value) {
+      $all_translatable_properties[$key] = [
+        '#markup' => $value,
+        '#prefix' => '<strong>',
+        '#suffix' => '</strong>',
+        '#weight' => -10,
+      ];
+    }
+    foreach ($all_properties as $key => $value) {
+      // Remove all composite properties.
+      if (strpos($key, '__')) {
+        unset($all_properties[$key]);
+      }
+    }
+    $build['properties'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Element properties'),
+      '#description' => $this->t('Below are all available element properties with translatable properties in <strong>bold</strong>.'),
+      'list' => [
+        '#theme' => 'item_list',
+        '#items' => $all_translatable_properties + $all_properties,
       ],
     ];
 

@@ -69,7 +69,7 @@ trait YamlFormDialogTrait {
       unset($form['#prefix'], $form['#suffix']);
       $form['status_messages'] = [
         '#type' => 'status_messages',
-        '#weight' => -10,
+        '#weight' => -1000,
       ];
       $response = new AjaxResponse();
       $response->addCommand(new HtmlCommand('#yamlform-dialog', $form));

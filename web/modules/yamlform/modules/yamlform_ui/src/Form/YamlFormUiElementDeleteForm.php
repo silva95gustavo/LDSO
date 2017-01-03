@@ -5,6 +5,7 @@ namespace Drupal\yamlform_ui\Form;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\yamlform\YamlFormInterface;
 use Drupal\yamlform\YamlFormEntityElementsValidator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,6 +15,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Form for deleting a form element.
  */
 class YamlFormUiElementDeleteForm extends ConfirmFormBase {
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
 
   /**
    * Form element validator.
@@ -53,10 +61,13 @@ class YamlFormUiElementDeleteForm extends ConfirmFormBase {
   /**
    * Constructs a new YamlFormUiElementDeleteForm.
    *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    * @param \Drupal\yamlform\YamlFormEntityElementsValidator $elements_validator
    *   Form element validator.
    */
-  public function __construct(YamlFormEntityElementsValidator $elements_validator) {
+  public function __construct(RendererInterface $renderer, YamlFormEntityElementsValidator $elements_validator) {
+    $this->renderer = $renderer;
     $this->elementsValidator = $elements_validator;
   }
 
@@ -65,6 +76,7 @@ class YamlFormUiElementDeleteForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('renderer'),
       $container->get('yamlform.elements_validator')
     );
   }
@@ -95,7 +107,7 @@ class YamlFormUiElementDeleteForm extends ConfirmFormBase {
       $build['elements']['#title'] = t('The below nested elements will be also deleted.');
     }
 
-    return drupal_render($build);
+    return $this->renderer->render($build);
   }
 
   /**
@@ -151,7 +163,7 @@ class YamlFormUiElementDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->yamlform->urlInfo('edit-form');
+    return $this->yamlform->toUrl('edit-form');
   }
 
   /**
@@ -195,7 +207,7 @@ class YamlFormUiElementDeleteForm extends ConfirmFormBase {
     $this->yamlform->save();
 
     drupal_set_message($this->t('The form element %title has been deleted.', ['%title' => $this->getElementTitle()]));
-    $form_state->setRedirectUrl($this->yamlform->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->yamlform->toUrl('edit-form'));
   }
 
   /**

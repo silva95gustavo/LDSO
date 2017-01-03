@@ -24,10 +24,12 @@ class Captcha extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return [
+      // Captcha settings.
       'captcha_type' => 'default',
       'captcha_admin_mode' => FALSE,
+      // Flexbox.
       'flex' => 1,
-      'states' => [],
+      // Conditional logic.
     ];
   }
 
@@ -95,9 +97,8 @@ class Captcha extends YamlFormElementBase {
       $captcha_types = ['default' => $this->t('Default challenge type')];
     }
     $form['captcha'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('CAPTCHA settings'),
-      '#open' => FALSE,
     ];
     $form['captcha']['captcha_type'] = [
       '#type' => 'select',

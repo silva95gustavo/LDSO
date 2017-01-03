@@ -14,14 +14,18 @@
    */
   Drupal.behaviors.yamlFormHtmlEditor = {
     attach: function (context) {
-      $(context).find('.js-form-type-yamlform-html-editor textarea').once().each(function () {
+      $(context).find('.js-form-type-yamlform-html-editor textarea').once('yamlform-html-editor').each(function () {
+        var allowedContent = drupalSettings['yamlform']['html_editor']['allowedContent'];
         var $textarea = $(this);
-
         CKEDITOR.replace(this.id, {
           // Turn off external config and styles.
           customConfig: '',
           stylesSet: false,
           contentsCss: [],
+          allowedContent: allowedContent,
+          // Use <br> tags instead of <p> tags.
+          enterMode: CKEDITOR.ENTER_BR,
+          shiftEnterMode: CKEDITOR.ENTER_BR,
           // Set height, hide the status bar, and remove plugins.
           height: '100px',
           resize_enabled: false,

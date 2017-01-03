@@ -18,7 +18,7 @@ class YamlFormElementManagedFileTest extends YamlFormTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'block', 'file', 'user', 'yamlform', 'yamlform_test'];
+  protected static $modules = ['system', 'block', 'file', 'user', 'yamlform', 'yamlform_test'];
 
   /**
    * File usage manager.
@@ -107,6 +107,45 @@ class YamlFormElementManagedFileTest extends YamlFormTestBase {
   }
 
   /**
+   * Test media file upload elements.
+   */
+  public function testMediaFileUpload() {
+    global $base_url;
+
+    /* Element processing */
+
+    // Get test form.
+    $this->drupalGet('yamlform/test_element_media_file');
+
+    // Check document file.
+    $this->assertRaw('<input data-drupal-selector="edit-document-file-upload" type="file" id="edit-document-file-upload" name="files[document_file]" size="22" class="js-form-file form-file" />');
+
+    // Check audio file.
+    $this->assertRaw('<input data-drupal-selector="edit-audio-file-upload" accept="audio/*" capture type="file" id="edit-audio-file-upload" name="files[audio_file]" size="22" class="js-form-file form-file" />');
+
+    // Check image file.
+    $this->assertRaw('<input data-drupal-selector="edit-image-file-upload" accept="image/*" capture type="file" id="edit-image-file-upload" name="files[image_file]" size="22" class="js-form-file form-file" />');
+
+    // Check video file.
+    $this->assertRaw('<input data-drupal-selector="edit-video-file-upload" accept="video/*" capture type="file" id="edit-video-file-upload" name="files[video_file]" size="22" class="js-form-file form-file" />');
+
+    /* Element rendering */
+
+    // Get test form preview with test values.
+    $this->drupalLogin($this->adminFormUser);
+    $this->drupalPostForm('yamlform/test_element_media_file/test', [], t('Preview'));
+
+    // Check audio file preview.
+    $this->assertRaw('<source src="' . $base_url . '/system/files/yamlform/test_element_media_file/_sid_/audio_file_mp3.mp3" type="audio/mpeg">');
+
+    // Check image file preview.
+    $this->assertRaw('<img src="' . $base_url . '/system/files/yamlform/test_element_media_file/_sid_/image_file_jpg.jpg" class="yamlform-image-file" />');
+
+    // Check video file preview.
+    $this->assertRaw('<source src="' . $base_url . '/system/files/yamlform/test_element_media_file/_sid_/video_file_mp4.mp4" type="video/mp4">');
+  }
+
+  /**
    * Check file upload.
    *
    * @param string $type
@@ -140,7 +179,7 @@ class YamlFormElementManagedFileTest extends YamlFormTestBase {
     $this->assertIdentical(['yamlform' => ['yamlform_submission' => [$sid => '1']]], $this->fileUsage->listUsage($file), 'The file has 1 usage.');
 
     // Check test file uploaded file path.
-    $this->assertEqual($file->getFileUri(), 'public://yamlform/test_element_managed_file/' . $sid . '/' . $first_file->filename);
+    $this->assertEqual($file->getFileUri(), 'private://yamlform/test_element_managed_file/' . $sid . '/' . $first_file->filename);
 
     // Check that test file exists.
     $this->assert(file_exists($file->getFileUri()), 'File exists');

@@ -137,24 +137,52 @@ class YamlFormElementManager extends DefaultPluginManager implements FallbackPlu
   /**
    * {@inheritdoc}
    */
-  public function getSortedDefinitions(array $definitions = NULL, $label_key = 'label') {
+  public function getSortedDefinitions(array $definitions = NULL, $sort_by = 'label') {
     $definitions = isset($definitions) ? $definitions : $this->getDefinitions();
 
-    switch ($label_key) {
+    switch ($sort_by) {
       case 'category':
-        uasort($definitions, function ($a, $b) use ($label_key) {
-          return strnatcasecmp($a['category'] . '-' . $a[$label_key], $b['category'] . '-' . $b[$label_key]);
+        uasort($definitions, function ($a, $b) use ($sort_by) {
+          return strnatcasecmp($a['category'] . '-' . $a[$sort_by], $b['category'] . '-' . $b[$sort_by]);
         });
         break;
 
       default:
-        uasort($definitions, function ($a, $b) use ($label_key) {
-          return strnatcasecmp($a[$label_key], $b[$label_key]);
+        uasort($definitions, function ($a, $b) use ($sort_by) {
+          return strnatcasecmp($a[$sort_by], $b[$sort_by]);
         });
         break;
     }
 
     return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslatableProperties() {
+    $properties = [];
+    $yamlform_elements = $this->getInstances();
+    foreach ($yamlform_elements as $yamlform_element) {
+      $translatable_properties = $yamlform_element->getTranslatableProperties();
+      $properties += array_combine($translatable_properties, $translatable_properties);
+    }
+    ksort($properties);
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllProperties() {
+    $properties = [];
+    $yamlform_elements = $this->getInstances();
+    foreach ($yamlform_elements as $yamlform_element) {
+      $default_properties = array_keys($yamlform_element->getDefaultProperties());
+      $properties += array_combine($default_properties, $default_properties);
+    }
+    ksort($properties);
+    return $properties;
   }
 
 }

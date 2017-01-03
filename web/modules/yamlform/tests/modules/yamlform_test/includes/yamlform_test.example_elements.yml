@@ -20,19 +20,10 @@ entity_autocomplete:
     include_anonymous: true
 language_select:
   '#languages': 3
+yamlform_autocomplete:
+  '#autocomplete_items': country_names
 yamlform_codemirror:
   '#mode': yaml
-yamlform_likert:
-  '#questions':
-    q1: 'Please answer question 1?'
-    q2: 'How about now answering question 2?'
-    q3: 'Finally, here is question 3?'
-  '#answers':
-    1: 1
-    2: 2
-    3: 3
-    4: 4
-    5: 5
 yamlform_entity_select:
   '#target_type': 'user'
   '#selection_handler': 'default:user'
@@ -48,6 +39,17 @@ yamlform_entity_radios:
   '#selection_handler': 'default:user'
   '#selection_settings':
     include_anonymous: true
+yamlform_likert:
+  '#questions':
+    q1: 'Please answer question 1?'
+    q2: 'How about now answering question 2?'
+    q3: 'Finally, here is question 3?'
+  '#answers':
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 5
 yamlform_message:
   '#message_type': 'warning'
   '#message_message': 'This is a <strong>warning</strong> message.'

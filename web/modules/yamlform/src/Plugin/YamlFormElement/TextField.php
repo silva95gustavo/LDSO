@@ -21,7 +21,9 @@ class TextField extends TextBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form display.
       'input_mask' => '',
+      // Form validation.
       'counter_type' => '',
       'counter_maximum' => '',
       'counter_message' => '',

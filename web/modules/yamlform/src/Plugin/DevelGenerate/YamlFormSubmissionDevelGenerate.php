@@ -2,8 +2,8 @@
 
 namespace Drupal\yamlform\Plugin\DevelGenerate;
 
-use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\devel_generate\DevelGenerateBase;
@@ -38,6 +38,13 @@ class YamlFormSubmissionDevelGenerate extends DevelGenerateBase implements Conta
   protected static $generatingSubmissions = FALSE;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The form storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -67,30 +74,28 @@ class YamlFormSubmissionDevelGenerate extends DevelGenerateBase implements Conta
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $yamlform_storage
-   *   The form storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $yamlform_submission_storage
-   *   The form submission storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\yamlform\YamlFormSubmissionGenerateInterface $yamlform_submission_generate
    *   The form submission generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $yamlform_storage, EntityStorageInterface $yamlform_submission_storage, YamlFormSubmissionGenerateInterface $yamlform_submission_generate) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, YamlFormSubmissionGenerateInterface $yamlform_submission_generate) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->yamlformStorage = $yamlform_storage;
-    $this->yamlformSubmissionStorage = $yamlform_submission_storage;
+    $this->entityTypeManager = $entity_type_manager;
     $this->yamlformSubmissionGenerate = $yamlform_submission_generate;
+
+    $this->yamlformStorage = $entity_type_manager->getStorage('yamlform');
+    $this->yamlformSubmissionStorage = $entity_type_manager->getStorage('yamlform_submission');
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $entity_manager = $container->get('entity.manager');
     return new static(
       $configuration, $plugin_id, $plugin_definition,
-      $entity_manager->getStorage('yamlform'),
-      $entity_manager->getStorage('yamlform_submission'),
+      $container->get('entity_type.manager'),
       $container->get('yamlform_submission.generate')
     );
   }
@@ -123,7 +128,7 @@ class YamlFormSubmissionDevelGenerate extends DevelGenerateBase implements Conta
       '#title' => $this->t('Delete existing submissions in specified form before generating new submissions.'),
       '#default_value' => $this->getSetting('kill'),
     ];
-    $entity_types = \Drupal::entityManager()->getEntityTypeLabels(TRUE);
+    $entity_types = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
     $form['submitted'] = [
       '#type' => 'item',
       '#title' => $this->t('Submitted to'),
@@ -222,7 +227,7 @@ class YamlFormSubmissionDevelGenerate extends DevelGenerateBase implements Conta
    */
   protected function deleteYamlFormSubmissions(array $yamlform_ids, $entity_type = NULL, $entity_id = NULL) {
     $yamlforms = $this->yamlformStorage->loadMultiple($yamlform_ids);
-    $entity = ($entity_type && $entity_id) ? entity_load($entity_type, $entity_id) : NULL;
+    $entity = ($entity_type && $entity_id) ? $this->entityTypeManager->getStorage($entity_type)->load($entity_id) : NULL;
     foreach ($yamlforms as $yamlform) {
       $this->yamlformSubmissionStorage->deleteAll($yamlform, $entity);
     }
@@ -364,7 +369,7 @@ class YamlFormSubmissionDevelGenerate extends DevelGenerateBase implements Conta
 
     $dt_args = ['@entity_type' => $entity_type, '@entity_id' => $entity_id];
 
-    $source_entity = entity_load($entity_type, $entity_id);
+    $source_entity = $this->entityTypeManager->getStorage($entity_type)->load($entity_id);
     if (!$source_entity) {
       return $t('Unable to load @entity_type:@entity_id', $dt_args);
     }

@@ -22,7 +22,7 @@ class YamlFormAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkAdminAccess(AccountInterface $account) {
+  public static function checkAdminAccess(AccountInterface $account) {
     return AccessResult::allowedIf($account->hasPermission('administer yamlform') || $account->hasPermission('administer yamlform submission'));
   }
 
@@ -35,7 +35,7 @@ class YamlFormAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkSubmissionAccess(AccountInterface $account) {
+  public static function checkSubmissionAccess(AccountInterface $account) {
     return AccessResult::allowedIf($account->hasPermission('administer yamlform') || $account->hasPermission('administer yamlform submission') || $account->hasPermission('view any yamlform submission'));
   }
 
@@ -48,7 +48,7 @@ class YamlFormAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkOverviewAccess(AccountInterface $account) {
+  public static function checkOverviewAccess(AccountInterface $account) {
     return AccessResult::allowedIf($account->hasPermission('administer yamlform') || $account->hasPermission('administer yamlform submission') || $account->hasPermission('access yamlform overview'));
   }
 
@@ -63,7 +63,7 @@ class YamlFormAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkEmailAccess(YamlFormSubmissionInterface $yamlform_submission, AccountInterface $account) {
+  public static function checkEmailAccess(YamlFormSubmissionInterface $yamlform_submission, AccountInterface $account) {
     $yamlform = $yamlform_submission->getYamlForm();
     if ($yamlform->access('submission_update_any')) {
       $handlers = $yamlform->getHandlers();
@@ -87,7 +87,7 @@ class YamlFormAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkEntityResultsAccess(EntityInterface $entity, AccountInterface $account) {
+  public static function checkEntityResultsAccess(EntityInterface $entity, AccountInterface $account) {
     return AccessResult::allowedIf($entity->access('update') && $entity->hasField('yamlform') && $entity->yamlform->entity);
   }
 

@@ -23,6 +23,7 @@ class YamlFormSignature extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return [
+      // General settings.
       'description' => $this->t('Sign above'),
     ] + parent::getDefaultProperties();
   }
@@ -129,7 +130,7 @@ class YamlFormSignature extends YamlFormElementBase {
       '#type' => 'radios',
       '#title' => $this->t('Signature format'),
       '#options' => [
-        'image' => $this->t('Image: The signature\'s <a href="@href">Data URI</a>.', ['@href' => 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs']),
+        'image' => $this->t('Image: The signature\'s <a href=":href">Data URI</a>.', [':href' => 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs']),
         'status' => $this->t("Status: 'signed' or 'no signed'."),
       ],
       '#default_value' => $export_options['signature_format'],

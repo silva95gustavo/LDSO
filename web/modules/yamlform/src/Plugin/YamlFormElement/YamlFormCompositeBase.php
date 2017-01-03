@@ -88,18 +88,17 @@ abstract class YamlFormCompositeBase extends YamlFormElementBase {
   public function getDefaultProperties() {
     $properties = [
       'title' => '',
+      // General settings.
       'description' => '',
-
       'default_value' => [],
-      'required' => FALSE,
-
-      'title_display' => '',
+      // Form display.
+      'title_display' => 'invisible',
       'description_display' => '',
-
+      // Form validation.
+      'required' => FALSE,
+      // Flex box.
       'flexbox' => '',
-      'flex' => 1,
-      'states' => [],
-    ];
+    ] + $this->getDefaultBaseProperties();
 
     $composite_elements = $this->getCompositeElements();
     foreach ($composite_elements as $composite_key => $composite_element) {
@@ -199,6 +198,7 @@ abstract class YamlFormCompositeBase extends YamlFormElementBase {
 
         switch ($composite_element['#type']) {
           case 'label':
+          case 'yamlform_message':
             break;
 
           case 'yamlform_select_other':
@@ -227,31 +227,21 @@ abstract class YamlFormCompositeBase extends YamlFormElementBase {
     // Update #required label.
     $form['validation']['required']['#description'] .= '<br/>' . $this->t("Checking this option only displays the required indicator next to this element's label. Please chose which elements should be required below.");
 
-    // Display flexbox setting.
-    if ($this->hasProperty('flexbox')) {
-      $form['flexbox'] = [
-        '#type' => 'details',
-        '#title' => $this->t('Flexbox'),
-        '#open' => FALSE,
-      ];
-      $form['flexbox']['flexbox'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Use Flexbox'),
-        '#description' => $this->t("If 'Automatic' is selected Flexbox layout will only be used if a Flexbox element is included in the form."),
-        '#options' => [
-          '' => $this->t('Automatic'),
-          0 => $this->t('No'),
-          1 => $this->t('Yes'),
-        ],
-      ];
-    }
-
     $form['composite'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('@title settings', ['@title' => $this->getPluginLabel()]),
-      '#open' => FALSE,
     ];
     $form['composite']['elements'] = $this->buildCompositeElementsTable();
+    $form['composite']['flexbox'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Use Flexbox'),
+      '#description' => $this->t("If 'Automatic' is selected Flexbox layout will only be used if a Flexbox element is included in the form."),
+      '#options' => [
+        '' => $this->t('Automatic'),
+        0 => $this->t('No'),
+        1 => $this->t('Yes'),
+      ],
+    ];
 
     return $form;
   }
@@ -331,60 +321,55 @@ abstract class YamlFormCompositeBase extends YamlFormElementBase {
       }
 
       // Type and options.
+      // Using if/else instead of switch/case because of complex conditions.
       $row['type_and_options'] = [];
-      switch ($type) {
-        case 'select':
-          if ($composite_options = $this->getCompositeElementOptions($composite_key)) {
-            $row['type_and_options']['data'][$composite_key . '__type'] = [
-              '#type' => 'select',
-              '#required' => TRUE,
-              '#options' => [
-                'select' => $this->t('Select'),
-                'yamlform_select_other' => $this->t('Select other'),
-                'textfield' => $this->t('Text field'),
+      if ($type == 'tel') {
+        $row['type_and_options']['data'][$composite_key . '__type'] = [
+          '#type' => 'select',
+          '#required' => TRUE,
+          '#options' => [
+            'tel' => $this->t('Telephone'),
+            'textfield' => $this->t('Text field'),
+          ],
+          '#attributes' => ['style' => 'width: 100%; margin-bottom: 5px'],
+          '#states' => $state_disabled,
+        ];
+      }
+      elseif ($type == 'select' && ($composite_options = $this->getCompositeElementOptions($composite_key))) {
+        $row['type_and_options']['data'][$composite_key . '__type'] = [
+          '#type' => 'select',
+          '#required' => TRUE,
+          '#options' => [
+            'select' => $this->t('Select'),
+            'yamlform_select_other' => $this->t('Select other'),
+            'textfield' => $this->t('Text field'),
+          ],
+          '#attributes' => ['style' => 'width: 100%; margin-bottom: 5px'],
+          '#states' => $state_disabled,
+        ];
+        $row['type_and_options']['data'][$composite_key . '__options'] = [
+          '#type' => 'select',
+          '#options' => $composite_options,
+          '#required' => TRUE,
+          '#attributes' => ['style' => 'width: 100%;'],
+          '#states' => $state_disabled + [
+            'invisible' => [
+              ':input[name="properties[' . $composite_key . '__type]"]' => [
+                'value' => 'textfield',
               ],
-              '#attributes' => ['style' => 'width: 100%; margin-bottom: 5px'],
-              '#states' => $state_disabled,
-            ];
-            $row['type_and_options']['data'][$composite_key . '__options'] = [
-              '#type' => 'select',
-              '#options' => $composite_options,
-              '#required' => TRUE,
-              '#attributes' => ['style' => 'width: 100%;'],
-              '#states' => $state_disabled + [
-                'invisible' => [
-                  ':input[name="properties[' . $composite_key . '__type]"]' => [
-                    'value' => 'textfield',
-                  ],
-                ],
-              ],
-            ];
-          }
-          else {
-            $row['type_and_options']['data'][$composite_key . '__type'] = [
-              '#markup' => $this->elementManager->getElementInstance($composite_element)->getPluginLabel(),
-            ];
-          }
-          break;
-
-        case 'tel':
-          $row['type_and_options']['data'][$composite_key . '__type'] = [
-            '#type' => 'select',
-            '#required' => TRUE,
-            '#options' => [
-              'tel' => $this->t('Telephone'),
-              'textfield' => $this->t('Text field'),
             ],
-            '#attributes' => ['style' => 'width: 100%; margin-bottom: 5px'],
-            '#states' => $state_disabled,
-          ];
-          break;
-
-        default:
-          $row['type_and_options']['data'][$composite_key . '__type'] = [
-            '#markup' => $this->elementManager->getElementInstance($composite_element)->getPluginLabel(),
-          ];
-          break;
+          ],
+        ];
+      }
+      else {
+        $row['type_and_options']['data'][$composite_key . '__type'] = [
+          '#type' => 'textfield',
+          '#access' => FALSE,
+        ];
+        $row['type_and_options']['data']['markup'] = [
+          '#markup' => $this->elementManager->getElementInstance($composite_element)->getPluginLabel(),
+          '#access' => TRUE,
+        ];
       }
 
       // Required.
@@ -494,7 +479,7 @@ abstract class YamlFormCompositeBase extends YamlFormElementBase {
    */
   public function formatText(array &$element, $value, array $options = []) {
     // Return empty value.
-    if (empty(array_filter($value))) {
+    if (empty($value) || (is_array($value) && empty(array_filter($value)))) {
       return '';
     }
 

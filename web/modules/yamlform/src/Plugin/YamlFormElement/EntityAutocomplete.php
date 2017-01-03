@@ -25,7 +25,8 @@ class EntityAutocomplete extends YamlFormElementBase implements YamlFormEntityRe
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
-      'target_type' => 'node',
+      // Entity reference settings.
+      'target_type' => '',
       'selection_handler' => 'default',
       'selection_settings' => [],
       'tags' => FALSE,
@@ -37,12 +38,13 @@ class EntityAutocomplete extends YamlFormElementBase implements YamlFormEntityRe
    */
   public function setDefaultValue(array &$element) {
     if (isset($element['#default_value']) && (!empty($element['#default_value']) || $element['#default_value'] === 0)) {
+      $target_storage = $this->entityTypeManager->getStorage($element['#target_type']);
       if ($this->hasMultipleValues($element)) {
         $entity_ids = $this->getTargetEntityIds($element['#default_value']);
-        $element['#default_value'] = ($entity_ids) ? entity_load_multiple($element['#target_type'], $entity_ids) : [];
+        $element['#default_value'] = ($entity_ids) ? $target_storage->loadMultiple($entity_ids) : [];
       }
       else {
-        $element['#default_value'] = entity_load($element['#target_type'], $element['#default_value']) ?: NULL;
+        $element['#default_value'] = $target_storage->load($element['#default_value']) ?: NULL;
       }
     }
     else {
@@ -68,6 +70,13 @@ class EntityAutocomplete extends YamlFormElementBase implements YamlFormEntityRe
     if ($this->hasMultipleValues($element)) {
       $element['#after_build'][] = [get_class($this), 'afterBuildEntityAutocomplete'];
     }
+
+    // If selection handler include auto_create when need to also set it for
+    // the $element.
+    // @see \Drupal\Core\Entity\Element\EntityAutocomplete::validateEntityAutocomplete
+    if (!empty($element['#selection_settings']['auto_create_bundle'])) {
+      $element['#autocreate']['bundle'] = $element['#selection_settings']['auto_create_bundle'];
+    }
   }
 
   /**
@@ -87,7 +96,18 @@ class EntityAutocomplete extends YamlFormElementBase implements YamlFormEntityRe
     if (is_array($value) && !empty($value)) {
       $entity_ids = [];
       foreach ($value as $item) {
-        $entity_ids[] = $item['target_id'];
+        if (isset($item['target_id'])) {
+          $entity_ids[] = $item['target_id'];
+        }
+        elseif (isset($item['entity'])) {
+          // If #auto_create is set then we need to save the entity and get
+          // the new entity's id.
+          // @todo Decide what level of access controls are needed to allow
+          // users to create entities.
+          $entity = $item['entity'];
+          $entity->save();
+          $entity_ids[] = $entity->id();
+        }
       }
       $form_state->setValueForElement($element, $entity_ids);
     }

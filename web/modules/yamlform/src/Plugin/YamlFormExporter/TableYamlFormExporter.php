@@ -3,6 +3,7 @@
 namespace Drupal\yamlform\Plugin\YamlFormExporter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\yamlform\YamlFormSubmissionInterface;
 
 /**
  * Defines a HTML table exporter.
@@ -13,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   description = @Translation("Exports results as an HTML table."),
  * )
  */
-class TableYamlFormExporter extends FileHandleBaseYamlFormExporter {
+class TableYamlFormExporter extends TabularBaseYamlFormExporter {
 
   /**
    * {@inheritdoc}
@@ -28,11 +29,20 @@ class TableYamlFormExporter extends FileHandleBaseYamlFormExporter {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    if (isset($form['excel'])) {
+      return $form;
+    }
+
     $form['excel'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Open HTML table in Excel'),
       '#description' => $this->t('If checked, the download file extension will be change from .html to .xls.'),
       '#default_value' => $this->configuration['excel'],
+      '#states' => [
+        'visible' => [
+          [':input.js-yamlform-exporter' => ['value' => 'table']],
+        ],
+      ],
     ];
     return $form;
   }
@@ -40,7 +50,9 @@ class TableYamlFormExporter extends FileHandleBaseYamlFormExporter {
   /**
    * {@inheritdoc}
    */
-  public function writeHeader(array $header) {
+  public function writeHeader() {
+    $header = $this->buildHeader();
+
     $file_handle = $this->fileHandle;
 
     if ($this->configuration['source_entity']) {
@@ -78,7 +90,9 @@ class TableYamlFormExporter extends FileHandleBaseYamlFormExporter {
   /**
    * {@inheritdoc}
    */
-  public function writeRecord(array $record) {
+  public function writeSubmission(YamlFormSubmissionInterface $yamlform_submission) {
+    $record = $this->buildRecord($yamlform_submission);
+
     $file_handle = $this->fileHandle;
 
     $row = [];

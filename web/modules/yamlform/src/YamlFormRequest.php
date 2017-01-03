@@ -4,7 +4,8 @@ namespace Drupal\yamlform;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -14,11 +15,18 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class YamlFormRequest implements YamlFormRequestInterface {
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity type repository.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
+   */
+  protected $entityTypeRepository;
 
   /**
    * The current route match.
@@ -37,15 +45,16 @@ class YamlFormRequest implements YamlFormRequestInterface {
   /**
    * Constructs a YamlFormSubmissionExporter object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
+   *   The entity type repository.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    */
-  public function __construct(EntityManagerInterface $entity_manager, RequestStack $request_stack, RouteMatchInterface $route_match) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeRepositoryInterface $entity_type_repository, RequestStack $request_stack, RouteMatchInterface $route_match) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeRepository = $entity_type_repository;
     $this->request = $request_stack->getCurrentRequest();
     $this->routeMatch = $route_match;
   }
@@ -59,7 +68,7 @@ class YamlFormRequest implements YamlFormRequestInterface {
       return $source_entity;
     }
 
-    $entity_types = $this->entityManager->getEntityTypeLabels();
+    $entity_types = $this->entityTypeRepository->getEntityTypeLabels();
     if ($ignored_types) {
       if (is_array($ignored_types)) {
         $entity_types = array_diff_key($entity_types, array_flip($ignored_types));
@@ -208,7 +217,7 @@ class YamlFormRequest implements YamlFormRequestInterface {
 
     // Get and check source entity type.
     $source_entity_type = $this->request->query->get('source_entity_type');
-    if (!$source_entity_type) {
+    if (!$source_entity_type || !$this->entityTypeManager->hasDefinition($source_entity_type)) {
       return NULL;
     }
 
@@ -219,7 +228,7 @@ class YamlFormRequest implements YamlFormRequestInterface {
     }
 
     // Get and check source entity.
-    $source_entity = \Drupal::entityTypeManager()->getStorage($source_entity_type)->load($source_entity_id);
+    $source_entity = $this->entityTypeManager->getStorage($source_entity_type)->load($source_entity_id);
     if (!$source_entity) {
       return NULL;
     }

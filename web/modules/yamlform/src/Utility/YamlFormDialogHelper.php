@@ -20,7 +20,7 @@ class YamlFormDialogHelper {
    * @return array
    *   Modal dialog attributes.
    */
-  static public function getModalDialogAttributes($width = 800, array $class = []) {
+  public static function getModalDialogAttributes($width = 800, array $class = []) {
     if (\Drupal::config('yamlform.settings')->get('ui.dialog_disabled')) {
       return $class ? ['class' => $class] : [];
     }

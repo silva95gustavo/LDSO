@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform\Tests;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
@@ -388,6 +388,40 @@ trait YamlFormTestTrait {
     $sent_email = end($sent_emails);
     $this->debug($sent_email);
     return $sent_email;
+  }
+
+  /**
+   * Request a form results export CSV.
+   *
+   * @param \Drupal\yamlform\YamlFormInterface $yamlform
+   *   A form.
+   * @param array $options
+   *   An associative array of export options.
+   */
+  protected function getExport(YamlFormInterface $yamlform, array $options = []) {
+    /** @var \Drupal\yamlform\YamlFormSubmissionExporterInterface $exporter */
+    $exporter = \Drupal::service('yamlform_submission.exporter');
+    $options += $exporter->getDefaultExportOptions();
+    $this->drupalGet('admin/structure/yamlform/manage/' . $yamlform->id() . '/results/download', ['query' => $options]);
+  }
+
+  /**
+   * Get form export columns.
+   *
+   * @param \Drupal\yamlform\YamlFormInterface $yamlform
+   *   A form.
+   *
+   * @return array
+   *   An array of exportable columns.
+   */
+  protected function getExportColumns(YamlFormInterface $yamlform) {
+    /** @var \Drupal\yamlform\YamlFormSubmissionStorageInterface $submission_storage */
+    $submission_storage = \Drupal::entityTypeManager()->getStorage('yamlform_submission');
+    $columns = array_merge(
+      array_keys($submission_storage->getFieldDefinitions()),
+      array_keys($yamlform->getElementsInitializedAndFlattened())
+    );
+    return array_combine($columns, $columns);
   }
 
   /****************************************************************************/

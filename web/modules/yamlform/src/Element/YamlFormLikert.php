@@ -29,6 +29,9 @@ class YamlFormLikert extends FormElement {
       // Using #answers insteads of #options to prevent triggering
       // \Drupal\Core\Form\FormValidator::performRequiredValidation().
       '#answers' => [],
+      '#na_answer' => FALSE,
+      '#na_answer_text' => '',
+      '#na_answer_value' => '',
     ];
   }
 
@@ -36,9 +39,12 @@ class YamlFormLikert extends FormElement {
    * Processes a likert scale form element.
    */
   public static function processYamlFormLikert(&$element, FormStateInterface $form_state, &$complete_form) {
+    // Get answer with optional N/A.
+    self::processYamlFormLikertAnswers($element);
+
     // Build header.
     $header = [
-      ['question' => FALSE],
+      'likert_question' => ['question' => FALSE],
     ] + $element['#answers'];
 
     // Randomize questions.
@@ -53,7 +59,7 @@ class YamlFormLikert extends FormElement {
       $row = [];
       // Must format the label as an item so that inline form errors will be
       // displayed.
-      $row['_question_title'] = [
+      $row['likert_question'] = [
         '#type' => 'item',
         '#title' => $question_title,
         // Must include an empty <span> so that the item's value is
@@ -67,8 +73,10 @@ class YamlFormLikert extends FormElement {
           '#type' => 'radio',
           '#title' => $answer_title,
           '#title_display' => 'after',
-          '#return_value' => $answer_key,
-          '#value' => $value,
+          // Must cast values as strings to prevent NULL and empty strings.
+          // from being evaluated as 0.
+          '#return_value' => (string) $answer_key,
+          '#value' => (string) $value,
         ];
       }
       $rows[$question_key] = $row;
@@ -98,12 +106,30 @@ class YamlFormLikert extends FormElement {
   }
 
   /**
+   * Get likert element's answer which can include an N/A option.
+   *
+   * @param array $element
+   *   The element.
+   */
+  public static function processYamlFormLikertAnswers(array &$element) {
+    if (empty($element['#na_answer']) || empty($element['#answers'])) {
+      return;
+    }
+
+    $na_value = (!empty($element['#na_answer_value'])) ? $element['#na_answer_value'] : (string) t('N/A');
+    $na_text = (!empty($element['#na_answer_text'])) ? $element['#na_answer_text'] : $na_value;
+    $element['#answers'] += [
+      $na_value => $na_text,
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     $default_value = [];
     foreach ($element['#questions'] as $question_key => $question_title) {
-      $default_value[$question_key] = '';
+      $default_value[$question_key] = NULL;
     }
 
     if ($input === FALSE) {
@@ -128,7 +154,7 @@ class YamlFormLikert extends FormElement {
     if (!empty($element['#required'])) {
       foreach ($element['#questions'] as $question_key => $question_title) {
         if (empty($value[$question_key])) {
-          $form_state->setError($element['table'][$question_key]['_question_title'], t('@name field is required.', ['@name' => $question_title]));
+          $form_state->setError($element['table'][$question_key]['likert_question'], t('@name field is required.', ['@name' => $question_title]));
         }
       }
     }

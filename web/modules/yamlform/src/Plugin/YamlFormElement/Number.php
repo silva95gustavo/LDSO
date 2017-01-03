@@ -19,6 +19,7 @@ class Number extends NumericBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Number settings.
       'min' => '',
       'max' => '',
       'step' => '',

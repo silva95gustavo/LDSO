@@ -7,6 +7,9 @@
 'administer yamlform submission':
   title: 'Administer form submissions'
   description: 'Allows accessing, updating, and deleting <em>all</em> form submissions.'
+'administer yamlform element access':
+  title: 'Administer form element access'
+  description: 'Restrict form element access use to certain roles and users.'
 'view any yamlform submission':
   title: 'View any form submissions'
   description: 'Allows viewing <em>all</em> forms and submissions.'
@@ -22,3 +25,8 @@
   title: 'Delete any form'
 'delete own yamlform':
   title: 'Delete own form'
+'delete own yamlform':
+  title: 'Delete own form'
+'edit yamlform assets':
+  title: 'Edit CSS/JS form assets'
+  description: 'Allows administrators to attach custom CSS and JavaScript to a form.'

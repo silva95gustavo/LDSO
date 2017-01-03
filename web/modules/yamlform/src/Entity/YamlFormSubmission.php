@@ -2,7 +2,7 @@
 
 namespace Drupal\yamlform\Entity;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -72,7 +72,7 @@ class YamlFormSubmission extends ContentEntityBase implements YamlFormSubmission
    *
    * @see \Drupal\yamlform\YamlFormEntityElementsValidator::validateRendering()
    */
-  static protected $yamlform;
+  protected static $yamlform;
 
   /**
    * The data.
@@ -390,7 +390,9 @@ class YamlFormSubmission extends ContentEntityBase implements YamlFormSubmission
    */
   public function getSourceEntity() {
     if ($this->entity_type->value && $this->entity_id->value) {
-      return entity_load($this->entity_type->value, $this->entity_id->value);
+      $entity_type = $this->entity_type->value;
+      $entity_id = $this->entity_id->value;
+      return $this->entityTypeManager()->getStorage($entity_type)->load($entity_id);
     }
     else {
       return NULL;
@@ -645,14 +647,7 @@ class YamlFormSubmission extends ContentEntityBase implements YamlFormSubmission
   }
 
   /**
-   * Gets an array of all property values.
-   *
-   * @param bool $custom
-   *   If TRUE, return customized array that contains simplified properties
-   *   and form submission data.
-   *
-   * @return mixed[]
-   *   An array of property values, keyed by property name.
+   * {@inheritdoc}
    */
   public function toArray($custom = FALSE) {
     if ($custom === FALSE) {

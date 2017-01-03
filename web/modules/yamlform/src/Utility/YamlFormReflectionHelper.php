@@ -13,7 +13,7 @@ class YamlFormReflectionHelper {
    * @return array
    *   An array containing this elements class hierarchy.
    */
-  static public function getParentClasses($object, $base_class_name = '') {
+  public static function getParentClasses($object, $base_class_name = '') {
     $class = get_class($object);
     $parent_classes = [
       self::getClassName($class),
@@ -36,7 +36,7 @@ class YamlFormReflectionHelper {
    * @return string
    *   The class's name without its namespace.
    */
-  static protected function getClassName($class) {
+  protected static function getClassName($class) {
     $parts = preg_split('#\\\\#', $class);
     return end($parts);
   }

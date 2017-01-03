@@ -12,7 +12,6 @@ use Drupal\yamlform\YamlFormSubmissionInterface;
  *   label = @Translation("Checkboxes other"),
  *   category = @Translation("Options elements"),
  *   multiple = TRUE,
- *   states_wrapper = TRUE,
  * )
  */
 class YamlFormCheckboxesOther extends Checkboxes {
@@ -21,14 +20,7 @@ class YamlFormCheckboxesOther extends Checkboxes {
    * {@inheritdoc}
    */
   public function getDefaultProperties() {
-    return parent::getDefaultProperties() + [
-      'other__option_label' => '',
-      'other__title' => '',
-      'other__placeholder' => '',
-      'other__description' => '',
-      'other__size' => '',
-      'other__maxlength' => '',
-    ];
+    return parent::getDefaultProperties() + self::getOtherProperties();
   }
 
   /**

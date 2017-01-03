@@ -21,11 +21,19 @@ class YamlFormWizardPage extends Details {
    */
   public function getDefaultProperties() {
     return [
+      // Page settings.
       'title' => '',
-      'open' => '',
+      'open' => FALSE,
       'prev_button_label' => '',
       'next_button_label' => '',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslatableProperties() {
+    return array_merge(parent::getTranslatableProperties(), ['prev_button_label', 'next_button_label']);
   }
 
   /**
@@ -59,9 +67,8 @@ class YamlFormWizardPage extends Details {
     $yamlform = $form_state->getFormObject()->getYamlForm();
 
     $form['wizard_page'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Page settings'),
-      '#open' => TRUE,
     ];
     $form['wizard_page']['prev_button_label'] = [
       '#type' => 'textfield',

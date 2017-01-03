@@ -32,7 +32,7 @@
   Drupal.behaviors.yamlFormDisableAutoSubmit = {
     attach: function (context) {
       // @see http://stackoverflow.com/questions/11235622/jquery-disable-form-submit-on-enter
-      $(context).find('.yamlform-submission-form.js-yamlform-disable-autosubmit input').once().on('keyup keypress', function(e) {
+      $(context).find('.yamlform-submission-form.js-yamlform-disable-autosubmit input').once('yamlform-disable-autosubmit').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
           e.preventDefault();
@@ -52,7 +52,7 @@
    */
   Drupal.behaviors.yamlFormSubmitNoValidate = {
     attach: function (context) {
-      $(context).find(':button.js-yamlform-novalidate').once().on('click', function () {
+      $(context).find(':button.js-yamlform-novalidate').once('yamlform-novalidate').on('click', function () {
         $(this.form).attr('novalidate', 'novalidate');
       });
     }
@@ -68,7 +68,7 @@
    */
   Drupal.behaviors.yamlFormDraft = {
     attach: function (context) {
-      $(context).find('#edit-draft').once().on('click', function () {
+      $(context).find('#edit-draft').once('yamlform-draft').on('click', function () {
         $(this.form).attr('novalidate', 'novalidate');
       });
     }

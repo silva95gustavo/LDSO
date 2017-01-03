@@ -26,9 +26,17 @@ class Table extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return [
+      // Table settings.
       'header' => [],
       'empty' => '',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslatableProperties() {
+    return array_merge(parent::getTranslatableProperties(), ['header']);
   }
 
   /**
@@ -99,11 +107,19 @@ class Table extends YamlFormElementBase {
     foreach ($value as $row_key => $row_element) {
       $element[$row_key] = [];
       foreach ($row_element['#value'] as $column_key => $column_element) {
-        if (is_string($column_element['#value']) || $column_element['#value'] instanceof TranslatableMarkup) {
-          $value = ['#markup' => $column_element['#value']];
+        if (isset($column_element['#value'])) {
+          if (is_string($column_element['#value']) || $column_element['#value'] instanceof TranslatableMarkup) {
+            $value = ['#markup' => $column_element['#value']];
+          }
+          else {
+            $value = $column_element['#value'];
+          }
+        }
+        elseif (isset($column_element['#markup'])) {
+          $value = ['#markup' => $column_element['#markup']];
         }
         else {
-          $value = $column_element['#value'];
+          $value = '';
         }
         $rows[$row_key][$column_key] = ['data' => $value];
       }
@@ -147,9 +163,8 @@ class Table extends YamlFormElementBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['table'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Table settings'),
-      '#open' => TRUE,
     ];
     $form['table']['header'] = [
       '#title' => $this->t('Header (YAML)'),
@@ -162,6 +177,13 @@ class Table extends YamlFormElementBase {
       '#description' => $this->t('Text to display when no rows are present.'),
     ];
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getElementSelectorOptions(array $element) {
+    return [];
   }
 
 }

@@ -22,9 +22,11 @@ class Range extends NumericBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form validation.
       'min' => '',
       'max' => '',
       'step' => '',
+      // Range settings.
       'range__output' => FALSE,
       'range__output_prefix' => '',
       'range__output_suffix' => '',
@@ -60,20 +62,17 @@ class Range extends NumericBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $form['range'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Range settings'),
-      '#open' => TRUE,
-    ];
-    $form['range']['range__output'] = [
+    $form['number']['#title'] = $this->t('Range settings');
+
+    $form['number']['range__output'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Output the range's value."),
       '#return_type' => TRUE,
     ];
-    $form['range']['range__output_prefix'] = [
+    $form['number']['range__output_prefix'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Range output prefix'),
-      '#description' => $this->t('Text or code that is placed directly in front of the output. This can be used to prefix a textfield with a constant string. Examples: $, #, -.'),
+      '#description' => $this->t('Text or code that is placed directly in front of the output. This can be used to prefix an output with a constant string. Examples: $, #, -.'),
       '#size' => 10,
       '#states' => [
         'visible' => [
@@ -81,10 +80,10 @@ class Range extends NumericBase {
         ],
       ],
     ];
-    $form['range']['range__output_suffix'] = [
+    $form['number']['range__output_suffix'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Range output suffix'),
-      '#description' => $this->t('Text or code that is placed directly after the output. This can be used to add a unit to a textfield. Examples: lb, kg, %.'),
+      '#description' => $this->t('Text or code that is placed directly after the output. This can be used to add a unit to an output. Examples: lb, kg, %.'),
       '#size' => 10,
       '#states' => [
         'visible' => [

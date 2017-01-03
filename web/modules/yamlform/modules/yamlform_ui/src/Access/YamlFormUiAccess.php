@@ -23,7 +23,7 @@ class YamlFormUiAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkYamlFormSourceAccess(YamlFormInterface $yamlform, AccountInterface $account) {
+  public static function checkYamlFormSourceAccess(YamlFormInterface $yamlform, AccountInterface $account) {
     return AccessResult::allowedIf($yamlform->access('update', $account) && $account->hasPermission('edit yamlform source'));
   }
 
@@ -38,7 +38,7 @@ class YamlFormUiAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkYamlFormOptionSourceAccess(YamlFormOptionsInterface $yamlform_options, AccountInterface $account) {
+  public static function checkYamlFormOptionSourceAccess(YamlFormOptionsInterface $yamlform_options, AccountInterface $account) {
     return AccessResult::allowedIf($yamlform_options->access('update', $account) && $account->hasPermission('edit yamlform source'));
   }
 
@@ -53,8 +53,8 @@ class YamlFormUiAccess {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  static public function checkYamlFormEditAccess(YamlFormInterface $yamlform, AccountInterface $account) {
-    return AccessResult::allowedIf(!$yamlform->hasTranslations() && $yamlform->access('update', $account));
+  public static function checkYamlFormEditAccess(YamlFormInterface $yamlform, AccountInterface $account) {
+    return AccessResult::allowedIf($yamlform->access('update', $account));
   }
 
 }
