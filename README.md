@@ -112,6 +112,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Credits
 - André Lago ([@andrelago13](https://github.com/andrelago13))
 - Diogo Carvalho ([@DiogoVazC](https://github.com/DiogoVazC))
+- Guilherme Pinto ([@guilhermevpinto](https://github.com/guilhermevpinto))
 - Gustavo Silva ([@gtugablue](https://github.com/gtugablue))
 - José Rebelo ([@joserebelo](https://github.com/joserebelo))
 - Pedro Castro ([@F0lha](https://github.com/F0lha))
