@@ -6,6 +6,7 @@
     - [Website](#website)
     - [Mobile app](#mobile-app)
   - [Running the tests](#running-the-tests)
+  - [Updating](#updating)
 - [Usage](#usage)
   - [Account system](#account-system)
   - [Charts](#charts)
@@ -49,6 +50,23 @@
 ### Running the tests
 The website unit tests use PHPUnit and can be run with the following command: `/web/core/vendor/bin/phpunit --testsuite=unit`.
 The website acceptance tests use Selenium and Google Chrome as the browser. They can be run with the following command: `/web/scripts/acceptance/compile_and_run.bat`.
+
+### Updating
+
+#### Drupal
+You are highly recommended not to update Drupal, unless a security update is available. The reason for this is that some files that are modified by the update must be manually edited to restore their original content.
+
+To update, the "Update Manager" module must be enabled. Then you should backup the following files:
+- .htaccess
+- robots.txt
+- core/lib/Drupal/Core/Password/PhpassHashedPassword.php
+
+After updating, you must merge the files you previously backed up with the new changes. Also, you need to remove the following test files:
+- core/lib/Drupal/Core/Password/PhpassHashedPassword.php
+- core/tests/Drupal/Tests/Core/PageCache/CommandLineOrUnsafeMethodTest.php
+
+#### Flarum
+Run `composer update` in a command line open on folder `/web/comunidade/`.
 
 ## Usage
 In this section, the usage of specific parts of the website will be explained.
