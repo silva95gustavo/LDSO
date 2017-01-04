@@ -106,29 +106,6 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Tests password rehashing.
-   *
-   * @covers ::hash
-   * @covers ::getCountLog2
-   * @covers ::check
-   * @covers ::needsRehash
-   */
-  public function testPasswordRehashing() {
-    // Increment the log2 iteration to MIN + 1.
-    $password_hasher = new PhpassHashedPassword(PhpassHashedPassword::MIN_HASH_COUNT + 1);
-    $this->assertTrue($password_hasher->needsRehash($this->hashedPassword), 'Needs a new hash after incrementing the log2 count.');
-    // Re-hash the password.
-    $rehashed_password = $password_hasher->hash($this->password);
-    $this->assertSame($password_hasher->getCountLog2($rehashed_password), PhpassHashedPassword::MIN_HASH_COUNT + 1, 'Re-hashed password has the correct number of log2 iterations.');
-    $this->assertNotEquals($rehashed_password, $this->hashedPassword, 'Password hash changed again.');
-
-    // Now the hash should be OK.
-    $this->assertFalse($password_hasher->needsRehash($rehashed_password), 'Re-hashed password does not need a new hash.');
-    $this->assertTrue($password_hasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
-  }
-
-  /**
    * Verifies that passwords longer than 512 bytes are not hashed.
    *
    * @covers ::crypt
