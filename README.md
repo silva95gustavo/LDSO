@@ -11,6 +11,7 @@
   - [Charts](#charts)
   - [Forms](#forms)
   - [Newsletter](#newsletter)
+  - [Custom content](#custom-content)
   - [Export user info](#export-user-info)
 - [System architecture](#system-architecture)
   - [Built width](#built-width)
@@ -77,15 +78,25 @@ The newsletter system allows the subscription of guests or logged-in users. It a
 
 ![Newsletter subscription](images/newsletter_subscription.gif)
 
+### Custom content
+Some special content of the website can be created using the appropriate content type. The following list explains some of the custom content types available:
+- **Chart:** Creates a chart (using EasyChart) to be displayed in the sidebar of the main page.
+- **Event:** Creates a new event that will be displayed in the calendar and in the News & Events section.
+- **News:** Creates a news article that will be displayed in the News & Events section as well as the main page.
+- **Partner:** Adds an image to the Partners/Supporters section.
+- **Responsive slideshow:** Adds a new image to the main page slideshow.
+- **Newsletter issue:** Creates a new issue of a newsletter, to be later sent to the subscribers.
+- **Training video:** Adds a new video to the Training Videos section.
+
 ### Export user info
 The administrator is able to export a list of all users of both the website and community to an Excel spreadsheet. In order to do that, one must acess the Configuration page and click "Export User Information" in the development section. The generated spreadsheet contains the following columns:
-- **Account type:** - Can be one of three values: "Website", "Community" or "Both". The value depends on where the user is registered.
-- **Email:** - The email of the user.
-- **Name:** - The name of the user (optional field).
-- **Associate number:** - The associate number of the user (optional field).
-- **Username:** - The username of the user (if registered in the forum).
-- **Age group:** - Young (17-) or Adult (18+).
-- **Account activated:** - Activated or Not Activated, depending on whether or not the user has activated the email associated to the account.
+- **Account type:** Can be one of three values: "Website", "Community" or "Both". The value depends on where the user is registered.
+- **Email:** The email of the user.
+- **Name:** The name of the user (optional field).
+- **Associate number:** The associate number of the user (optional field).
+- **Username:** The username of the user (if registered in the forum).
+- **Age group:** Young (17-) or Adult (18+).
+- **Account activated:** Activated or Not Activated, depending on whether or not the user has activated the email associated to the account.
 
 ## System architecture
 
