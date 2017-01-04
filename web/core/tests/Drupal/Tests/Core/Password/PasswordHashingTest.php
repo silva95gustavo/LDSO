@@ -66,65 +66,6 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Tests the hash count boundaries are enforced.
-   *
-   * @covers ::enforceLog2Boundaries
-   */
-  public function testWithinBounds() {
-    $hasher = new FakePhpassHashedPassword();
-    $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $hasher->enforceLog2Boundaries(1), "Min hash count enforced");
-    $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $hasher->enforceLog2Boundaries(100), "Max hash count enforced");
-  }
-
-
-  /**
-   * Test a password needs update.
-   *
-   * @covers ::needsRehash
-   */
-  public function testPasswordNeedsUpdate() {
-    // The md5 password should be flagged as needing an update.
-    $this->assertTrue($this->passwordHasher->needsRehash($this->md5HashedPassword), 'Upgraded md5 password hash needs a new hash.');
-  }
-
-  /**
-   * Test password hashing.
-   *
-   * @covers ::hash
-   * @covers ::getCountLog2
-   * @covers ::check
-   * @covers ::needsRehash
-   */
-  public function testPasswordHashing() {
-    $this->assertSame($this->passwordHasher->getCountLog2($this->hashedPassword), PhpassHashedPassword::MIN_HASH_COUNT, 'Hashed password has the minimum number of log2 iterations.');
-    $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword, 'Password hashes not the same.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $this->md5HashedPassword), 'Password check succeeds.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $this->hashedPassword), 'Password check succeeds.');
-    // Since the log2 setting hasn't changed and the user has a valid password,
-    // userNeedsNewHash() should return FALSE.
-    $this->assertFalse($this->passwordHasher->needsRehash($this->hashedPassword), 'Does not need a new hash.');
-  }
-
-  /**
-   * Verifies that passwords longer than 512 bytes are not hashed.
-   *
-   * @covers ::crypt
-   *
-   * @dataProvider providerLongPasswords
-   */
-  public function testLongPassword($password, $allowed) {
-
-    $hashed_password = $this->passwordHasher->hash($password);
-
-    if ($allowed) {
-      $this->assertNotFalse($hashed_password);
-    }
-    else {
-      $this->assertFalse($hashed_password);
-    }
-  }
-
-  /**
    * Provides the test matrix for testLongPassword().
    */
   public function providerLongPasswords() {
