@@ -133,6 +133,11 @@ body {
     width: auto;
 }
 
+.col-sm-9 .region.region-content {
+	padding-right: 20px;
+    border-right: 1px solid #e7e7e7;
+}
+
 .top_footer {
 	margin-top: 45px;
 	padding-top: 35px;
