@@ -261,3 +261,7 @@ input[type="password"] {
 #not_activated {
 	text-align: center;
 }
+
+#frm_email, #already_registered, #not_registered, #register_website, #register_community {
+	text-align: left !important;
+}
