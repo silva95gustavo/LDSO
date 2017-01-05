@@ -3,7 +3,7 @@ CREATE TABLE `cuidadores_users` (
 	`email` varchar(254) NOT NULL,
 	`id_site` int(11) DEFAULT NULL,
 	`id_community` int(11) DEFAULT NULL,
-	`birthday` date NOT NULL,
+	`birthday` date DEFAULT NULL,
 	`admin_notified` tinyint(1) NOT NULL DEFAULT '0',
 	`name` text,
 	`associate_nr` text,
