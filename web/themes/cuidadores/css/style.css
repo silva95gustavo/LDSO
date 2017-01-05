@@ -276,6 +276,6 @@ body {
 	flex: 1;
 }
 
-footer {
+footer, .top_footer {
 	width: 100%;
 }
