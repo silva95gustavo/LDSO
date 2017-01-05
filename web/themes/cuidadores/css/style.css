@@ -1,5 +1,6 @@
 body {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+	min-width: 369px;
 }
 
 #cuidadores_header {
@@ -46,6 +47,12 @@ body {
 	padding-left: 4em;
 	border-left: 1px solid #e7e7e7;
 	font-size:  10px;
+}
+
+.navbar-toggle.collapsed[data-target="#cuidadores_primary_nav"] {
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
 #cuidadores_secondary_nav {
@@ -104,8 +111,15 @@ body {
 	display: inline-block;
 }
 
+#cuidadores_header_search > .region > * {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 20px;
+}
+
 #cuidadores_header_search .search-block-form .input-group {
 	width: 200px;
+	margin-bottom: 10px;
 }
 
 @media  (max-width: 768px) {
@@ -152,7 +166,6 @@ body {
 }
 
 .top_footer_left, .top_footer_right {
-	text-align: center;
 	vertical-align: middle;
 	margin: auto;
 	height: 100%;
