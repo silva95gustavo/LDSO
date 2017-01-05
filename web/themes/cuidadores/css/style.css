@@ -263,7 +263,7 @@ div#top.container-fluid { padding: 0 }
 /* sticky footer */
 
 html {
-	width: 100%;
+	height: 100%;
 }
 
 body {
