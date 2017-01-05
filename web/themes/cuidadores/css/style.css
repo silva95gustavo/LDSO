@@ -259,3 +259,23 @@ body {
 div#top.container-fluid { padding: 0 }
 
 #block-responsiveslideshow > div.col-md-12 { padding: 0 }
+
+/* sticky footer */
+
+html {
+	width: 100%;
+}
+
+body {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.main-container {
+	flex: 1;
+}
+
+footer {
+	width: 100%;
+}
