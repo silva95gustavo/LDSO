@@ -8,12 +8,12 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\yamlform\Element\YamlFormSelectOther;
 use Drupal\yamlform\YamlFormHandlerBase;
 use Drupal\yamlform\YamlFormHandlerMessageInterface;
 use Drupal\yamlform\YamlFormSubmissionInterface;
+use Drupal\yamlform\YamlFormTokenManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,11 +46,11 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
   protected $configFactory;
 
   /**
-   * The token handler.
+   * The token manager.
    *
-   * @var \Drupal\Core\Utility\Token
+   * @var \Drupal\yamlform\YamlFormTranslationManagerInterface
    */
-  protected $token;
+  protected $tokenManager;
 
   /**
    * Cache of default configuration values.
@@ -62,11 +62,11 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, MailManagerInterface $mail_manager, ConfigFactoryInterface $config_factory, Token $token) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, MailManagerInterface $mail_manager, ConfigFactoryInterface $config_factory, YamlFormTokenManagerInterface $token_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);
     $this->mailManager = $mail_manager;
     $this->configFactory = $config_factory;
-    $this->token = $token;
+    $this->tokenManager = $token_manager;
   }
 
   /**
@@ -80,7 +80,7 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
       $container->get('logger.factory')->get('yamlform.email'),
       $container->get('plugin.manager.mail'),
       $container->get('config.factory'),
-      $container->get('token')
+      $container->get('yamlform.token_manager')
     );
   }
 
@@ -134,7 +134,7 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
       'bcc_mail' => $default_mail,
       'from_mail' => $default_mail,
       'from_name' => $yamlform_settings->get('mail.default_from_name') ?: $site_settings->get('name'),
-      'subject' => $yamlform_settings->get('mail.default_subject') ?: 'Form submission from: [yamlform-submission:source-entity]',
+      'subject' => $yamlform_settings->get('mail.default_subject') ?: 'Form submission from: [yamlform_submission:source-entity]',
       'body' => $this->getBodyDefaultValues($body_format),
     ];
 
@@ -188,9 +188,9 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
         // Note: Token must use the :raw form mail elements.
         // For example a select menu's option value would be used to route an
         // email address.
-        $mail_element_options["[yamlform-submission:values:$key:raw]"] = $title;
+        $mail_element_options["[yamlform_submission:values:$key:raw]"] = $title;
       }
-      $text_element_options["[yamlform-submission:values:$key:value]"] = $title;
+      $text_element_options["[yamlform_submission:values:$key:value]"] = $title;
     }
 
     $default_optgroup = (string) $this->t('Default');
@@ -309,22 +309,64 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
     ];
 
     // Body.
+    // Building a custom select other element that toggles between
+    // HTML (CKEditor) and Plain text (CodeMirror) custom body elements.
+    $body_options = [
+      YamlFormSelectOther::OTHER_OPTION => $this->t('Custom body...'),
+      'default' => $this->t('Default'),
+      $elements_optgroup => $text_element_options,
+    ];
+
+    $body_default_format = ($this->configuration['html']) ? 'html' : 'text';
+    $body_default_values = $this->getBodyDefaultValues();
+    if (isset($body_options[$this->configuration['body']])) {
+      $body_default_value = $this->configuration['body'];
+      $body_custom_default_value = $body_default_values[$body_default_format];
+    }
+    else {
+      $body_default_value = YamlFormSelectOther::OTHER_OPTION;
+      $body_custom_default_value = $this->configuration['body'];
+    }
     $form['message']['body'] = [
-      '#type' => 'yamlform_select_other',
+      '#type' => 'select',
       '#title' => $this->t('Body'),
-      '#options' => [
-        YamlFormSelectOther::OTHER_OPTION => $this->t('Custom body...'),
-        'default' => $this->t('Default'),
-        $elements_optgroup => $text_element_options,
-      ],
-      '#other__type' => 'yamlform_codemirror',
-      '#other__mode' => 'html',
+      '#options' => $body_options,
       '#required' => TRUE,
       '#parents' => ['settings', 'body'],
-      '#default_value' => $this->configuration['body'],
+      '#default_value' => $body_default_value,
     ];
-    $body_default_values = $this->getBodyDefaultValues();
     foreach ($body_default_values as $format => $default_value) {
+      // Custom body.
+      $custom_default_value = ($format === $body_default_format) ? $body_custom_default_value : $default_value;
+      if ($format == 'html') {
+        $form['message']['body_custom_' . $format] = [
+          '#type' => 'yamlform_html_editor',
+        ];
+      }
+      else {
+        $form['message']['body_custom_' . $format] = [
+          '#type' => 'yamlform_codemirror',
+          '#mode' => $format,
+        ];
+      }
+      $form['message']['body_custom_' . $format] += [
+        '#title' => $this->t('Body custom value (@format)', ['@label' => $format]),
+        '#title_display' => 'hidden',
+        '#parents' => ['settings', 'body_custom_' . $format],
+        '#default_value' => $custom_default_value,
+        '#states' => [
+          'visible' => [
+            ':input[name="settings[body]"]' => ['value' => YamlFormSelectOther::OTHER_OPTION],
+            ':input[name="settings[html]"]' => ['checked' => ($format == 'html') ? TRUE : FALSE],
+          ],
+          'required' => [
+            ':input[name="settings[body]"]' => ['value' => YamlFormSelectOther::OTHER_OPTION],
+            ':input[name="settings[html]"]' => ['checked' => ($format == 'html') ? TRUE : FALSE],
+          ],
+        ],
+      ];
+
+      // Default body.
       $form['message']['body_default_' . $format] = [
         '#type' => 'yamlform_codemirror',
         '#mode' => $format,
@@ -334,21 +376,13 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
         '#attributes' => ['readonly' => 'readonly', 'disabled' => 'disabled'],
         '#states' => [
           'visible' => [
-            ':input[name="settings[body][select]"]' => ['value' => 'default'],
+            ':input[name="settings[body]"]' => ['value' => 'default'],
             ':input[name="settings[html]"]' => ['checked' => ($format == 'html') ? TRUE : FALSE],
           ],
         ],
       ];
     }
-    $form['message']['token_tree_link'] = [
-      '#theme' => 'token_tree_link',
-      '#token_types' => [
-        'yamlform',
-        'yamlform-submission',
-      ],
-      '#click_insert' => FALSE,
-      '#dialog' => TRUE,
-    ];
+    $form['message']['token_tree_link'] = $this->tokenManager->buildTreeLink();
 
     // Elements.
     $form['elements'] = [
@@ -358,7 +392,7 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
     ];
     $form['elements']['excluded_elements'] = [
       '#type' => 'yamlform_excluded_elements',
-      '#description' => $this->t('The selected elements will be included in the [yamlform-submission:values] token. Individual values may still be printed if explicitly specified as a [yamlform-submission:values:?] in the email body template.'),
+      '#description' => $this->t('The selected elements will be included in the [yamlform_submission:values] token. Individual values may still be printed if explicitly specified as a [yamlform_submission:values:?] in the email body template.'),
       '#yamlform' => $this->yamlform,
       '#default_value' => $this->configuration['excluded_elements'],
       '#parents' => ['settings', 'excluded_elements'],
@@ -388,7 +422,7 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
     $form['settings']['debug'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable debugging'),
-      '#description' => $this->t('If checked sent emails will be displayed onscreen to all users.'),
+      '#description' => $this->t('If checked, sent emails will be displayed onscreen to all users.'),
       '#return_value' => TRUE,
       '#parents' => ['settings', 'debug'],
       '#default_value' => $this->configuration['debug'],
@@ -403,6 +437,17 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $values = $form_state->getValues();
+
+    // Set custom body based on the selected format.
+    if ($values['body'] === YamlFormSelectOther::OTHER_OPTION) {
+      $body_format = ($values['html']) ? 'html' : 'text';
+      $values['body'] = $values['body_custom_' . $body_format];
+    }
+    unset(
+      $values['body_custom_text'],
+      $values['body_default_html']
+    );
+
     foreach ($this->configuration as $name => $value) {
       if (isset($values[$name])) {
         $this->configuration[$name] = $values[$name];
@@ -427,25 +472,23 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
    */
   public function getMessage(YamlFormSubmissionInterface $yamlform_submission) {
     $token_data = [
-      'yamlform' => $yamlform_submission->getYamlForm(),
-      'yamlform-submission' => $yamlform_submission,
       'yamlform-submission-options' => [
         'email' => TRUE,
         'excluded_elements' => $this->configuration['excluded_elements'],
         'html' => ($this->configuration['html'] && $this->supportsHtml()),
       ],
     ];
-    $token_options = ['clear' => TRUE];
 
     $message = $this->configuration;
-    unset($message['excluded_elements']);
 
     // Replace 'default' values and [tokens] with configuration default values.
     foreach ($message as $key => $value) {
       if ($value === 'default') {
         $message[$key] = $this->getDefaultConfigurationValue($key);
       }
-      $message[$key] = $this->token->replace($message[$key], $token_data, $token_options);
+      if (is_string($message[$key])) {
+        $message[$key] = $this->tokenManager->replace($message[$key], $yamlform_submission, $token_data);
+      }
     }
 
     // Trim the message body.
@@ -467,25 +510,28 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
     }
 
     // Add attachments.
+    $message['attachments'] = [];
     if ($this->configuration['attachments'] && $this->supportsAttachments()) {
-      $message['attachments'] = [];
       $elements = $this->yamlform->getElementsInitializedAndFlattened();
       foreach ($elements as $key => $element) {
         if (!isset($element['#type']) || $element['#type'] != 'managed_file') {
           continue;
         }
-        $fid = $yamlform_submission->getData($key);
-        if (!$fid) {
+
+        $fids = $yamlform_submission->getData($key);
+        if (empty($fids)) {
           continue;
         }
-        /** @var \Drupal\file\FileInterface $file */
-        if ($file = File::load($fid)) {
+
+        /** @var \Drupal\file\FileInterface[] $files */
+        $files = File::loadMultiple(is_array($fids) ? $fids : [$fids]);
+        foreach ($files as $file) {
           $filepath = \Drupal::service('file_system')->realpath($file->getFileUri());
           $message['attachments'][] = [
             'filecontent' => file_get_contents($filepath),
             'filename' => $file->getFilename(),
             'filemime' => $file->getMimeType(),
-            // Add URL to be used by resend form.
+            // Add URL to be used by resend webform.
             'file' => $file,
           ];
         }
@@ -676,8 +722,8 @@ class EmailYamlFormHandler extends YamlFormHandlerBase implements YamlFormHandle
   protected function getBodyDefaultValues($format = NULL) {
     $yamlform_settings = $this->configFactory->get('yamlform.settings');
     $formats = [
-      'text' => $yamlform_settings->get('mail.default_body_text') ?: '[yamlform-submission:values]',
-      'html' => $yamlform_settings->get('mail.default_body_html') ?: '[yamlform-submission:values]',
+      'text' => $yamlform_settings->get('mail.default_body_text') ?: '[yamlform_submission:values]',
+      'html' => $yamlform_settings->get('mail.default_body_html') ?: '[yamlform_submission:values]',
     ];
     return ($format === NULL) ? $formats : $formats[$format];
   }

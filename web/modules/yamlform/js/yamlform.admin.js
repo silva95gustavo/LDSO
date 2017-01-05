@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.yamlFormFilterAutocomplete = {
     attach: function (context) {
-      $('.yamlform-filter-form input.form-autocomplete', context).once()
+      $('.yamlform-filter-form input.form-autocomplete', context).once('yamlform-autocomplete')
         .each(function () {
           // If input value is an autocomplete match, reset the input to its
           // default value.
@@ -42,7 +42,7 @@
     attach: function (context) {
       // Only attach the click event handler to the entire table and determine
       // which row triggers the event.
-      $('.yamlform-results__table', context).once().click(function (event) {
+      $('.yamlform-results__table', context).once('yamlform-results-table').click(function (event) {
         if (event.target.tagName == 'A' || event.target.tagName == 'BUTTON') {
           return true;
         }

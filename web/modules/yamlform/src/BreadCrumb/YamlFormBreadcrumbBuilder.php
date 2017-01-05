@@ -61,7 +61,9 @@ class YamlFormBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $this->type = 'yamlform_submission';
     }
     elseif (($route_match->getParameter('yamlform') instanceof YamlFormInterface  && $route_match->getParameter('yamlform')->access('admin'))) {
-      $this->type = 'yamlform';
+      /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
+      $yamlform = $route_match->getParameter('yamlform');
+      $this->type = ($yamlform->isTemplate() && \Drupal::moduleHandler()->moduleExists('yamlform_templates')) ? 'yamlform_template' : 'yamlform';
     }
     else {
       $this->type = NULL;
@@ -106,6 +108,10 @@ class YamlFormBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $breadcrumb->addLink(Link::createFromRoute($this->t('Structure'), 'system.admin_structure'));
       $breadcrumb->addLink(Link::createFromRoute($this->t('Forms'), 'entity.yamlform.collection'));
       switch ($this->type) {
+        case 'yamlform_template':
+          $breadcrumb->addLink(Link::createFromRoute('Templates', 'entity.yamlform.templates'));
+          break;
+
         case 'yamlform_element':
           /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
           $yamlform = $route_match->getParameter('yamlform');

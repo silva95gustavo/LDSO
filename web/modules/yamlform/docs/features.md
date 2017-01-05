@@ -190,7 +190,7 @@ Results management features include:
 </a>
 </div>
 
-The YAML Form module provide full access controls for managing who can create
+The YAML Form module provides full access controls for managing who can create
 forms, post submissions, and access a form's results.  
 Access controls can be applied to roles and/or specific users.
 
@@ -212,16 +212,24 @@ Access controls allow users to:
 </a>
 </div>
 
-The YAML Form module provides a few starter templates and examples that form 
-administrators can update or use to create new reusable templates for their 
-organization.
+The YAML Form module provides a few starter templates and multiple example forms
+which form administrators can update or use to create new reusable templates
+for their organization.
 
 Starter templates include:
 
-- Contact form
+- Contact Us form
 - Registration form
 - Job Application form 
 - Subscribe form
+
+Example forms include:
+
+- Basic layout
+- Elements
+- Flexbox layout
+- Options
+- Wizard
 
 
 ### Reusable Options
@@ -242,7 +250,7 @@ Reusable options include:
 - Country codes & names	
 - State/province codes & names	
 - State codes	& names		
-- Likert agreement, comparison, importance, satisfaction, ten scale, and
+- Likert agreement, comparison, importance, quality, satisfaction, ten scale, and
   would you
 
 
@@ -266,7 +274,7 @@ configuration translation system.
 </a>
 </div>
 
-Forms can be attached to nodes or displayed as blocks.  Forms can also have 
+Forms can be attached to nodes or displayed as blocks. Forms can also have
 dedicated SEO-friendly URLs. Form elements are simply render arrays that can
 easily be altered using custom hooks and/or plugins.
 
@@ -275,11 +283,11 @@ easily be altered using custom hooks and/or plugins.
 
 Drush commands are provided to:
 
-- Generate multiple form submissions.
-- Export form submissions.
-- Purge form submissions.
-- Download and manage third party libraries.
-- Tidy YAML configuration files. 
+- Generate multiple form submissions
+- Export form submissions
+- Purge form submissions
+- Download and manage third party libraries
+- Tidy YAML configuration files
 
 <!-- Creates the bootstrap modal where the image will appear -->
 <div class="modal fade" id="modal-lightbox" tabindex="-1" role="dialog" aria-labelledby="modal-lightbox-label" aria-hidden="true">

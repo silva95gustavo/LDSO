@@ -3,7 +3,6 @@ angular.module('starter.controllers.home', ['ngSanitize'])
   .controller('homeCtrl', function ($scope, $ionicLoading, $sce, API) {
     var ctrl = this;
     ctrl.domain = $sce.trustAsResourceUrl(API.domain);
-    ctrl.loaded = false;
     $scope.loading = $ionicLoading.show();
 
     $('iframe').on('load', function() {

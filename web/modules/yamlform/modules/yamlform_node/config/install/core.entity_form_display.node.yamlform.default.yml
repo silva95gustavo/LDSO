@@ -66,10 +66,7 @@ content:
     third_party_settings: {  }
   yamlform:
     weight: 0
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: yamlform_entity_reference_autocomplete
+    type: yamlform_entity_reference_select
 hidden: {  }

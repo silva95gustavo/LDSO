@@ -43,7 +43,7 @@ class YamlFormHandlerDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->yamlform->urlInfo('handlers-form');
+    return $this->yamlform->toUrl('handlers-form');
   }
 
   /**
@@ -69,7 +69,7 @@ class YamlFormHandlerDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->yamlform->deleteYamlFormHandler($this->yamlformHandler);
     drupal_set_message($this->t('The form handler %name has been deleted.', ['%name' => $this->yamlformHandler->label()]));
-    $form_state->setRedirectUrl($this->yamlform->urlInfo('handlers-form'));
+    $form_state->setRedirectUrl($this->yamlform->toUrl('handlers-form'));
   }
 
 }

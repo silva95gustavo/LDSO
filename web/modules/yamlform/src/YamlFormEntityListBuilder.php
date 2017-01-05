@@ -75,7 +75,7 @@ class YamlFormEntityListBuilder extends ConfigEntityListBuilder {
     // actions and add the needed dialog attributes.
     // @see https://www.drupal.org/node/2585169
     if ($this->moduleHandler()->moduleExists('yamlform_ui')) {
-      $add_form_attributes = YamlFormDialogHelper::getModalDialogAttributes(400, ['button', 'button-action', 'button--primary', 'button--small']);
+      $add_form_attributes = YamlFormDialogHelper::getModalDialogAttributes(640, ['button', 'button-action', 'button--primary', 'button--small']);
     }
     else {
       $add_form_attributes = ['class' => ['button', 'button-action', 'button--primary', 'button--small']];
@@ -115,7 +115,10 @@ class YamlFormEntityListBuilder extends ConfigEntityListBuilder {
       }
     }
     $build += parent::render();
-    $build['#attached']['library'][] = 'yamlform/yamlform.admin';
+
+    // Must preload libraries required by (modal) dialogs.
+    $build['#attached']['library'][] = 'yamlform/yamlform.admin.dialog';
+
     return $build;
   }
 
@@ -228,7 +231,7 @@ class YamlFormEntityListBuilder extends ConfigEntityListBuilder {
           'title' => $this->t('Duplicate'),
           'weight' => 23,
           'url' => Url::fromRoute('entity.yamlform.duplicate_form', $route_parameters),
-          'attributes' => YamlFormDialogHelper::getModalDialogAttributes(400),
+          'attributes' => YamlFormDialogHelper::getModalDialogAttributes(640),
         ];
       }
     }
@@ -287,9 +290,13 @@ class YamlFormEntityListBuilder extends ConfigEntityListBuilder {
 
     // Filter by (form) state.
     if ($state == self::STATE_OPEN || $state == self::STATE_CLOSED) {
-      $query->condition('status', ($state == self::STATE_OPEN) ? 1 : 0);
+      $query->condition('status', ($state == self::STATE_OPEN) ? TRUE : FALSE);
     }
 
+    // Filter out templates if the yamlform_template.module is enabled.
+    if ($this->moduleHandler()->moduleExists('yamlform_templates')) {
+      $query->condition('template', FALSE);
+    }
     return $query;
   }
 

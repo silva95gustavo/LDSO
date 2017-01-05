@@ -1,11 +1,14 @@
 langcode: en
 status: false
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - yamlform_examples
 uid: null
 template: false
 id: example_elements
 title: 'Example: Elements'
-description: 'Examples for every supported <a href="https://api.drupal.org/api/drupal/elements">form element</a>.'
+description: 'Examples of every supported <a href="https://api.drupal.org/api/drupal/elements">form element</a>.'
 elements: |
   basic_elements:
     '#type': details
@@ -14,6 +17,9 @@ elements: |
     checkbox:
       '#type': checkbox
       '#title': Checkbox
+    hidden:
+      '#type': hidden
+      '#title': Hidden
     password:
       '#type': password
       '#title': Password
@@ -30,6 +36,7 @@ elements: |
     yamlform_autocomplete:
       '#type': autocomplete
       '#title': Autocomplete
+      '#autocomplete_items': country_names
     captcha:
       '#type': captcha
       '#title': CAPTCHA
@@ -40,6 +47,9 @@ elements: |
     color:
       '#type': color
       '#title': Color
+    yamlform_creditcard_number:
+      '#type': creditcard_number
+      '#title': 'Credit card number'
     email:
       '#type': email
       '#title': Email
@@ -83,7 +93,7 @@ elements: |
     text_format:
       '#type': text_format
       '#title': 'Text format'
-      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/997826">Issue #997826: #states doesn''t work correctly with type text_format</a><br/><a href="https://www.drupal.org/node/2625128">Issue #2625128: Text format selection stays visible when using editor and a hidden form state</a>'
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/997826">Issue #997826: #states doesn''t work correctly with type text_format</a><br/><a href="https://www.drupal.org/node/2625128">Issue #2625128: Text format selection stays visible when using editor and a hidden form state</a><br/><a href="https://www.drupal.org/node/1954968">Issue #1954968: Required CKEditor fields always fail HTML5 validation</a>'
     yamlform_toggle:
       '#type': toggle
       '#title': Toggle
@@ -93,29 +103,48 @@ elements: |
     value:
       '#type': value
       '#title': Value
-  composite_elements:
+  file_upload_elements:
     '#type': details
-    '#title': 'Composite elements'
+    '#title': 'File upload elements'
     '#open': true
-    yamlform_address:
-      '#type': address
-      '#title': Address
-    yamlform_contact:
-      '#type': contact
-      '#title': Contact
-    yamlform_location:
-      '#type': location
-      '#title': Location
-    yamlform_name:
-      '#type': name
-      '#title': Name
+    yamlform_audio_file:
+      '#type': audio_file
+      '#title': 'Audio file'
+    yamlform_document_file:
+      '#type': document_file
+      '#title': 'Document file'
+    yamlform_image_file:
+      '#type': image_file
+      '#title': 'Image file'
+    managed_file:
+      '#type': managed_file
+      '#title': 'Managed file'
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2705471">Issue #2705471: Form states managed file fields</a><br/><a href="https://www.drupal.org/node/2113931">Issue #2113931: File Field design update</a>'
+    yamlform_video_file:
+      '#type': video_file
+      '#title': 'Video file'
   options_elements:
     '#type': details
     '#title': 'Options elements'
     '#open': true
+    yamlform_buttons:
+      '#type': buttons
+      '#title': Buttons
+      '#options':
+        One: One
+        Two: Two
+        Three: Three
+    yamlform_buttons_other:
+      '#type': buttons_other
+      '#title': 'Buttons other'
+      '#options':
+        One: One
+        Two: Two
+        Three: Three
     checkboxes:
       '#type': checkboxes
       '#title': Checkboxes
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/994360">Issue #994360: #states cannot disable/enable radios and checkboxes</a><br/><a href="https://www.drupal.org/node/2836364">Issue #2836364: Wrapper attributes are not supported by composite elements, this includes radios, checkboxes, and buttons.</a>'
       '#options':
         One: One
         Two: Two
@@ -143,7 +172,7 @@ elements: |
     radios:
       '#type': radios
       '#title': Radios
-      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2731991">Issue #2731991: Setting required on radios marks all options required</a><br/><a href="https://www.drupal.org/node/994360">Issue #994360: #states cannot disable/enable radios and checkboxes</a>'
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2731991">Issue #2731991: Setting required on radios marks all options required</a><br/><a href="https://www.drupal.org/node/994360">Issue #994360: #states cannot disable/enable radios and checkboxes</a><br/><a href="https://www.drupal.org/node/2836364">Issue #2836364: Wrapper attributes are not supported by composite elements, this includes radios, checkboxes, and buttons.</a>'
       '#options':
         One: One
         Two: Two
@@ -158,7 +187,7 @@ elements: |
     select:
       '#type': select
       '#title': Select
-      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/1426646">Issue #1426646: "-Select-" option is lost when form elements uses ''#states''</a><br/><a href="https://www.drupal.org/node/1149078">Issue #1149078: States API doesn''t work with multiple select fields</a><br/><a href="https://www.drupal.org/node/2791741">Issue #2791741: FAPI states: fields aren''t hidden initally when depending on multi-value selection</a>'
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/1426646">Issue #1426646: "-Select-" option is lost when form elements uses ''#states''</a><br/><a href="https://www.drupal.org/node/1149078">Issue #1149078: States API doesn''t work with multiple select fields</a><br/><a href="https://www.drupal.org/node/2791741">Issue #2791741: FAPI states: fields aren''t hidden initially when depending on multi-value selection</a>'
       '#options':
         One: One
         Two: Two
@@ -173,6 +202,27 @@ elements: |
     tableselect:
       '#type': tableselect
       '#title': 'Table select'
+      '#options':
+        One: One
+        Two: Two
+        Three: Three
+    yamlform_tableselect_sort:
+      '#type': tableselect_sort
+      '#title': 'Tableselect sort'
+      '#options':
+        One: One
+        Two: Two
+        Three: Three
+    yamlform_table_sort:
+      '#type': table_sort
+      '#title': 'Table sort'
+      '#options':
+        One: One
+        Two: Two
+        Three: Three
+    yamlform_toggles:
+      '#type': toggles
+      '#title': Toggles
       '#options':
         One: One
         Two: Two
@@ -211,13 +261,6 @@ elements: |
       '#title': Label
       label_content:
         '#markup': 'This is a Label container.'
-    yamlform_message:
-      '#type': message
-      '#title': Message
-      '#message_type': warning
-      '#message_message': 'This is a <strong>warning</strong> message.'
-      yamlform_message_content:
-        '#markup': 'This is a Message container.'
   date_time_elements:
     '#type': details
     '#title': 'Date/time elements'
@@ -243,6 +286,7 @@ elements: |
     entity_autocomplete:
       '#type': entity_autocomplete
       '#title': 'Entity autocomplete'
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2826451">Issue #2826451: TermSelection returning HTML characters in select list</a>'
       '#target_type': user
       '#selection_handler': 'default:user'
       '#selection_settings':
@@ -278,24 +322,41 @@ elements: |
       '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2700667">Issue #2700667: Notice: Undefined index: #type in drupal_process_states()</a>'
       yamlform_markup_content:
         '#markup': 'This is a HTML markup container.'
+    yamlform_message:
+      '#type': message
+      '#title': Message
+      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/77245">Issue #77245: A place for JavaScript status messages</a>'
+      '#message_type': warning
+      '#message_message': 'This is a <strong>warning</strong> message.'
+      yamlform_message_content:
+        '#markup': 'This is a Message container.'
     processed_text:
       '#type': processed_text
       '#title': 'Processed text'
       processed_text_content:
         '#markup': 'This is a Processed text container.'
-  file_upload_elements:
+  other_elements:
     '#type': details
-    '#title': 'File upload elements'
+    '#title': 'Other elements'
     '#open': true
-    managed_file:
-      '#type': managed_file
-      '#title': 'Managed file'
-      '#description': '<b>Known Issues:</b><br/><a href="https://www.drupal.org/node/2705471">Issue #2705471: Form states managed file fields</a>'
+    yamlform_element:
+      '#type': element
+      '#title': 'Generic element'
+    language_select:
+      '#type': language_select
+      '#title': 'Language select'
+      '#languages': 3
+    machine_name:
+      '#type': machine_name
+      '#title': 'Machine name'
+css: ''
+javascript: ''
 settings:
   page: true
   page_submit_path: ''
   page_confirm_path: ''
   form_submit_label: ''
+  form_submit_attributes: {  }
   form_exception_message: ''
   form_closed_message: ''
   form_confidential: false
@@ -303,28 +364,39 @@ settings:
   form_prepopulate: false
   form_prepopulate_source_entity: false
   form_novalidate: false
+  form_unsaved: false
+  form_disable_back: false
   form_autofocus: false
   form_details_toggle: false
   wizard_progress_bar: true
   wizard_progress_pages: false
   wizard_progress_percentage: false
   wizard_next_button_label: ''
+  wizard_next_button_attributes: {  }
   wizard_prev_button_label: ''
+  wizard_prev_button_attributes: {  }
   wizard_start_label: ''
   wizard_complete: true
   wizard_complete_label: ''
   preview: 0
   preview_next_button_label: ''
+  preview_next_button_attributes: {  }
   preview_prev_button_label: ''
+  preview_prev_button_attributes: {  }
   preview_message: ''
   draft: false
   draft_auto_save: false
   draft_button_label: ''
+  draft_button_attributes: {  }
   draft_saved_message: ''
   draft_loaded_message: ''
   confirmation_type: page
   confirmation_message: ''
   confirmation_url: ''
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  confirmation_back_attributes: {  }
   limit_total: null
   limit_total_message: ''
   limit_user: null

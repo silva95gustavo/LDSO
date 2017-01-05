@@ -21,7 +21,11 @@ class YamlFormTime extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Time settings.
       'time_format' => '',
+      'min' => '',
+      'max' => '',
+      'step' => '',
     ];
   }
 
@@ -53,9 +57,8 @@ class YamlFormTime extends YamlFormElementBase {
 
     // Time.
     $form['time'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Time settings'),
-      '#open' => FALSE,
     ];
     $form['time']['time_format'] = [
       '#type' => 'yamlform_select_other',
@@ -70,6 +73,31 @@ class YamlFormTime extends YamlFormElementBase {
       '#other__option_label' => $this->t('Custom...'),
       '#other__placeholder' => $this->t('Custom time format...'),
       '#other__description' => $this->t('Enter time format using <a href="http://php.net/manual/en/function.date.php">Time Input Format</a>.'),
+    ];
+    $form['time']['min'] = [
+      '#type' => 'yamlform_time',
+      '#title' => $this->t('Min'),
+      '#description' => $this->t('Specifies the minimum time.'),
+    ];
+    $form['time']['max'] = [
+      '#type' => 'yamlform_time',
+      '#title' => $this->t('Max'),
+      '#description' => $this->t('Specifies the maximum time.'),
+    ];
+    $form['time']['step'] = [
+      '#type' => 'yamlform_select_other',
+      '#title' => $this->t('Step'),
+      '#description' => $this->t('Specifies the minute intervals.'),
+      '#options' => [
+        '' => $this->t('1 minute'),
+        30 => $this->t('5 minutes'),
+        600 => $this->t('10 minutes'),
+        900 => $this->t('15 minutes'),
+        1200 => $this->t('20 minutes'),
+        1800 => $this->t('30 minutes'),
+      ],
+      '#other__type' => 'number',
+      '#other__description' => $this->t('Enter interval in seconds.'),
     ];
     return $form;
   }

@@ -153,7 +153,8 @@ class YamlFormSubmissionListBuilder extends EntityListBuilder {
     /** @var YamlFormSubmissionStorageInterface $yamlform_submission_storage */
     $yamlform_submission_storage = $this->getStorage();
 
-    if (\Drupal::routeMatch()->getRouteName() == "$base_route_name.yamlform.results_table") {
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if ($route_name == "$base_route_name.yamlform.results_table") {
       $this->columns = $yamlform_submission_storage->getCustomColumns($this->yamlform, $this->sourceEntity, $this->account, TRUE);
       $this->sort = $yamlform_submission_storage->getCustomSetting('sort', 'serial', $this->yamlform, $this->sourceEntity);
       $this->direction  = $yamlform_submission_storage->getCustomSetting('direction', 'desc', $this->yamlform, $this->sourceEntity);
@@ -171,7 +172,16 @@ class YamlFormSubmissionListBuilder extends EntityListBuilder {
     }
     else {
       $this->columns = $yamlform_submission_storage->getDefaultColumns($this->yamlform, $this->sourceEntity, $this->account, FALSE);
-      $this->sort = 'serial';
+      // Display the sid when show results from all forms.
+      if ($route_name == 'entity.yamlform_submission.collection') {
+        unset($this->columns['serial']);
+        $this->columns['sid']['title'] = '#';
+        $this->sort = 'sid';
+      }
+      else {
+        unset($this->columns['sid']);
+        $this->sort = 'serial';
+      }
       $this->direction  = 'desc';
       $this->limit = 50;
       $this->customize = FALSE;
@@ -373,7 +383,7 @@ class YamlFormSubmissionListBuilder extends EntityListBuilder {
             '#type' => 'link',
             '#title' => new FormattableMarkup('<span class="yamlform-icon yamlform-icon-notes yamlform-icon-notes--@state"></span>', ['@state' => $state]),
             '#url' => Url::fromRoute($route_name, $route_parameters, $route_options),
-            '#attributes' => YamlFormDialogHelper::getModalDialogAttributes(400),
+            '#attributes' => YamlFormDialogHelper::getModalDialogAttributes(640),
           ],
           'class' => ['yamlform-results__icon'],
         ];

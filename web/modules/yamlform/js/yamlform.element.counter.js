@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.yamlFormCounter = {
     attach: function (context) {
-      $(context).find('.js-yamlform-counter').once().each(function () {
+      $(context).find('.js-yamlform-counter').once('yamlform-counter').each(function () {
         var options = {
           goal: $(this).attr('data-counter-limit'),
           msg: $(this).attr('data-counter-message')

@@ -11,7 +11,7 @@
 	text-align: right;
 	width: 100%;
 	height: 3.5em;
-	background-color: #144877;
+	background-color: #4AACC5;
 	margin: 0;
 }
 
@@ -64,7 +64,8 @@
 }
 
 #cuidadores_header nav>ul>li.active {
-	color: orange;
+	font-weight: bold;
+	color: #FF9A5F;
 }
 
 #cuidadores_header #cuidadores_secondary_nav ul > li {

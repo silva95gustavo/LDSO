@@ -35,6 +35,22 @@ interface YamlFormExporterInterface extends PluginInspectionInterface, Configura
   public function description();
 
   /**
+   * Determine if exporter generates an archive.
+   *
+   * @return bool
+   *   TRUE if exporter generates an archive.
+   */
+  public function isArchive();
+
+  /**
+   * Determine if exporter has options.
+   *
+   * @return bool
+   *   TRUE if export has options.
+   */
+  public function hasOptions();
+
+  /**
    * Returns the results exporter status.
    *
    * @return bool
@@ -43,38 +59,35 @@ interface YamlFormExporterInterface extends PluginInspectionInterface, Configura
   public function getStatus();
 
   /**
-   * Create export file.
+   * Create export.
    */
-  public function createFile();
+  public function createExport();
 
   /**
-   * Open export file.
+   * Open export.
    */
-  public function openFile();
+  public function openExport();
 
   /**
-   * Close export file.
+   * Close export.
    */
-  public function closeFile();
+  public function closeExport();
 
   /**
-   * Write export file header.
+   * Write header to export.
+   */
+  public function writeHeader();
+
+  /**
+   * Write submission to export.
    *
-   * @param array $header
-   *   A array of headers.
+   * @param \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission
+   *   A form submission.
    */
-  public function writeHeader(array $header);
+  public function writeSubmission(YamlFormSubmissionInterface $yamlform_submission);
 
   /**
-   * Write export file record.
-   *
-   * @param array $record
-   *   A array of record values.
-   */
-  public function writeRecord(array $record);
-
-  /**
-   * Write export file footer.
+   * Write footer to export.
    */
   public function writeFooter();
 
@@ -85,6 +98,17 @@ interface YamlFormExporterInterface extends PluginInspectionInterface, Configura
    *   The export file temp directory..
    */
   public function getFileTempDirectory();
+
+  /**
+   * Get form submission base file name.
+   *
+   * @param \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission
+   *   A form submission.
+   *
+   * @return string
+   *   Form submission's base file name.
+   */
+  public function getSubmissionBaseName(YamlFormSubmissionInterface $yamlform_submission);
 
   /**
    * Get export file extension.
@@ -117,5 +141,21 @@ interface YamlFormExporterInterface extends PluginInspectionInterface, Configura
    *   A file path.
    */
   public function getExportFilePath();
+
+  /**
+   * Get archive file name and path for a form.
+   *
+   * @return string
+   *   Archive file name and path for a form
+   */
+  public function getArchiveFilePath();
+
+  /**
+   * Get archive file name for a form.
+   *
+   * @return string
+   *   Archive file name.
+   */
+  public function getArchiveFileName();
 
 }

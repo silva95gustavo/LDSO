@@ -18,7 +18,7 @@ class YamlFormElementDateTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['yamlform', 'yamlform_test'];
+  protected static $modules = ['yamlform', 'yamlform_test'];
 
   /**
    * Test date element.
@@ -105,6 +105,19 @@ class YamlFormElementDateTest extends WebTestBase {
     $this->drupalPostForm('yamlform/test_element_dates', $edit, t('Submit'));
     $this->assertRaw('<em class="placeholder">time 24 hour</em> must be a valid time.');
 
+    // Check time #max validation.
+    $edit = [
+      'time_min_max' => '12:00',
+    ];
+    $this->drupalPostForm('yamlform/test_element_dates', $edit, t('Submit'));
+    $this->assertRaw('<em class="placeholder">time (min/max)</em> must be on or after <em class="placeholder">14:00</em>.');
+
+    // Check time #min validation.
+    $edit = [
+      'time_min_max' => '22:00',
+    ];
+    $this->drupalPostForm('yamlform/test_element_dates', $edit, t('Submit'));
+    $this->assertRaw('<em class="placeholder">time (min/max)</em> must be on or before <em class="placeholder">18:00</em>.');
   }
 
 }

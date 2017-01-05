@@ -128,25 +128,16 @@ interface YamlFormSubmissionExporterInterface {
 
   /**
    * Write form results header to export file.
-   *
-   * @param array $field_definitions
-   *   An associative array containing form submission field definitions.
-   * @param array $elements
-   *   An associative array containing form elements.
    */
-  public function writeHeader(array $field_definitions, array $elements);
+  public function writeHeader();
 
   /**
    * Write form results header to export file.
    *
    * @param \Drupal\yamlform\YamlFormSubmissionInterface[] $yamlform_submissions
    *   A form submission.
-   * @param array $field_definitions
-   *   An associative array containing form submission field definitions.
-   * @param array $elements
-   *   An associative array containing form elements.
    */
-  public function writeRecords(array $yamlform_submissions, array $field_definitions, array $elements);
+  public function writeRecords(array $yamlform_submissions);
 
   /**
    * Write form results footer to export file.
@@ -157,19 +148,6 @@ interface YamlFormSubmissionExporterInterface {
    * Write export file to Archive file.
    */
   public function writeExportToArchive();
-
-  /**
-   * Get form submission field definitions.
-   */
-  public function getFieldDefinitions();
-
-  /**
-   * Get form elements.
-   *
-   * @return array
-   *   An associative array containing form elements keyed by name.
-   */
-  public function getElements();
 
   /**
    * Get form submission query for specified YAMl form and export options.
@@ -210,6 +188,17 @@ interface YamlFormSubmissionExporterInterface {
    *   Temp directory path.
    */
   public function getFileTempDirectory();
+
+  /**
+   * Get form submission base file name.
+   *
+   * @param \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission
+   *   A form submission.
+   *
+   * @return string
+   *   Form submission's base file name.
+   */
+  public function getSubmissionBaseName(YamlFormSubmissionInterface $yamlform_submission);
 
   /**
    * Get export file name and path.

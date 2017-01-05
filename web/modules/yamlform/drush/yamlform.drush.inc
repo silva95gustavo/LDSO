@@ -5,6 +5,7 @@
  * YAML Form module drush commands.
  */
 
+use Drupal\Core\Serialization\Yaml;
 use Drupal\yamlform\Controller\YamlFormResultsExportController;
 use Drupal\yamlform\Entity\YamlForm;
 use Drupal\yamlform\Form\YamlFormResultsClearForm;
@@ -27,12 +28,17 @@ function yamlform_drush_command() {
       'yamlform' => 'The form ID you want to export (required unless --entity-type and --entity-id are specified)',
     ],
     'options' => [
+      // Delimited export options.
       'delimiter' => 'Delimiter between columns (defaults to site-wide setting). This option may need to be wrapped in quotes. i.e. --delimiter="\t".',
+      // Document and managed file export options.
+      'file-name' => 'File name used to export submission and uploaded filed. You may use tokens.',
+      // Tabular export options.
       'header-keys' => 'Set to "label" (default) or "key"',
       'options-item-format' => 'Set to "label" (default) or "key". Set to "key" to print select list values by their keys instead of labels.',
       'options-format' => 'Set to "separate" (default) or "compact" to determine how select list values are exported.',
       'entity-reference-format' => 'Set to "link" (default) or "id" to determine how entity references are exported.',
       'excluded-columns' => 'Comma-separated list of component IDs or form keys to exclude.',
+      // Download options.
       'entity-type' => 'The entity type to which this submission was submitted from.',
       'entity-id' => 'The ID of the entity of which this form submission was submitted from.',
       'range-type' => 'Range of submissions to export: "all", "latest", "serial", "sid", or "date".',
@@ -42,6 +48,7 @@ function yamlform_drush_command() {
       'state' => 'Submission state to be included: "completed", "draft" or "all" (default).',
       'sticky' => 'Flagged/starred submission status.',
       'files' => 'Download files: "1" or "0" (default). If set to 1, the exported CSV file and any submission file uploads will be download in a gzipped tar file.',
+      // Output options.
       'destination' => 'The full path and filename in which the CSV or archive should be stored. If omitted the CSV file or archive will be outputted to the commandline.',
     ],
     'aliases' => ['yfx'],
@@ -73,6 +80,9 @@ function yamlform_drush_command() {
     'description' => "Tidy export form configuration files",
     'core' => ['8+'],
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_ROOT,
+    'options' => [
+      'dependencies' => 'Add module dependencies to installed form and options configuration entities.',
+    ],
     'arguments' => [
       'module' => "The module that needs its YAML configuration files (config/install) tidied. (Defaults to yamlform)",
     ],
@@ -135,6 +145,18 @@ function yamlform_drush_command() {
     'aliases' => ['yfg'],
   ];
 
+  /* Repair */
+
+  $items['yamlform-repair'] = [
+    'description' => 'Makes sure all YAML Form admin settings and forms are up-to-date.',
+    'core' => ['8+'],
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_ROOT,
+    'examples' => [
+      'yamlform-repair' => 'Repairs admin settings and forms are up-to-date.',
+    ],
+    'aliases' => ['yfr'],
+  ];
+
   return $items;
 }
 
@@ -157,6 +179,9 @@ function yamlform_drush_help($section) {
 
     case 'drush:yamlform-libraries-remove':
       return dt('This command removes all downloaded third party libraries required by the YAML Form module.');
+
+    case 'drush:yamlform-repair':
+      return dt('Makes sure all YAML Form admin settings and forms are up-to-date. Only use this command if you are having problems with your existing YAML Form configuration.');
 
     case 'drush:yamlform-tidy':
       return dt('This command tidies exported YAML configuration files.') . "\n\n" .
@@ -217,11 +242,12 @@ function drush_yamlform_export($yamlform_id = NULL) {
     $export_options[str_replace('-', '_', $key)] = $value;
   }
   $export_options += $submission_exporter->getDefaultExportOptions();
+  $submission_exporter->setExporter($export_options);
 
   YamlFormResultsExportController::batchSet($yamlform, $source_entity, $export_options);
   drush_backend_batch_process();
 
-  $file_path = ($submission_exporter->isArchive($export_options)) ? $submission_exporter->getArchiveFilePath($export_options) : $submission_exporter->getExportFilePath($export_options);;
+  $file_path = ($submission_exporter->isArchive()) ? $submission_exporter->getArchiveFilePath() : $submission_exporter->getExportFilePath();
   if (isset($export_options['destination'])) {
     drush_print(dt('Created @destination', ['@destination' => $export_options['destination']]));
     file_unmanaged_copy($file_path, $export_options['destination'], FILE_EXISTS_REPLACE);
@@ -299,12 +325,9 @@ function drush_yamlform_purge($yamlform_id = NULL) {
   }
   else {
     // Set source entity.
-    if (drush_get_option('entity-type') && drush_get_option('entity-id')) {
-      $source_entity = entity_load(drush_get_option('entity-type'), drush_get_option('entity-id'));
-    }
-    else {
-      $source_entity = NULL;
-    }
+    $entity_type = drush_get_option('entity-type');
+    $entity_id = drush_get_option('entity-id');
+    $source_entity = ($entity_type && $entity_id) ? \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id) : NULL;
 
     $t_args = [
       '@title' => ($source_entity) ? $source_entity->label() : $yamlform->label(),
@@ -339,16 +362,30 @@ function drush_yamlform_tidy_validate($module = 'yamlform') {
  * Implements drush_hook_COMMAND().
  */
 function drush_yamlform_tidy($module = 'yamlform') {
+  $dependencies = drush_get_option('dependencies');
   $file_directory_path = drupal_get_path('module', $module) . '/config';
   $files = file_scan_directory($file_directory_path, '/.*\.yml$/');
   drush_print(dt('Reviewing @count YAML configuration files for the @module.module.', ['@count' => count($files), '@module' => $module]));
   $total = 0;
   foreach ($files as $file) {
-    $yaml = file_get_contents($file->uri);
-    $tidied_yaml = YamlFormTidy::tidy($yaml);
-    if ($yaml != $tidied_yaml) {
+    $original_yaml = file_get_contents($file->uri);
+    $tidied_yaml = $original_yaml;
+
+    // Add module dependency to exporter form and form options config entities.
+    if ($dependencies && preg_match('/^(yamlform\.yamlform\.|yamlform\.yamlform_options\.)/', $file->filename)) {
+      $data = Yaml::decode($tidied_yaml);
+      if (empty($data['dependencies']['enforced']['module']) || !in_array($module, $data['dependencies']['enforced']['module'])) {
+        drush_print(dt('Adding module dependency to @file...', ['@file' => $file->filename]));
+        $data['dependencies']['enforced']['module'][] = $module;
+        $tidied_yaml = Yaml::encode($data);
+      }
+    }
+
+    // Tidy and add new line to the end of the tidied file.
+    $tidied_yaml = YamlFormTidy::tidy($tidied_yaml) . "\n";
+    if ($tidied_yaml != $original_yaml) {
       drush_print(dt('Tidying @file...', ['@file' => $file->filename]));
-      file_put_contents($file->uri, YamlFormTidy::tidy(file_get_contents($file->uri)));
+      file_put_contents($file->uri, $tidied_yaml);
       $total++;
     }
   }
@@ -385,11 +422,12 @@ function drush_yamlform_generate_validate() {
 function drush_yamlform_libraries_status() {
   module_load_include('install', 'yamlform');
 
-  $requirements = _yamlform_libraries_requirements();
-
+  /** @var \Drupal\yamlform\YamlFormLibrariesManagerInterface $libraries_manager */
+  $libraries_manager = \Drupal::service('yamlform.libraries_manager');
+  $requirements = $libraries_manager->requirements();
   foreach ($requirements as $requirement) {
     $library = $requirement['library'];
-    drush_print($library['library_title'] . ' (' . $library['library_name'] . ') ' . $requirement['value']);
+    drush_print($library['title'] . ' (' . $library['name'] . ') ' . $requirement['value']);
     // drush_print();
     drush_print(strip_tags($requirement['description']));
     drush_print();
@@ -404,7 +442,10 @@ function drush_yamlform_libraries_remove($status = TRUE) {
     drush_print(dt('Beginning to remove libraries...'));
   }
   $removed = FALSE;
-  $libraries = _yamlform_libraries_load();
+
+  /** @var \Drupal\yamlform\YamlFormLibrariesManagerInterface $libraries_manager */
+  $libraries_manager = \Drupal::service('yamlform.libraries_manager');
+  $libraries = $libraries_manager->getLibraries();
   foreach ($libraries as $library_name => $library) {
     $library_path = '/' . $library['destination'] . '/' . $library['directory_name'];
     $library_exists = (file_exists(DRUPAL_ROOT . $library_path)) ? TRUE : FALSE;
@@ -420,6 +461,7 @@ function drush_yamlform_libraries_remove($status = TRUE) {
       $removed = TRUE;
     }
   }
+
   if ($status) {
     drupal_flush_all_caches();
   }
@@ -442,7 +484,29 @@ function drush_yamlform_libraries_download() {
   ];
   $commandline_options = ['no-core' => 'no-core'];
   drush_invoke_process('@self', 'make', $commandline_args, $commandline_options);
+
   drupal_flush_all_caches();
+}
+
+/******************************************************************************/
+// Repair.
+/******************************************************************************/
+
+/**
+ * Implements drush_hook_COMMAND().
+ */
+function drush_yamlform_repair() {
+  if (!drush_confirm(dt("Are you sure you want repair the YAML Form module's admin settings and forms?"))) {
+    return drush_user_abort();
+  }
+
+  module_load_include('install', 'yamlform');
+
+  drush_print('Repairing admin settings...');
+  _yamlform_update_admin_settings();
+
+  drush_print('Repairing form settings...');
+  _yamlform_update_form_settings();
 }
 
 /******************************************************************************/
@@ -477,7 +541,7 @@ function _drush_yamlform_validate($yamlform_id = NULL) {
       '@entity_id' => $entity_id,
     ];
 
-    $source_entity = entity_load($entity_type, $entity_id);
+    $source_entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
     if (!$source_entity) {
       return drush_set_error(dt('Unable to load @entity_type:@entity_id', $dt_args));
     }

@@ -19,7 +19,7 @@
 	}
 
 	// Token
-	if(!isset($_GET['token']))
+	if(!isset($_GET['token']) || $_GET['token'] === "")
 		on_error('Token de activação inválido.');
 	$token = $_GET['token'];
 
@@ -28,17 +28,21 @@
 		on_error('Email inválido.');
 	$email = $_GET['email'];
 
-	$dbh = get_dbh();
+	try {
+		$dbh = get_dbh();
 
-	$dbh->beginTransaction();
+		$dbh->beginTransaction();
 
-	$res = activate_user($dbh, $email, $token);
+		$res = activate_user($dbh, $email, $token);
 
-	if($res !== false) {
-		$dbh->rollBack();
-		on_error($res);
-	} else {
-		$dbh->commit();
-		on_success();
+		if($res !== false) {
+			$dbh->rollBack();
+			on_error($res);
+		} else {
+			$dbh->commit();
+			on_success();
+		}
+	} catch (Exception $e) {
+		on_error("");
 	}
 ?>

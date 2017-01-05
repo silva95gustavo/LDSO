@@ -8,13 +8,13 @@
   'use strict';
 
   /**
-   * Enance HTML5 range element.
+   * Enhance HTML5 range element.
    *
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.yamlFormRange = {
     attach: function (context) {
-      $(context).find('.form-range[data-range-output]').once().each(function () {
+      $(context).find('.form-range[data-range-output]').once('yamlform-range').each(function () {
         var $element = $(this);
         // Handle browser that don't support the HTML5 range input.
         if (Modernizr.inputtypes.range === false) {

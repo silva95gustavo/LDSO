@@ -19,9 +19,11 @@ class Container extends ContainerBase {
    */
   public function getDefaultProperties() {
     return [
-      'attributes__class' => '',
-      'attributes__style' => '',
+      // Attributes.
+      'attributes' => [],
+      // Flexbox.
       'flex' => 1,
+      // Conditional logic.
       'states' => [],
     ];
   }

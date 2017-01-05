@@ -13,6 +13,32 @@ yamlform.admin:
     - core/jquery.once
     - yamlform/yamlform.form
 
+# Used preload libraries required by (modal) dialogs.
+# @see js/yamlform.element.codemirror.js
+yamlform.admin.dialog:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.admin.css: {}
+  js:
+    js/yamlform.admin.js:  {}
+    js/yamlform.dialog.js:  {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.ui.dialog
+    - yamlform/yamlform.form
+    - yamlform/yamlform.element.codemirror.yaml
+    - yamlform/yamlform.element.html_editor
+    - yamlform/yamlform.element.other
+    - yamlform/yamlform.element.select2
+
+yamlform.admin.translation:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.admin.translation.css: {}
+
 # Theme
 
 yamlform.theme.bartik:
@@ -40,6 +66,7 @@ yamlform.help:
     - core/drupal
     - core/jquery
     - core/jquery.once
+    - core/jquery.ui.accordion
 
 # Form.
 
@@ -62,16 +89,26 @@ yamlform.form:
     - core/jquery.once
     - yamlform/yamlform.states
 
-yamlform.states:
-  version: 1.x
-  js:
-    js/yamlform.states.js:  {}
-
-yamlform.options:
+yamlform.assets.css:
   version: 1.x
   css:
     theme:
-      css/yamlform.options.css: {}
+      css/yamlform.assets.css: { preprocess: false, minified: false }
+
+yamlform.assets.javascript:
+  version: 1.x
+  js:
+    js/yamlform.assets.js: { preprocess: false, minified: false }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
+yamlform.navigation:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.navigation.css: {}
 
 yamlform.progress:
   version: 1.x
@@ -85,7 +122,34 @@ yamlform.progress.bar:
     theme:
       css/yamlform.progress.bar.css: {}
 
+yamlform.states:
+  version: 1.x
+  js:
+    js/yamlform.states.js:  {}
+
+yamlform.form.disable_back:
+  version: 1.x
+  header: true
+  js:
+    js/yamlform.form.disable_back.js:  {preprocess: false}
+
+yamlform.form.unsaved:
+  version: 1.x
+  js:
+    js/yamlform.form.unsaved.js:  {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
 # Elements.
+
+yamlform.element.buttons:
+  version: 1.x
+  js:
+    js/yamlform.element.buttons.js: {}
+  dependencies:
+    - core/jquery.ui.button
 
 yamlform.element.codemirror.text:
   version: 1.x
@@ -117,6 +181,26 @@ yamlform.element.codemirror.html:
   dependencies:
     - yamlform/codemirror.html
 
+yamlform.element.codemirror.css:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.element.codemirror.css: {}
+  js:
+    js/yamlform.element.codemirror.js: {}
+  dependencies:
+    - yamlform/codemirror.css
+
+yamlform.element.codemirror.javascript:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.element.codemirror.css: {}
+  js:
+    js/yamlform.element.codemirror.js: {}
+  dependencies:
+    - yamlform/codemirror.javascript
+
 yamlform.element.color:
   version: 1.x
   css:
@@ -127,6 +211,12 @@ yamlform.element.color:
   dependencies:
     - core/modernizr
     - yamlform/yamlform.element.inputmask
+
+yamlform.element.composite:
+  version: 1.x
+  css:
+    component:
+      css/yamlform.element.composite.css: {}
 
 yamlform.element.counter:
   version: 1.x
@@ -172,6 +262,12 @@ yamlform.element.flexbox:
     theme:
       css/yamlform.element.flexbox.css: {}
 
+yamlform.element.image_file:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.element.image_file.css: {}
+
 yamlform.element.html_editor:
   version: 1.x
   css:
@@ -196,6 +292,12 @@ yamlform.element.inputmask:
     - core/jquery.once
     - yamlform/jquery.inputmask
 
+yamlform.element.multiple:
+  version: 1.x
+  css:
+    component:
+      css/yamlform.element.multiple.css: {}
+
 yamlform.element.likert:
   version: 1.x
   css:
@@ -214,6 +316,18 @@ yamlform.element.location:
     - core/jquery
     - core/jquery.once
     - yamlform/jquery.geocomplete
+
+yamlform.element.message:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.element.message.css: {}
+  js:
+    js/yamlform.element.message.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
 
 yamlform.element.options:
   version: 1.x
@@ -253,6 +367,15 @@ yamlform.element.rating:
   dependencies:
     - yamlform/jquery.rateit
 
+yamlform.element.roles:
+  version: 1.x
+  js:
+    js/yamlform.element.roles.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
 yamlform.element.select2:
   version: 1.x
   js:
@@ -284,6 +407,12 @@ yamlform.element.text_format:
   version: 1.x
   js:
     js/yamlform.element.text_format.js: {}
+
+yamlform.element.tableselect:
+  version: 1.x
+  css:
+    theme:
+      css/yamlform.element.tableselect.css: {}
 
 yamlform.element.tableselect_sort:
   version: 1.x
@@ -319,11 +448,11 @@ yamlform.element.tooltip:
     - core/jquery.once
     - core/jquery.ui.tooltip
 
-yamlform.navigation:
+yamlform.element.video_file:
   version: 1.x
   css:
     theme:
-      css/yamlform.navigation.css: {}
+      css/yamlform.element.video_file.css: {}
 
 # External libraries.
 
@@ -337,18 +466,18 @@ ckeditor:
   cdn:
     /libraries/ckeditor/: 'https://cdn.ckeditor.com/4.5.11/standard/'
   js:
-    /libraries/ckeditor/ckeditor.js: {}
+    /libraries/ckeditor/ckeditor.js: { preprocess: false, minified: true }
 
 codemirror.text:
   remote: https://github.com/codemirror/codemirror
-  version: &yamlform_codemirror_version 5.17.0
+  version: &yamlform_codemirror_version 5.21.0
   license: &yamlform_codemirror_license
     name: MIT
     url: http://codemirror.net/LICENSE
     gpl-compatible: true
   cdn: &yamlform_codemirror_cdn
-    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/
-    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/
+    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/
+    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/
   css:
     theme:
       /libraries/codemirror/lib/codemirror.css: {}
@@ -372,6 +501,24 @@ codemirror.html:
   js:
     /libraries/codemirror/mode/xml/xml.js: {}
     /libraries/codemirror/mode/htmlmixed/htmlmixed.js: {}
+  dependencies:
+    - yamlform/codemirror.text
+
+codemirror.css:
+  version: *yamlform_codemirror_version
+  license: *yamlform_codemirror_license
+  cdn: *yamlform_codemirror_cdn
+  js:
+    /libraries/codemirror/mode/css/css.js: {}
+  dependencies:
+    - yamlform/codemirror.text
+
+codemirror.javascript:
+  version: *yamlform_codemirror_version
+  license: *yamlform_codemirror_license
+  cdn: *yamlform_codemirror_cdn
+  js:
+    /libraries/codemirror/mode/javascript/javascript.js: {}
   dependencies:
     - yamlform/codemirror.text
 
@@ -405,13 +552,13 @@ jquery.geocomplete:
 
 jquery.inputmask:
   remote: https://github.com/RobinHerbots/jquery.inputmask
-  version: 3.31
+  version: 3.3.3
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   cdn:
-    /libraries/jquery.inputmask/dist/: https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.1/
+    /libraries/jquery.inputmask/dist/min/: https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.3/
   js:
     /libraries/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js: {}
   dependencies:
@@ -419,13 +566,13 @@ jquery.inputmask:
 
 jquery.rateit:
   remote: https://github.com/gjunge/rateit.js
-  version: 1.0.24
+  version: 1.1.1
   license:
     name: MIT
     url: https://github.com/gjunge/rateit.js/blob/master/LICENSE.md
     gpl-compatible: true
   cdn:
-    /libraries/jquery.rateit/: https://cdn.rawgit.com/gjunge/rateit.js/1.0.24/
+    /libraries/jquery.rateit/: https://cdn.rawgit.com/gjunge/rateit.js/1.1.1/
   css:
     theme:
       /libraries/jquery.rateit/scripts/rateit.css: {}
@@ -453,13 +600,13 @@ jquery.select2:
 
 jquery.timepicker:
   remote: https://github.com/jonthornton/jquery-timepicker
-  version: 1.10.0
+  version: 1.11.8
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   cdn:
-    /libraries/jquery.timepicker/: https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/
+    /libraries/jquery.timepicker/: https://cdn.rawgit.com/jonthornton/jquery-timepicker/1.11.8/
   css:
     theme:
       /libraries/jquery.timepicker/jquery.timepicker.css: {}

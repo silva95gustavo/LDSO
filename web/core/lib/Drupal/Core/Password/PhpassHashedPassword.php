@@ -158,40 +158,7 @@ class PhpassHashedPassword implements PasswordInterface {
       return FALSE;
     }
 
-    // The first 12 characters of an existing hash are its setting string.
-    $setting = substr($setting, 0, 12);
-
-    if ($setting[0] != '$' || $setting[2] != '$') {
-      return FALSE;
-    }
-    $count_log2 = $this->getCountLog2($setting);
-    // Stored hashes may have been crypted with any iteration count. However we
-    // do not allow applying the algorithm for unreasonable low and high values
-    // respectively.
-    if ($count_log2 != $this->enforceLog2Boundaries($count_log2)) {
-      return FALSE;
-    }
-    $salt = substr($setting, 4, 8);
-    // Hashes must have an 8 character salt.
-    if (strlen($salt) != 8) {
-      return FALSE;
-    }
-
-    // Convert the base 2 logarithm into an integer.
-    $count = 1 << $count_log2;
-
-    // We rely on the hash() function being available in PHP 5.2+.
-    $hash = hash($algo, $salt . $password, TRUE);
-    do {
-      $hash = hash($algo, $hash . $password, TRUE);
-    } while (--$count);
-
-    $len = strlen($hash);
-    $output = $setting . $this->base64Encode($hash, $len);
-    // $this->base64Encode() of a 16 byte MD5 will always be 22 characters.
-    // $this->base64Encode() of a 64 byte sha512 will always be 86 characters.
-    $expected = 12 + ceil((8 * $len) / 6);
-    return (strlen($output) == $expected) ? substr($output, 0, static::HASH_LENGTH) : FALSE;
+    return password_hash($password, PASSWORD_DEFAULT);
   }
 
   /**
@@ -219,10 +186,10 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check($password, $hash) {
-    // Support php's password_hash and password_verify
-  	if(substr($hash, 0, 4) == '$2y$') {
-  	  return password_verify($password, $hash);
-    }
+    // Support php's password_hash and password_verify		
+    if(substr($hash, 0, 4) == '$2y$') {		
+      return password_verify($password, $hash);		
+    }	
 
     if (substr($hash, 0, 2) == 'U$') {
       // This may be an updated password from user_update_7000(). Such hashes

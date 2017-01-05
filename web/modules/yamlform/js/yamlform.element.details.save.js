@@ -19,7 +19,7 @@
       }
 
       // Summary click event handler.
-      $('details > summary', context).once().click(function () {
+      $('details > summary', context).once('yamlform-details-summary-save').click(function () {
         var $details = $(this).parent();
 
         var name = Drupal.yamlFormDetailsSaveGetName($details);
@@ -32,7 +32,7 @@
       });
 
       // Initialize details open state via local storage.
-      $('details', context).once().each(function () {
+      $('details', context).once('yamlform-details-save').each(function () {
         var $details = $(this);
 
         var name = Drupal.yamlFormDetailsSaveGetName($details);
@@ -73,7 +73,7 @@
     // Any details element not included a form must have define its own id.
     var yamlformId = $details.attr('data-yamlform-element-id');
     if (yamlformId) {
-      return 'yamlform.' + yamlformId.replace('--', '.');
+      return 'Drupal.yamlform.' + yamlformId.replace('--', '.');
     }
 
     var detailsId = $details.attr('id');
@@ -96,7 +96,7 @@
     // WORKAROUND: Remove the unique id that delimited using double dashes.
     formId = formId.replace(/--.+?$/, '').replace(/-/g, '_');
     detailsId = detailsId.replace(/--.+?$/, '').replace(/-/g, '_');
-    return 'yamlform.' + formId + '.' + detailsId;
+    return 'Drupal.yamlform.' + formId + '.' + detailsId;
   }
 
 

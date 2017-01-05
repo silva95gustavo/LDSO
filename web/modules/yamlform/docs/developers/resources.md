@@ -1,7 +1,9 @@
 Additional Resources
 --------------------
 
-### Articles and Blogs Posts about YAML Forms
+### Articles and Blog Posts about YAML Forms
+
+- [Getting NYU onto YAML Form](https://www.fourkitchens.com/blog/article/getting-nyu-yaml-form)
 
 - [YAML Forms for Drupal 8](https://www.gaiaresources.com.au/yaml-forms-drupal-8/)
 
@@ -34,7 +36,7 @@ Additional Resources
 
 ### Form Builders
 
-Below are the YAML Form module's 'competitors'.
+Below are the YAML Form module's 'alternatives' and 'competitors'.
  
 **Drupal Form Builders**
 
@@ -44,8 +46,15 @@ Below are the YAML Form module's 'competitors'.
 
 - [Webform.com](https://www.drupal.org/project/webform)  
    Webform.com is a form and survey service built on the open-source software Drupal and Webform. 
-
     - [Drupal 7 Form Building](https://www.drupalwatchdog.com/volume-3/issue-2/drupal-7-form-building)
+- [Contact](https://www.drupal.org/documentation/modules/contact) 
+    - [Contact Storage](https://www.drupal.org/project/contact_storage)
+    - [Contact module 8.1 and beyond roadmap](https://www.drupal.org/node/2582955)
+    - [Goodbye Webform? Contact Forms Are In the Drupal 8 Core](https://www.ostraining.com/blog/drupal/drupal-8-contact-forms/)
+- [Eform](https://www.drupal.org/project/eform)
+    - [When to use Entityform](https://www.drupal.org/node/1540680)
+- [Webform](https://www.drupal.org/project/webform) 
+        
         
 **WordPress Form Builders**
 
@@ -56,7 +65,7 @@ Below are the YAML Form module's 'competitors'.
 ---
 
 - [Gravity Forms](http://www.gravityforms.com) - [Demo](http://demo.gravityforms.com/)   
-  Gravity Forms is the Easiest Tool to Create Advanced Forms for Your WordPress Powered Website.
+  Gravity Forms is the easiest tool to create advanced forms for your WordPress powered website.
 
 - [Ninja Forms](https://ninjaforms.com/) - [Demo](https://three.ninjaforms.com/)  
   Create forms and manage submissions easily with a simple drag and drop interface. 
@@ -68,12 +77,12 @@ Below are the YAML Form module's 'competitors'.
  
 - [The Best Online Survey Tools of 2016](http://www.pcmag.com/article2/0,2817,2494737,00.asp)
 
-- [AlternativeTo WebForm](http://alternativeto.net/software/webform/)
+- [AlternativeTo WebForm](http://alternativeto.net/software/webform/)  
   Crowdsourced software recommendations
 
 ---
 
-- [Form.IO](https://form.io/)
+- [Form.IO](https://form.io/)  
   Form.io A Form and Data Management Platform for Serverless Enterprise 
   Applications Simplify the connections between your forms and APIs. 
   Integrate with 3rd party providers and legacy systems. 

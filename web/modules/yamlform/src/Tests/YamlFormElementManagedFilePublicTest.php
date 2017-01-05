@@ -2,8 +2,6 @@
 
 namespace Drupal\yamlform\Tests;
 
-use Drupal\yamlform\Entity\YamlForm;
-
 /**
  * Test for form element managed public file handling (DRUPAL-PSA-2016-003).
  *
@@ -18,7 +16,19 @@ class YamlFormElementManagedFilePublicTest extends YamlFormTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'file', 'yamlform', 'yamlform_test', 'yamlform_ui'];
+  protected static $modules = ['system', 'file', 'yamlform', 'yamlform_test', 'yamlform_ui'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    // Set public file upload support for testing.
+    $settings_config = \Drupal::configFactory()->getEditable('yamlform.settings');
+    $settings_config->set('file.file_public', TRUE);
+    $settings_config->save();
+  }
 
   /**
    * Test public upload protection.
@@ -37,7 +47,7 @@ class YamlFormElementManagedFilePublicTest extends YamlFormTestBase {
 
     // Check element form warning message not visible public files.
     \Drupal::configFactory()->getEditable('yamlform.settings')
-      ->set('elements.file_public', FALSE)
+      ->set('file.file_public', FALSE)
       ->save();
     $this->drupalGet('admin/structure/yamlform/manage/test_element_managed_file/element/managed_file_single/edit');
     $this->assertNoRaw('Public files upload destination is dangerous for forms that are available to anonymous and/or untrusted users.');
@@ -52,7 +62,7 @@ class YamlFormElementManagedFilePublicTest extends YamlFormTestBase {
 
     // Disable managed file element.
     \Drupal::configFactory()->getEditable('yamlform.settings')
-      ->clear('elements.types.managed_file')
+      ->set('elements.excluded_types.managed_file', 'managed_file')
       ->save();
 
     // Check disabled managed_file element remove from add element dialog.

@@ -23,6 +23,7 @@ class YamlFormCodeMirror extends YamlFormElementBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Codemirror setings.
       'mode' => 'text',
     ];
   }
@@ -92,9 +93,8 @@ class YamlFormCodeMirror extends YamlFormElementBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['codemirror'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('CodeMirror settings'),
-      '#open' => FALSE,
     ];
     $form['codemirror']['mode'] = [
       '#title' => $this->t('Mode'),

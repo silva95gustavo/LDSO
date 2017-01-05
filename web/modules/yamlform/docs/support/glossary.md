@@ -2,7 +2,7 @@ Glossary
 --------
 
 Below are definitions for some key terms and concepts that you need to know 
-to for a better understanding of how the YAML Form module works.
+for a better understanding of how the YAML Form module works.
  
 **[YAML: YAML Ain't Markup Language](http://yaml.org/)**  
 YAML is a human friendly data serialization standard for all programming 

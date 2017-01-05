@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.yamlFormTextFormat = {
     attach: function (context) {
-      $(context).find('.js-text-format-wrapper textarea').once().each(function () {
+      $(context).find('.js-text-format-wrapper textarea').once('yamlform-text-format').each(function () {
         var $textarea = $(this);
         if (!window.CKEDITOR) {
           return;

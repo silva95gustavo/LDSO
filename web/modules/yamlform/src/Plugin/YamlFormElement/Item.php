@@ -23,26 +23,16 @@ class Item extends ContainerBase {
   public function getDefaultProperties() {
     return [
       'title' => '',
+      // General settings.
       'description' => '',
-
-      'required' => FALSE,
-
+      // Form display.
       'title_display' => '',
       'description_display' => '',
       'field_prefix' => '',
       'field_suffix' => '',
-
-      'admin_title' => '',
-      'private' => FALSE,
-
-      'wrapper_attributes__class' => '',
-      'wrapper_attributes__style' => '',
-      'attributes__class' => '',
-      'attributes__style' => '',
-
-      'flex' => 1,
-      'states' => [],
-    ];
+      // Form validation.
+      'required' => FALSE,
+    ] + $this->getDefaultBaseProperties();
   }
 
   /**

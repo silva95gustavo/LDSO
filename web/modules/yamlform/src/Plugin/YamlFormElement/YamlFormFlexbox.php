@@ -21,6 +21,7 @@ class YamlFormFlexbox extends Container {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Flexbox.
       'align_items' => 'flex-start',
     ];
   }
@@ -38,9 +39,8 @@ class YamlFormFlexbox extends Container {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['flexbox'] = [
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $this->t('Flexbox settings'),
-      '#open' => FALSE,
     ];
     $form['flexbox']['align_items'] = [
       '#type' => 'select',

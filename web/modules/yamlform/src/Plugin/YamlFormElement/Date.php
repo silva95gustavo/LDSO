@@ -32,11 +32,15 @@ class Date extends DateBase {
     }
 
     return parent::getDefaultProperties() + [
+      // Date settings.
       'date_date_format' => $date_format,
       'step' => '',
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function prepare(array &$element, YamlFormSubmissionInterface $yamlform_submission) {
     parent::prepare($element, $yamlform_submission);
     // Set the (input) type attribute to 'date' since #min and #max will
@@ -47,7 +51,6 @@ class Date extends DateBase {
     // Issue #2817693 by danbohea: Min date option not working with jQuery UI
     // datepicker.
     $element['#attached']['library'][] = 'yamlform/yamlform.element.date';
-
   }
 
   /**
@@ -55,11 +58,6 @@ class Date extends DateBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    $form['date'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Date settings'),
-      '#open' => FALSE,
-    ];
 
     $date_format = DateFormat::load('html_date')->getPattern();
     $form['date']['date_date_format'] = [
@@ -75,10 +73,11 @@ class Date extends DateBase {
     ];
     $form['date']['step'] = [
       '#type' => 'number',
-      '#title' => $this->t('Steps'),
+      '#title' => $this->t('Step'),
       '#description' => $this->t('Specifies the legal number intervals.'),
       '#min' => 1,
       '#size' => 4,
+      '#weight' => 10,
     ];
     return $form;
   }

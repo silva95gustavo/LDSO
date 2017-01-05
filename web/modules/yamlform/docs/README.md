@@ -8,7 +8,7 @@ Documentation README
 - Use Chrome.
 - Resize browser to 1024px using [Web  Developer](http://chrispederick.com/work/web-developer/)
 - Use [Awesome Screenshot](http://www.awesomescreenshot.com/)
-- Take full page screenshot
+- Take full page screenshot.
 - Use 'feature name' as the file name.
 - Save to 'yamlform-features' directory.
 
@@ -32,22 +32,22 @@ Documentation README
     drush-integration
     
 
-### How to take screencast
+### How to take a screencast
 
 **Setup**
 
 - Drupal
-    - `osx install-site d8_dev`
+    - Install Drupal locally.
     - Remove all blocks in first sidebar.  
       http://localhost/d8_dev/admin/structure/block
 - Desktop
     - Switch to laptop.
-    - Turn 'Hiding on'
+    - Turn 'Hiding on' in the Dock System Preferences.
     - Set screen display to 'Large Text'
 - Chrome
-    - Hide Bookmarks
-    - Hide Extra Icons
-    - Always Show Toolbar in Full Screen
+    - Hide Bookmarks.
+    - Hide Extra Icons.
+    - Always Show Toolbar in Full Screen.
     - Delete all yamlform.* keys from local storage.
 
 **Generate list of screencasts**

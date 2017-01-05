@@ -7,7 +7,7 @@ use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
@@ -103,8 +103,8 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration object factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
@@ -114,9 +114,9 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    * @param \Drupal\yamlform\YamlFormExporterManagerInterface $exporter_manager
    *   The results exporter manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, QueryFactory $query_factory, StreamWrapperManagerInterface $stream_wrapper_manager, YamlFormElementManagerInterface $element_manager, YamlFormExporterManagerInterface $exporter_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, QueryFactory $query_factory, StreamWrapperManagerInterface $stream_wrapper_manager, YamlFormElementManagerInterface $element_manager, YamlFormExporterManagerInterface $exporter_manager) {
     $this->configFactory = $config_factory;
-    $this->entityStorage = $entity_manager->getStorage('yamlform_submission');
+    $this->entityStorage = $entity_type_manager->getStorage('yamlform_submission');
     $this->queryFactory = $query_factory;
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->elementManager = $element_manager;
@@ -231,7 +231,10 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
 
     $this->defaultOptions = [
       'exporter' => 'delimited',
+
       'delimiter' => ',',
+      'file_name' => 'submission-[yamlform_submission:serial]',
+
       'header_format' => 'label',
       'header_prefix' => TRUE,
       'header_prefix_label_delimiter' => ': ',
@@ -241,6 +244,7 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
         'token' => 'token',
         'yamlform_id' => 'yamlform_id',
       ],
+
       'entity_type' => '',
       'entity_id' => '',
       'range_type' => 'all',
@@ -271,9 +275,27 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
   public function buildExportOptionsForm(array &$form, FormStateInterface $form_state, array $export_options = []) {
     $default_options = $this->getDefaultExportOptions();
     $export_options = NestedArray::mergeDeep($default_options, $export_options);
-
     $yamlform = $this->getYamlForm();
     $exporter = $this->setExporter($export_options);
+
+    // Get exporter and build #states.
+    $exporter_plugins = $this->exporterManager->getInstances($export_options);
+    $states_archive = ['invisible' => []];
+    $states_options = ['invisible' => []];
+    foreach ($exporter_plugins as $plugin_id => $exporter_plugin) {
+      if ($exporter_plugin->isArchive()) {
+        if ($states_archive['invisible']) {
+          $states_archive['invisible'][] = 'or';
+        }
+        $states_archive['invisible'][] = [':input[name="export[format][exporter]"]' => ['value' => $plugin_id]];
+      }
+      if (!$exporter_plugin->hasOptions()) {
+        if ($states_options['invisible']) {
+          $states_options['invisible'][] = 'or';
+        }
+        $states_options['invisible'][] = [':input[name="export[format][exporter]"]' => ['value' => $plugin_id]];
+      }
+    }
 
     $form['export']['#tree'] = TRUE;
 
@@ -283,26 +305,26 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
       '#open' => TRUE,
     ];
     $form['export']['format']['exporter'] = [
-      '#type' => 'radios',
+      '#type' => 'select',
       '#title' => $this->t('Export format'),
       '#options' => $this->exporterManager->getOptions(),
       '#default_value' => $export_options['exporter'],
-      '#ajax' => [
-        'callback' => [get_class($this), 'ajaxExporterConfigurationCallback'],
-        'wrapper' => 'yamlform-exporter-configuration',
-      ],
+      // Below .js-yamlform-exporter is used for exporter configuration form
+      // #states.
+      // @see \Drupal\yamlform\YamlFormExporterBase::buildConfigurationForm
+      '#attributes' => ['class' => ['js-yamlform-exporter']],
     ];
-    $form['export']['format']['configuration'] = $exporter->buildConfigurationForm([], $form_state);
-    $form['export']['format']['configuration']['#prefix'] = '<div id="yamlform-exporter-configuration">';
-    $form['export']['format']['configuration']['#suffix'] = '</div>';
+    foreach ($exporter_plugins as $plugin_id => $exporter) {
+      $form['export']['format'] = $exporter->buildConfigurationForm($form['export']['format'], $form_state);
+    }
 
     // Header.
     $form['export']['header'] = [
       '#type' => 'details',
       '#title' => $this->t('Header options'),
       '#open' => TRUE,
+      '#states' => $states_options,
     ];
-
     $form['export']['header']['header_format'] = [
       '#type' => 'radios',
       '#title' => $this->t('Column header format'),
@@ -351,7 +373,11 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
     // Build element specific export forms.
     // Grouping everything in $form['export']['elements'] so that element handlers can
     // assign #weight to its export options form.
-    $form['export']['elements'] = [];
+    $form['export']['elements'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['form-item']],
+      '#states' => $states_options,
+    ];
     $element_types = $this->getYamlFormElementTypes();
     $element_handlers = $this->elementManager->getInstances();
     foreach ($element_handlers as $element_type => $element_handler) {
@@ -369,7 +395,8 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
     // Elements.
     $form['export']['columns'] = [
       '#type' => 'details',
-      '#title' => t('Column options'),
+      '#title' => $this->t('Column options'),
+      '#states' => $states_options,
     ];
     $form['export']['columns']['excluded_columns'] = [
       '#type' => 'yamlform_excluded_columns',
@@ -387,9 +414,10 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
     $form['export']['download']['download'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Download export file'),
-      '#description' => $this->t('If checked the export file will be automatically download to your local machine. If unchecked export file will be displayed as plain text within your browser.'),
+      '#description' => $this->t('If checked, the export file will be automatically download to your local machine. If unchecked, the export file will be displayed as plain text within your browser.'),
       '#default_value' => $export_options['download'],
       '#access' => !$this->requiresBatch(),
+      '#states' => $states_archive,
     ];
     $form['export']['download']['files'] = [
       '#type' => 'checkbox',
@@ -442,11 +470,11 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
       '#type' => 'select',
       '#title' => $this->t('Limit to'),
       '#options' => [
-        'all' => t('All'),
-        'latest' => t('Latest'),
-        'serial' => t('Submission number'),
-        'sid' => t('Submission ID'),
-        'date' => t('Date'),
+        'all' => $this->t('All'),
+        'latest' => $this->t('Latest'),
+        'serial' => $this->t('Submission number'),
+        'sid' => $this->t('Submission ID'),
+        'date' => $this->t('Date'),
       ],
       '#default_value' => $export_options['range_type'],
     ];
@@ -492,8 +520,8 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
 
     $form['export']['download']['sticky'] = [
       '#type' => 'checkbox',
-      '#title' => t('Starred/flagged submissions'),
-      '#description' => $this->t('If checked only starred/flagged submissions will be downloaded. If unchecked all submissions will downloaded.'),
+      '#title' => $this->t('Starred/flagged submissions'),
+      '#description' => $this->t('If checked, only starred/flagged submissions will be downloaded. If unchecked, all submissions will downloaded.'),
       '#default_value' => $export_options['sticky'],
     ];
 
@@ -501,12 +529,12 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
     // submission state.
     $form['export']['download']['state'] = [
       '#type' => 'radios',
-      '#title' => t('Submission state'),
+      '#title' => $this->t('Submission state'),
       '#default_value' => $export_options['state'],
       '#options' => [
-        'all' => t('Completed and draft submissions'),
-        'completed' => t('Completed submissions only'),
-        'draft' => t('Drafts only'),
+        'all' => $this->t('Completed and draft submissions'),
+        'completed' => $this->t('Completed submissions only'),
+        'draft' => $this->t('Drafts only'),
       ],
       '#access' => $yamlform->getSetting('draft'),
     ];
@@ -550,10 +578,7 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
 
     // Append format.
     if (isset($export_values['format'])) {
-      $values['exporter'] = $export_values['format']['exporter'];
-      if (isset($export_values['format']['configuration'])) {
-        $values += $export_values['format']['configuration'];
-      }
+      $values += $export_values['format'];
     }
 
     // Append header.
@@ -586,82 +611,70 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    * {@inheritdoc}
    */
   public function generate() {
-    $field_definitions = $this->getFieldDefinitions();
-    $elements = $this->getElements();
-
-    // Build header and add to export file.
-    $this->writeHeader($field_definitions, $elements);
-
-    // Build records and add to export file.
     $entity_ids = $this->getQuery()->execute();
     $yamlform_submissions = YamlFormSubmission::loadMultiple($entity_ids);
-    $this->writeRecords($yamlform_submissions, $field_definitions, $elements);
 
-    // Build footer.
+    $this->writeHeader();
+    $this->writeRecords($yamlform_submissions);
     $this->writeFooter();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function writeHeader(array $field_definitions, array $elements) {
+  public function writeHeader() {
     // If building a new archive make sure to delete the exist archive.
     if ($this->isArchive()) {
       @unlink($this->getArchiveFilePath());
     }
 
-    $header = $this->buildHeader($field_definitions, $elements);
-
-    $this->getExporter()->createFile();
-    $this->getExporter()->writeHeader($header);
-    $this->getExporter()->closeFile();
+    $this->getExporter()->createExport();
+    $this->getExporter()->writeHeader();
+    $this->getExporter()->closeExport();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function writeRecords(array $yamlform_submissions, array $field_definitions, array $elements) {
+  public function writeRecords(array $yamlform_submissions) {
+    $export_options = $this->getExportOptions();
     $yamlform = $this->getYamlForm();
 
-    $is_archive = $this->isArchive();
+    $is_archive = ($this->isArchive() && $export_options['files']);
     $files_directories = [];
     if ($is_archive) {
+      $archiver = new ArchiveTar($this->getArchiveFilePath(), 'gz');
       $stream_wrappers = array_keys($this->streamWrapperManager->getNames(StreamWrapperInterface::WRITE_VISIBLE));
       foreach ($stream_wrappers as $stream_wrapper) {
-        $files_directory = drupal_realpath($stream_wrapper . '://yamlform/' . $yamlform->id());
-        $files_directories[$files_directory] = [];
+        $files_directory = \Drupal::service('file_system')->realpath($stream_wrapper . '://yamlform/' . $yamlform->id());
+        $files_directories[] = $files_directory;
       }
     }
 
-    $this->getExporter()->openFile();
+    $this->getExporter()->openExport();
     foreach ($yamlform_submissions as $yamlform_submission) {
       if ($is_archive) {
-        foreach ($files_directories as $files_directory => &$files) {
-          if (file_exists($files_directory . '/' . $yamlform_submission->id())) {
-            $files[] = $files_directory . '/' . $yamlform_submission->id();
+        foreach ($files_directories as $files_directory) {
+          $submission_directory = $files_directory . '/' . $yamlform_submission->id();
+          if (file_exists($submission_directory)) {
+            $file_name = $this->getSubmissionBaseName($yamlform_submission);
+            $archiver->addModify($submission_directory, $file_name, $submission_directory);
           }
         }
       }
-      $record = $this->buildRecord($yamlform_submission, $field_definitions, $elements);
-      $this->getExporter()->writeRecord($record);
-    }
-    $this->getExporter()->closeFile();
 
-    if ($is_archive && ($files_directories = array_filter($files_directories))) {
-      $archiver = new ArchiveTar($this->getArchiveFilePath(), 'gz');
-      foreach ($files_directories as $files_directory => $files) {
-        $archiver->addModify($files, $this->getBaseFileName(), $files_directory);
-      }
+      $this->getExporter()->writeSubmission($yamlform_submission);
     }
+    $this->getExporter()->closeExport();
   }
 
   /**
    * {@inheritdoc}
    */
   public function writeFooter() {
-    $this->getExporter()->openFile();
+    $this->getExporter()->openExport();
     $this->getExporter()->writeFooter();
-    $this->getExporter()->closeFile();
+    $this->getExporter()->closeExport();
   }
 
   /**
@@ -669,54 +682,14 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    */
   public function writeExportToArchive() {
     $export_file_path = $this->getExportFilePath();
-    $archive_file_path = $this->getArchiveFilePath();
+    if (file_exists($export_file_path)) {
+      $archive_file_path = $this->getArchiveFilePath();
 
-    $archiver = new ArchiveTar($archive_file_path, 'gz');
-    $archiver->addModify($export_file_path, $this->getBaseFileName(), $this->getFileTempDirectory());
+      $archiver = new ArchiveTar($archive_file_path, 'gz');
+      $archiver->addModify($export_file_path, $this->getBaseFileName(), $this->getFileTempDirectory());
 
-    @unlink($export_file_path);
-  }
-
-  /****************************************************************************/
-  // Field definitions, elements, and query.
-  /****************************************************************************/
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldDefinitions() {
-    $export_options = $this->getExportOptions();
-
-    $field_definitions = $this->entityStorage->getFieldDefinitions();
-    $field_definitions = array_diff_key($field_definitions, $export_options['excluded_columns']);
-
-    // Add custom entity reference field definitions which rely on the
-    // entity type and entity id.
-    if ($export_options['entity_reference_format'] == 'link' && isset($field_definitions['entity_type']) && isset($field_definitions['entity_id'])) {
-      $field_definitions['entity_title'] = [
-        'name' => 'entity_title',
-        'title' => t('Submitted to: Entity title'),
-        'type' => 'entity_title',
-      ];
-      $field_definitions['entity_url'] = [
-        'name' => 'entity_url',
-        'title' => t('Submitted to: Entity URL'),
-        'type' => 'entity_url',
-      ];
+      @unlink($export_file_path);
     }
-
-    return $field_definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getElements() {
-    $export_options = $this->getExportOptions();
-
-    $yamlform = $this->getYamlForm();
-    $element_columns = $yamlform->getElementsFlattenedAndHasValue();
-    return array_diff_key($element_columns, $export_options['excluded_columns']);
   }
 
   /**
@@ -806,132 +779,6 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
     return $query;
   }
 
-  /****************************************************************************/
-  // Header.
-  /****************************************************************************/
-
-  /**
-   * Build export header using form submission field definitions and form element columns.
-   *
-   * @param array $field_definitions
-   *   An associative array containing form submission field definitions.
-   * @param array $elements
-   *   An associative array containing form elements.
-   *
-   * @return array
-   *   An array containing the export header.
-   */
-  protected function buildHeader(array $field_definitions, array $elements) {
-    $export_options = $this->getExportOptions();
-
-    $header = [];
-    foreach ($field_definitions as $field_definition) {
-      // Build a form element for each field definition so that we can
-      // use YamlFormElement::buildExportHeader(array $element, $export_options).
-      $element = [
-        '#type' => ($field_definition['type'] == 'entity_reference') ? 'entity_autocomplete' : 'element',
-        '#admin_title' => '',
-        '#title' => (string) $field_definition['title'],
-        '#yamlform_key' => (string) $field_definition['name'],
-      ];
-      $header = array_merge($header, $this->elementManager->invokeMethod('buildExportHeader', $element, $export_options));
-    }
-
-    // Build element columns headers.
-    foreach ($elements as $element) {
-      $header = array_merge($header, $this->elementManager->invokeMethod('buildExportHeader', $element, $export_options));
-    }
-    return $header;
-  }
-
-  /****************************************************************************/
-  // Record.
-  /****************************************************************************/
-
-  /**
-   * Build export record using form submission, field definitions, and element columns.
-   *
-   * @param \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission
-   *   A form submission.
-   * @param array $field_definitions
-   *   An associative array containing form submission field definitions.
-   * @param array $elements
-   *   An associative array containing form elements.
-   *
-   * @return array
-   *   An array containing the export record.
-   */
-  protected function buildRecord(YamlFormSubmissionInterface $yamlform_submission, array $field_definitions, array $elements) {
-    $export_options = $this->getExportOptions();
-
-    $record = [];
-
-    // Build record field definition columns.
-    foreach ($field_definitions as $field_definition) {
-      $this->formatRecordFieldDefinitionValue($record, $yamlform_submission, $field_definition);
-    }
-
-    // Build record element columns.
-    $data = $yamlform_submission->getData();
-    foreach ($elements as $column_name => $element) {
-      $value = (isset($data[$column_name])) ? $data[$column_name] : '';
-      $record = array_merge($record, $this->elementManager->invokeMethod('buildExportRecord', $element, $value, $export_options));
-    }
-    return $record;
-  }
-
-  /**
-   * Get the field definition value from a form submission entity.
-   *
-   * @param array $record
-   *   The record to be added to the export file.
-   * @param \Drupal\yamlform\YamlFormSubmissionInterface $yamlform_submission
-   *   A form submission.
-   * @param array $field_definition
-   *   The field definition for the value.
-   */
-  protected function formatRecordFieldDefinitionValue(array &$record, YamlFormSubmissionInterface $yamlform_submission, array $field_definition) {
-    $export_options = $this->getExportOptions();
-
-    $field_name = $field_definition['name'];
-    $field_type = $field_definition['type'];
-    switch ($field_type) {
-      case 'created':
-      case 'changed':
-        $record[] = date('c', $yamlform_submission->get($field_name)->value);
-        break;
-
-      case 'entity_reference':
-        $element = [
-          '#type' => 'entity_autocomplete',
-          '#target_type' => $field_definition['target_type'],
-        ];
-        $value = $yamlform_submission->get($field_name)->target_id;
-        $record = array_merge($record, $this->elementManager->invokeMethod('buildExportRecord', $element, $value, $export_options));
-        break;
-
-      case 'entity_url':
-      case 'entity_title':
-        if (empty($yamlform_submission->entity_type->value) || empty($yamlform_submission->entity_id->value)) {
-          $record[] = '';
-          break;
-        }
-
-        $entity = entity_load($yamlform_submission->entity_type->value, $yamlform_submission->entity_id->value);
-        if ($entity) {
-          $record[] = ($field_type == 'entity_url') ? $entity->toUrl()->setOption('absolute', TRUE)->toString() : $entity->label();
-        }
-        else {
-          $record[] = '';
-        }
-        break;
-
-      default:
-        $record[] = $yamlform_submission->get($field_name)->value;
-        break;
-    }
-  }
-
   /**
    * Get element types from a form.
    *
@@ -984,7 +831,7 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    * {@inheritdoc}
    */
   public function requiresBatch() {
-    return ($this->getTotal($this->getDefaultExportOptions()) > $this->getBatchLimit()) ? TRUE : FALSE;
+    return ($this->getTotal() > $this->getBatchLimit()) ? TRUE : FALSE;
   }
 
   /**
@@ -992,6 +839,13 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    */
   public function getFileTempDirectory() {
     return file_directory_temp();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubmissionBaseName(YamlFormSubmissionInterface $yamlform_submission) {
+    return $this->getExporter()->getSubmissionBaseName($yamlform_submission);
   }
 
   /**
@@ -1019,22 +873,27 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    * {@inheritdoc}
    */
   public function getArchiveFilePath() {
-    return $this->getExporter()->getFileTempDirectory() . '/' . $this->getArchiveFileName();
+    return $this->getExporter()->getArchiveFilePath();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getArchiveFileName() {
-    return $this->getExporter()->getBaseFileName() . '.tar.gz';
+    return $this->getExporter()->getArchiveFileName();
   }
 
   /**
    * {@inheritdoc}
    */
   public function isArchive() {
-    $export_options = $this->getExportOptions();
-    return ($export_options['download'] && $export_options['files']);
+    if ($this->getExporter()->isArchive()) {
+      return TRUE;
+    }
+    else {
+      $export_options = $this->getExportOptions();
+      return ($export_options['download'] && $export_options['files']);
+    }
   }
 
   /**
@@ -1042,18 +901,6 @@ class YamlFormSubmissionExporter implements YamlFormSubmissionExporterInterface 
    */
   public function isBatch() {
     return ($this->isArchive() || ($this->getTotal() >= $this->getBatchLimit()));
-  }
-
-  /****************************************************************************/
-  // AJAX callbacks.
-  /****************************************************************************/
-
-  /**
-   * Form submission AJAX callback that returns exporter configuration form.
-   */
-  public static function ajaxExporterConfigurationCallback(array &$form, FormStateInterface $form_state) {
-    $configuration = $form['export']['format']['configuration'];
-    return $configuration;
   }
 
 }

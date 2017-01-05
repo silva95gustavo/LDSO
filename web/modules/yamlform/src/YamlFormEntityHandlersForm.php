@@ -8,7 +8,7 @@ use Drupal\Core\Url;
 use Drupal\yamlform\Utility\YamlFormDialogHelper;
 
 /**
- * Controller for form handlers.
+ * Provides a form to manage submission handlers.
  */
 class YamlFormEntityHandlersForm extends EntityForm {
 
@@ -102,26 +102,24 @@ class YamlFormEntityHandlersForm extends EntityForm {
     // Must manually add local actions to the form because we can't alter local
     // actions and add the needed dialog attributes.
     // @see https://www.drupal.org/node/2585169
-    if (!$yamlform->hasTranslations()) {
-      $dialog_attributes = YamlFormDialogHelper::getModalDialogAttributes(
-        800,
-        ['button', 'button-action', 'button--primary', 'button--small']
-      );
-      $form['local_actions'] = [
-        'add_element' => [
+    $dialog_attributes = YamlFormDialogHelper::getModalDialogAttributes(
+      800,
+      ['button', 'button-action', 'button--primary', 'button--small']
+    );
+    $form['local_actions'] = [
+      'add_element' => [
+        '#type' => 'link',
+        '#title' => $this->t('Add email'),
+        '#url' => new Url('entity.yamlform.handler.add_form', ['yamlform' => $yamlform->id(), 'yamlform_handler' => 'email']),
+        '#attributes' => $dialog_attributes,
+        'add_page' => [
           '#type' => 'link',
-          '#title' => $this->t('Add email'),
-          '#url' => new Url('entity.yamlform.handler.add_form', ['yamlform' => $yamlform->id(), 'yamlform_handler' => 'email']),
+          '#title' => $this->t('Add handler'),
+          '#url' => new Url('entity.yamlform.handlers', ['yamlform' => $yamlform->id()]),
           '#attributes' => $dialog_attributes,
-          'add_page' => [
-            '#type' => 'link',
-            '#title' => $this->t('Add handler'),
-            '#url' => new Url('entity.yamlform.handlers', ['yamlform' => $yamlform->id()]),
-            '#attributes' => $dialog_attributes,
-          ],
         ],
-      ];
-    }
+      ],
+    ];
 
     // Build the list of existing form handlers for this form.
     $form['handlers'] = [
@@ -137,10 +135,11 @@ class YamlFormEntityHandlersForm extends EntityForm {
       '#attributes' => [
         'id' => 'yamlform-handlers',
       ],
-      '#empty' => $this->t('There are currently no handlers in this form. Add one by selecting an option below.'),
+      '#empty' => $this->t('There are currently no handlers setup for this form.'),
     ] + $rows;
 
-    $form['#attached']['library'][] = 'yamlform/yamlform.admin';
+    // Must preload libraries required by (modal) dialogs.
+    $form['#attached']['library'][] = 'yamlform/yamlform.admin.dialog';
 
     return parent::form($form, $form_state);
   }
@@ -175,8 +174,8 @@ class YamlFormEntityHandlersForm extends EntityForm {
     $yamlform = $this->getEntity();
     $yamlform->save();
 
-    $this->logger('yamlform')->notice('Form @label handlers saved.', ['@label' => $yamlform->label()]);
-    drupal_set_message($this->t('Form %label handlers saved.', ['%label' => $yamlform->label()]));
+    $this->logger('yamlform')->notice('Form @label handler saved.', ['@label' => $yamlform->label()]);
+    drupal_set_message($this->t('Form %label handler saved.', ['%label' => $yamlform->label()]));
   }
 
   /**

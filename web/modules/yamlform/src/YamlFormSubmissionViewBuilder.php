@@ -139,6 +139,12 @@ class YamlFormSubmissionViewBuilder extends EntityViewBuilder implements YamlFor
       $plugin_id = $this->elementManager->getElementPluginId($element);
       /** @var \Drupal\yamlform\YamlFormElementInterface $yamlform_element */
       $yamlform_element = $this->elementManager->createInstance($plugin_id);
+
+      // Check element view access.
+      if (!$yamlform_element->checkAccessRules('view', $element)) {
+        continue;
+      }
+
       if ($yamlform_element->isContainer($element)) {
         $children = $this->buildElements($element, $data, $options, $format);
         if ($children) {
@@ -188,6 +194,11 @@ class YamlFormSubmissionViewBuilder extends EntityViewBuilder implements YamlFor
       $plugin_id = $this->elementManager->getElementPluginId($element);
       /** @var \Drupal\yamlform\YamlFormElementInterface $yamlform_element */
       $yamlform_element = $this->elementManager->createInstance($plugin_id);
+
+      // Check element view access.
+      if (!$yamlform_element->checkAccessRules('view', $element)) {
+        continue;
+      }
 
       $title = $element['#admin_title'] ?: $element['#title'] ?: '(' . $key . ')';
       $value = (isset($data[$key])) ? $yamlform_element->formatHtml($element, $data[$key], $options) : '';

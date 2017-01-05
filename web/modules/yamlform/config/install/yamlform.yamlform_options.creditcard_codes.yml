@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - yamlform
 id: creditcard_codes
 label: 'Credit card codes'
 options: |

@@ -5,12 +5,12 @@ package: 'YAML Form'
 # core: 8.x
 configure: entity.yamlform.collection
 dependencies:
-  - field
-  - user
-  - yamlform
+  - 'drupal:system (>= 8.2)'
+  - 'drupal:field'
+  - 'drupal:user'
 
-# Information added by Drupal.org packaging script on 2016-10-19
-version: '8.x-1.0-beta21'
+# Information added by Drupal.org packaging script on 2016-12-26
+version: '8.x-1.0-beta29'
 core: '8.x'
 project: 'yamlform'
-datestamp: 1476877490
+datestamp: 1482752287

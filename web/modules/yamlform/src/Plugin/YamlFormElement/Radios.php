@@ -19,6 +19,7 @@ class Radios extends OptionsBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Form display.
       'options_display' => 'one_column',
     ];
   }

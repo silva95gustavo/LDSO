@@ -8,7 +8,8 @@
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Xss;
 use Drupal\yamlform\Element\YamlFormCodeMirror;
 use Drupal\yamlform\YamlFormMessageManagerInterface;
@@ -27,30 +28,37 @@ use Drupal\yamlform\Utility\YamlFormElementHelper;
  *   - title: Help title.
  *   - content: Help content.
  */
-function template_preprocess_yamlform_help(&$variables) {
-  $info = $variables['info'];
+function template_preprocess_yamlform_help(array &$variables) {
+  $help_info = $variables['info'];
 
-  $variables += $info;
+  $variables += $help_info;
 
   $help = [];
-  if (is_array($info['content'])) {
-    $help['content'] = $info['content'];
+  if (is_array($help_info['content'])) {
+    $help['content'] = $help_info['content'];
   }
   else {
     $help['content'] = [
-      '#markup' => $info['content'],
+      '#markup' => $help_info['content'],
     ];
   }
 
-  if ($info['youtube_id']) {
-    $video_display = \Drupal::config('yamlform.settings')->get('ui.video_display');
+  // Build watch video link.
+  /** @var \Drupal\yamlform\YamlFormHelpManagerInterface $help_manager */
+  $help_manager = \Drupal::service('yamlform.help_manager');
+
+  // If help info load the video else this is the video info.
+  $video_info = (isset($help_info['video_id'])) ? $help_manager->getVideo($help_info['video_id']) : $help_info;
+  if (!empty($video_info['youtube_id'])) {
     $classes = ['button', 'button-action', 'button--small', 'button-yamlform-play'];
+
+    $video_display = \Drupal::config('yamlform.settings')->get('ui.video_display');
     switch ($video_display) {
       case 'dialog';
         $help['link'] = [
           '#type' => 'link',
-          '#title' => 'Watch video',
-          '#url' => Url::fromRoute('yamlform.help', ['id' => str_replace('_', '-', $info['id'])]),
+          '#title' => t('Watch video'),
+          '#url' => Url::fromRoute('yamlform.help', ['id' => str_replace('_', '-', $video_info['id'])]),
           '#attributes' => YamlFormDialogHelper::getModalDialogAttributes(1000, $classes),
           '#prefix' => ' ',
         ];
@@ -59,12 +67,11 @@ function template_preprocess_yamlform_help(&$variables) {
       case 'link':
         $help['link'] = [
           '#type' => 'link',
-          '#title' => 'Watch video',
-          '#url' => Url::fromUri('https://youtu.be/' . $info['youtube_id']),
+          '#title' => t('Watch video'),
+          '#url' => Url::fromUri('https://youtu.be/' . $video_info['youtube_id']),
           '#attributes' => ['class' => $classes],
           '#prefix' => ' ',
         ];
-
         break;
 
       case 'hidden':
@@ -86,8 +93,28 @@ function template_preprocess_yamlform_help(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #action, #method, #attributes, #yamlform_children.
  */
-function template_preprocess_yamlform(&$variables) {
+function template_preprocess_yamlform(array &$variables) {
   template_preprocess_form($variables);
+}
+
+/**
+ * Prepares variables for form actions templates.
+ *
+ * Default template: yamlform-actions.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and buttons.
+ *
+ * @see \Drupal\yamlform\YamlFormSubmissionForm::actionsElement
+ * @see \Drupal\yamlform\YamlFormSubmissionForm::actions
+ */
+function template_preprocess_yamlform_actions(array &$variables) {
+  $element = $variables['element'];
+  // Buttons include submit, previous, next, and draft.
+  foreach (Element::children($element) as $key) {
+    $variables[$key] = $element[$key];
+  }
 }
 
 /**
@@ -116,7 +143,7 @@ function template_preprocess_yamlform_confirmation(array &$variables) {
   $settings = $yamlform->getSettings();
 
   // Set progress.
-  if ($settings['wizard_complete'] && ($settings['wizard_progress_bar'] || $settings['wizard_progress_pages'] || $settings['wizard_progress_percentage'])) {
+  if ($yamlform->getPages() && $settings['wizard_complete'] && ($settings['wizard_progress_bar'] || $settings['wizard_progress_pages'] || $settings['wizard_progress_percentage'])) {
     $variables['progress'] = [
       '#theme' => 'yamlform_progress',
       '#yamlform' => $yamlform,
@@ -126,6 +153,14 @@ function template_preprocess_yamlform_confirmation(array &$variables) {
 
   // Set message.
   $variables['message'] = $message_manager->build(YamlFormMessageManagerInterface::SUBMISSION_CONFIRMATION);
+
+  // Set attributes.
+  $variables['attributes'] = new Attribute($settings['confirmation_attributes']);
+
+  // Set back.
+  $variables['back'] = $settings['confirmation_back'];
+  $variables['back_label'] = $settings['confirmation_back_label'] ?: \Drupal::config('yamlform.settings')->get('settings.default_confirmation_back_label');
+  $variables['back_attributes'] = new Attribute($settings['confirmation_back_attributes']);
 
   // Apply all passed query string parameters to the 'Back to form' link.
   $query = \Drupal::request()->query->all();
@@ -471,15 +506,15 @@ function template_preprocess_yamlform_container_base_text(array &$variables) {
 function template_preprocess_yamlform_progress(array &$variables) {
   /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
   $yamlform = $variables['yamlform'];
+  $current_page = $variables['current_page'];
 
   $pages = $yamlform->getPages();
 
-  $total = count($pages);
-  $current_page = $variables['current_page'];
-  // Jump to last page if 'current_page' is complete.
-  if ($current_page === 'complete') {
-    $current_page = $total - 1;
-  }
+  $page_keys = array_keys($pages);
+  $page_indexes = array_flip($page_keys);
+  $current_index = $page_indexes[$current_page];
+
+  $total = count($page_keys);
 
   if ($yamlform->getSetting('wizard_progress_bar')) {
     $variables['bar'] = [
@@ -490,11 +525,11 @@ function template_preprocess_yamlform_progress(array &$variables) {
   }
 
   if ($yamlform->getSetting('wizard_progress_pages')) {
-    $variables['pages'] = t('Page @start of @end', ['@start' => $current_page + 1, '@end' => $total]);
+    $variables['summary'] = t('Page @start of @end', ['@start' => $current_index + 1, '@end' => $total]);
   }
 
   if ($yamlform->getSetting('wizard_progress_percentage')) {
-    $variables['percentage'] = number_format(($current_page / ($total - 1)) * 100, 0) . '%';
+    $variables['percentage'] = number_format(($current_index / ($total - 1)) * 100, 0) . '%';
   }
 }
 
@@ -511,18 +546,63 @@ function template_preprocess_yamlform_progress(array &$variables) {
 function template_preprocess_yamlform_progress_bar(array &$variables) {
   /** @var \Drupal\yamlform\YamlFormInterface $yamlform */
   $yamlform = $variables['yamlform'];
+  $current_page = $variables['current_page'];
 
   $pages = $yamlform->getPages();
-  $variables['pages'] = [];
-  foreach ($pages as $page) {
-    $variables['pages'][] = (isset($page['#title'])) ? $page['#title'] : '';
-  }
 
-  // Jump to last page if 'current_page' is complete.
-  if ($variables['current_page'] && $variables['current_page'] === 'complete') {
-    $variables['current_page'] = count($variables['pages']) - 1;
+  $page_keys = array_keys($pages);
+  $page_indexes = array_flip($page_keys);
+  $current_index = $page_indexes[$current_page];
+  $variables['current_index'] = $current_index;
+
+  // Reset the pages variable.
+  $variables['progress'] = [];
+  foreach ($pages as $page) {
+    $variables['progress'][] = (isset($page['#title'])) ? $page['#title'] : '';
   }
 }
+
+/******************************************************************************/
+// Element templates
+/******************************************************************************/
+
+/**
+ * Prepares variables for Form message templates.
+ *
+ * Default template: yamlform-message.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #id, #attributes, #children.
+ *
+ * @see template_preprocess_container()
+ */
+function template_preprocess_yamlform_message(&$variables) {
+  $variables['has_parent'] = FALSE;
+  $element = $variables['element'];
+  // Ensure #attributes is set.
+  $element += ['#attributes' => []];
+
+  // Special handling for form elements.
+  if (isset($element['#array_parents'])) {
+    // Assign an html ID.
+    if (!isset($element['#attributes']['id'])) {
+      $element['#attributes']['id'] = $element['#id'];
+    }
+    $variables['has_parent'] = TRUE;
+  }
+
+  $variables['message'] = $element['#message'];
+  $variables['attributes'] = $element['#attributes'];
+  if (isset($element['#closed'])) {
+    $variables['closed'] = $element['#closed'];
+  }
+}
+
+/******************************************************************************/
+// Composite templates
+/******************************************************************************/
 
 /**
  * Prepares variables for address composite element templates.
@@ -535,7 +615,7 @@ function template_preprocess_yamlform_progress_bar(array &$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  */
-function template_preprocess_yamlform_composite_address(&$variables) {
+function template_preprocess_yamlform_composite_address(array &$variables) {
   $element = $variables['element'];
   foreach (Element::children($element) as $key) {
     if ($element[$key]['#access']) {
@@ -556,7 +636,7 @@ function template_preprocess_yamlform_composite_address(&$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  */
-function template_preprocess_yamlform_composite_contact(&$variables) {
+function template_preprocess_yamlform_composite_contact(array &$variables) {
   $element = $variables['element'];
   foreach (Element::children($element) as $key) {
     if ($element[$key]['#access']) {
@@ -577,7 +657,7 @@ function template_preprocess_yamlform_composite_contact(&$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  */
-function template_preprocess_yamlform_composite_creditcard(&$variables) {
+function template_preprocess_yamlform_composite_creditcard(array &$variables) {
   $element = $variables['element'];
   foreach (Element::children($element) as $key) {
     if ($element[$key]['#access']) {
@@ -598,7 +678,7 @@ function template_preprocess_yamlform_composite_creditcard(&$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  */
-function template_preprocess_yamlform_composite_location(&$variables) {
+function template_preprocess_yamlform_composite_location(array &$variables) {
   $variables['content'] = $variables['element'];
 }
 
@@ -613,7 +693,7 @@ function template_preprocess_yamlform_composite_location(&$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  */
-function template_preprocess_yamlform_composite_name(&$variables) {
+function template_preprocess_yamlform_composite_name(array &$variables) {
   $element = $variables['element'];
   foreach (Element::children($element) as $key) {
     if ($element[$key]['#access']) {
@@ -621,4 +701,94 @@ function template_preprocess_yamlform_composite_name(&$variables) {
     }
   }
   $variables['flexbox'] = (isset($element['#flexbox'])) ? $element['#flexbox'] : FALSE;
+}
+
+/******************************************************************************/
+// Element templates
+/******************************************************************************/
+
+/**
+ * Prepares variables for a managed file element.
+ *
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - element: The form element.
+ *   - value: The content for the element.
+ *   - options Associative array of options for element.
+ *   - file: The element's File object.
+ */
+function template_preprocess_yamlform_element_managed_file(array &$variables) {
+  /** @var \Drupal\file\FileInterface $file */
+  $file = $variables['file'];
+  $variables['uri'] = file_create_url($file->getFileUri());
+  $variables['extension'] = strtolower(pathinfo($variables['uri'], PATHINFO_EXTENSION));
+  $variables['type'] = \Drupal::service('file.mime_type.guesser')->guess($variables['uri']);
+  $variables['file_link'] = [
+    '#theme' => 'file_link',
+    '#file' => $file,
+  ];
+}
+
+/**
+ * Prepares variables for an audio file element.
+ *
+ * Default template: yamlform-element-audio-file.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - element: The form element.
+ *   - value: The content for the element.
+ *   - options Associative array of options for element.
+ *   - file: The element's File object.
+ */
+function template_preprocess_yamlform_element_audio_file(array &$variables) {
+  template_preprocess_yamlform_element_managed_file($variables);
+}
+
+/**
+ * Prepares variables for a document file element.
+ *
+ * Default template: yamlform-element-document-file.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - element: The form element.
+ *   - value: The content for the element.
+ *   - options Associative array of options for element.
+ *   - file: The element's File object.
+ */
+function template_preprocess_yamlform_element_document_file(array &$variables) {
+  template_preprocess_yamlform_element_managed_file($variables);
+}
+
+/**
+ * Prepares variables for an image file element.
+ *
+ * Default template: yamlform-element-image-file.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - element: The form element.
+ *   - value: The content for the element.
+ *   - options Associative array of options for element.
+ *   - file: The element's File object.
+ */
+function template_preprocess_yamlform_element_image_file(array &$variables) {
+  template_preprocess_yamlform_element_managed_file($variables);
+}
+
+/**
+ * Prepares variables for a video file element.
+ *
+ * Default template: yamlform-element-video-file.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - element: The form element.
+ *   - value: The content for the element.
+ *   - options Associative array of options for element.
+ *   - file: The element's File object.
+ */
+function template_preprocess_yamlform_element_video_file(array &$variables) {
+  template_preprocess_yamlform_element_managed_file($variables);
 }

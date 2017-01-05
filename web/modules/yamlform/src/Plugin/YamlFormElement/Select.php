@@ -22,6 +22,7 @@ class Select extends OptionsBase {
    */
   public function getDefaultProperties() {
     return parent::getDefaultProperties() + [
+      // Options settings.
       'multiple' => FALSE,
       'empty_option' => '',
       'empty_value' => '',
@@ -59,12 +60,6 @@ class Select extends OptionsBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    $form['options']['multiple'] = [
-      '#title' => $this->t('Multiple'),
-      '#type' => 'checkbox',
-      '#return_value' => TRUE,
-      '#description' => $this->t('Check this option if the user should be allowed to choose multiple values.'),
-    ];
     $form['options']['select2'] = [
       '#title' => $this->t('Select2'),
       '#type' => 'checkbox',
