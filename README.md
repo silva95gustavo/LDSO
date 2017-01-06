@@ -46,6 +46,7 @@
 1. Get the website up and runnning.
 2. Install latest Node.js.
 3. Run `npm install -g cordova ionic`.
+4. To test the app in your browser run `ionic serve`.
 
 ### Running the tests
 The website unit tests use PHPUnit and can be run with the following command: `/web/core/vendor/bin/phpunit --testsuite=unit`.
