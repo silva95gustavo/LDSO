@@ -1,14 +1,17 @@
 angular.module('starter.controllers.restricted', [])
 
-  .controller('restrictedCtrl', function ($window, $scope, $ionicModal, $ionicLoading, API) {
-
+  .controller('restrictedCtrl', function ($window, $scope, $ionicModal, $ionicLoading, API, $sce) {
     var ctrl = this;
+    ctrl.domain = $sce.trustAsResourceUrl(API.restricted);
 
     localforage.getItem('session').then(function (value) {
       ctrl.session = value;
     });
 
     $scope.loading = $ionicLoading.show();
+
+    if(!ctrl.session)
+      $scope.loading = $ionicLoading.hide()
 
     $('iframe').on('load', function () {
       $ionicLoading.hide();
