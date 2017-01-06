@@ -21,7 +21,7 @@
 	<div id="wrapper">
 		<form id="frm_email">
 			<input type="email" id="email" required="required" placeholder="email@example.com">
-			<br>
+			&nbsp;&nbsp;
 			<div class="error">Ocorreu um erro.</div>
 			<input class="blue" type="submit" value="Continuar"><br>
 			<img class="loading" src="loading.gif">

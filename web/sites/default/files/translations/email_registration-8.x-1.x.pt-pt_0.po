@@ -1,0 +1,22 @@
+# Portuguese, Portugal translation of Email Registration (8.x-1.0-rc4)
+# Copyright (c) 2016 by the Portuguese, Portugal translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Email Registration (8.x-1.0-rc4)\n"
+"POT-Creation-Date: 2016-12-27 13:44+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Portuguese, Portugal\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "user"
+msgstr "utilizador"
+msgid "E-mail"
+msgstr "Email"
+msgid "Display name"
+msgstr "Nome da vista"
+msgid "Conflict"
+msgstr "Conflito"

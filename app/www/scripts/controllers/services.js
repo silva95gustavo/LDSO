@@ -1,6 +1,8 @@
 angular.module('starter.controllers.services', [])
 
-  .controller('servicesCtrl', function ($scope, $ionicLoading) {
+  .controller('servicesCtrl', function ($scope, $ionicLoading, $sce, API) {
+    var ctrl = this;
+    ctrl.domain = $sce.trustAsResourceUrl(API.services);
     $scope.loading = $ionicLoading.show();
 
     $('iframe').on('load', function () {

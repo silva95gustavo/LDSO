@@ -1,6 +1,8 @@
 angular.module('starter.controllers.carer', [])
 
-  .controller('carerCtrl', function ($scope, $ionicLoading) {
+  .controller('carerCtrl', function ($scope, $ionicLoading, API, $sce) {
+    var ctrl = this;
+    ctrl.domain = $sce.trustAsResourceUrl(API.carer);
     $scope.loading = $ionicLoading.show();
 
     $('iframe').on('load', function() {

@@ -1,6 +1,6 @@
 <ion-view view-title="Área Restrita">
     <ion-content ng-show="restricted.session">
-        <iframe class='webPage' src="http://cuidadores.tk/pt-pt/area-restrita">
+        <iframe class='webPage' ng-src="{{restricted.domain}}">
         </iframe>
     </ion-content>
     <ion-content ng-hide="restricted.session">

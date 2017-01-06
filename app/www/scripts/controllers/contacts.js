@@ -1,6 +1,8 @@
 angular.module('starter.controllers.contacts', [])
 
-  .controller('contactsCtrl', function ($scope, $ionicLoading) {
+  .controller('contactsCtrl', function ($scope, $ionicLoading, $sce, API) {
+    var ctrl = this;
+    ctrl.domain = $sce.trustAsResourceUrl(API.carer);
     $scope.loading = $ionicLoading.show();
 
     $('iframe').on('load', function () {

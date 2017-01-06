@@ -1,16 +1,22 @@
 # Associação Cuidadores
 
+Associação Cuidadores aims to fully support carers around Portugal, providing a set of services in order to improve their quality of life. Their main partner is the Carers Trust organization, which has a validated model in the United Kingdom for more than 30 years. Cuidadores wants to know the context, needs and profile of all portuguese carers, therefore recognizing their role.
+
+This project consists of two website components and a mobile app: the institutional website of the association, a forum for carers inside the website and an app to quickly acccess both components.
+
 - [Getting started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
     - [Website](#website)
     - [Mobile app](#mobile-app)
   - [Running the tests](#running-the-tests)
+  - [Updating](#updating)
 - [Usage](#usage)
   - [Account system](#account-system)
   - [Charts](#charts)
   - [Forms](#forms)
   - [Newsletter](#newsletter)
+  - [Custom content](#custom-content)
   - [Export user info](#export-user-info)
 - [System architecture](#system-architecture)
   - [Built width](#built-width)
@@ -27,6 +33,7 @@
 - Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
 - MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
 - SSH (command-line) access to the server folders.
+- NodeJS 6.9
 
 ### Installation
 
@@ -35,18 +42,37 @@
 1. Open a command line on folder `/web/scripts/`.
 2. Copy the file `/web/sites/default/settings.local.example.php` to `/web/sites/default/settings.local.php` and update it with the configurations of your database, as well as the folder where the temporary files will be stored.
 3. Copy the file `/web/comunidade/config.local.example.php` to `/web/comunidade/config.local.php` and update it with your database configurations, as well as the path to the online community page.
-4. Open a command line in folder `/web/scripts/`.
-5. Run the command `install.bat <dbuser> <dbpass> <dbname>`. If the database has no _password_ write `""` in the `<dbpass>` field.
-6. In order for the admin to be automatically notified when a community user becomes an adult, a cronjob must be set up. This means adding the following line to the crontab file: `0 0 * * * php -q /var/www/staging/comunidade/young_adult/notify_admin.php`
+4. Copy the file `/web/register/config.local.example.php` to `/web/register/config.local.php` and update it with your SMTP server configuration, as well as the website's address and administrator's email.
+5. Open a command line in folder `/web/scripts/`.
+6. Run the command `install.bat <dbuser> <dbpass> <dbname>`. If the database has no _password_ write `""` in the `<dbpass>` field.
+7. In order for the admin to be automatically notified when a community user becomes an adult, a cronjob must be set up. This means adding the following line to the crontab file: `0 0 * * * php -q /var/www/staging/comunidade/young_adult/notify_admin.php`
 
 #### Mobile app
 1. Get the website up and runnning.
 2. Install latest Node.js.
 3. Run `npm install -g cordova ionic`.
+4. To test the app in your browser run `ionic serve`.
 
 ### Running the tests
 The website unit tests use PHPUnit and can be run with the following command: `/web/core/vendor/bin/phpunit --testsuite=unit`.
 The website acceptance tests use Selenium and Google Chrome as the browser. They can be run with the following command: `/web/scripts/acceptance/compile_and_run.bat`.
+
+### Updating
+
+#### Drupal
+You are highly recommended not to update Drupal, unless a security update is available. The reason for this is that some files that are modified by the update must be manually edited to restore their original content.
+
+To update, the "Update Manager" module must be enabled. Then you should backup the following files:
+- .htaccess
+- robots.txt
+- core/lib/Drupal/Core/Password/PhpassHashedPassword.php
+
+After updating, you must merge the files you previously backed up with the new changes. Also, you need to remove the following test files:
+- core/lib/Drupal/Core/Password/PhpassHashedPassword.php
+- core/tests/Drupal/Tests/Core/PageCache/CommandLineOrUnsafeMethodTest.php
+
+#### Flarum
+Run `composer update` in a command line open on folder `/web/comunidade/`.
 
 ## Usage
 In this section, the usage of specific parts of the website will be explained.
@@ -77,15 +103,25 @@ The newsletter system allows the subscription of guests or logged-in users. It a
 
 ![Newsletter subscription](images/newsletter_subscription.gif)
 
+### Custom content
+Some special content of the website can be created using the appropriate content type. The following list explains some of the custom content types available:
+- **Chart:** Creates a chart (using EasyChart) to be displayed in the sidebar of the main page.
+- **Event:** Creates a new event that will be displayed in the calendar and in the News & Events section.
+- **News:** Creates a news article that will be displayed in the News & Events section as well as the main page.
+- **Partner:** Adds an image to the Partners/Supporters section.
+- **Responsive slideshow:** Adds a new image to the main page slideshow.
+- **Newsletter issue:** Creates a new issue of a newsletter, to be later sent to the subscribers.
+- **Training video:** Adds a new video to the Training Videos section.
+
 ### Export user info
 The administrator is able to export a list of all users of both the website and community to an Excel spreadsheet. In order to do that, one must acess the Configuration page and click "Export User Information" in the development section. The generated spreadsheet contains the following columns:
-- **Account type:** - Can be one of three values: "Website", "Community" or "Both". The value depends on where the user is registered.
-- **Email:** - The email of the user.
-- **Name:** - The name of the user (optional field).
-- **Associate number:** - The associate number of the user (optional field).
-- **Username:** - The username of the user (if registered in the forum).
-- **Age group:** - Young (17-) or Adult (18+).
-- **Account activated:** - Activated or Not Activated, depending on whether or not the user has activated the email associated to the account.
+- **Account type:** Can be one of three values: "Website", "Community" or "Both". The value depends on where the user is registered.
+- **Email:** The email of the user.
+- **Name:** The name of the user (optional field).
+- **Associate number:** The associate number of the user (optional field).
+- **Username:** The username of the user (if registered in the forum).
+- **Age group:** Young (17-) or Adult (18+).
+- **Account activated:** Activated or Not Activated, depending on whether or not the user has activated the email associated to the account.
 
 ## System architecture
 
