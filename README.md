@@ -33,6 +33,7 @@ This project consists of two website components and a mobile app: the institutio
 - Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
 - MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
 - SSH (command-line) access to the server folders.
+- NodeJS 6.9
 
 ### Installation
 
