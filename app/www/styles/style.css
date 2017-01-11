@@ -47,3 +47,8 @@
 .backdrop {
   background-color: rgba(256, 256, 256, 256);
   }
+
+  .title-image {
+      margin-top: 5px;
+      height: 25px;
+  }
