@@ -172,7 +172,7 @@
 			$act_url = $smtp_config['site_addr'] . "/register/activate.php?email=" . $email . "&token=" . $token;
 
 			$mail->Subject = 'Cuidadores - Activar conta';
-			$mail->Body    = "Para proceder à activação da sua conta, aceda ao endereço <a href=\"" . $act_url . "\">" . $act_url . "</a>".;
+			$mail->Body    = "Para proceder à activação da sua conta, aceda ao endereço <a href=\"" . $act_url . "\">" . $act_url . "</a>";
 
 			if(!$mail->send())
 				on_error('A criação da conta falhou.');

@@ -12,6 +12,7 @@ angular.module('starter.controllers.home', ['ngSanitize'])
       $('iframe').contents().find("#block-cuidadores-footer").remove();
       $('iframe').contents().find(".external_links").remove();
       $('iframe').contents().find(".main-container").css("margin-top", "1em");
+      $('iframe').contents().find(".region").css({"padding": "0px"});
       $('iframe').contents().find(".page-header").css({
         "font-size": "220%",
         "text-align": "center",

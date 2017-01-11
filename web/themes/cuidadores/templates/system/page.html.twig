@@ -56,6 +56,7 @@
  * @see html.html.twig
  */
 #}
+<div id="cuidadores_wrapper">
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
 {# Navbar #}
 {% if page.logo or page.navigation_top or page.navigation_top or page.navigation_bottom or page.navigation_collapsible %}
@@ -255,7 +256,7 @@
     </div>
   {% endblock %}
 {% endif %}
-
+</div>
 {% if page.footer %}
   {% block footer %}
     <footer class="footer {{ container }}" role="contentinfo">

@@ -7,6 +7,6 @@ dependencies:
 id: gender
 label: Gender
 options: |
-  Male: Male
-  Female: Female
+  Masculino: Masculino
+  Feminino: Feminino
   Transgender: Transgender
