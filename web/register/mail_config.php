@@ -23,6 +23,7 @@
 		$mail->isSMTP();
 		$mail->Host = $smtp_config['host'];
 
+		$mail->CharSet = 'UTF-8';
 		$mail->SMTPAuth = true;
 		$mail->Username = $smtp_config['username'];
 		$mail->Password = $smtp_config['password'];
