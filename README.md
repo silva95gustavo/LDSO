@@ -31,9 +31,10 @@ This project consists of two website components and a mobile app: the institutio
 - Apache web server.
 - PHP 5.5.9 or higher.
 - Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
-- MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
+- MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine. You must have access to create triggers.
 - SSH (command-line) access to the server folders.
 - NodeJS 6.9
+- If there is a limit on the number of inodes allowed, it should not be lower than 30 000.
 
 ### Installation
 
