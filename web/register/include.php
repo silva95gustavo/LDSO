@@ -8,8 +8,7 @@
 		global $databases;
 		$db_settings = $databases['default']['default'];
 
-		$db_host = $db_settings['host'] . ":" . $db_settings['port'];
-		$dsn = "mysql:host=" . $db_host . ";dbname=" . $db_settings['database'];
+		$dsn = "mysql:host=" . $db_settings['host'] . ";port=" . $db_settings['port'] . ";dbname=" . $db_settings['database'];
 
 		$username = $db_settings['username'];
 		$password = $db_settings['password'];
