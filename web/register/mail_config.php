@@ -27,7 +27,7 @@
 		$mail->SMTPAuth = true;
 		$mail->Username = $smtp_config['username'];
 		$mail->Password = $smtp_config['password'];
-		$mail->SMTPSecure = 'tls';
+		$mail->SMTPSecure = 'ssl';
 		$mail->Port = $smtp_config['port'];
 		
 		$mail->setFrom($smtp_config['from_addr'], 'Mailer');
