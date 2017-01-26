@@ -7,7 +7,7 @@ angular.module('starter.constants', [])
 })*/
 
 .constant('API', (function() {
-  var domain = 'http://cuidadores.tk/';
+  var domain = 'http://cuidadores.pt/';
   return {
     login: domain + 'user/login/',
     logout: domain + 'user/logout/',
