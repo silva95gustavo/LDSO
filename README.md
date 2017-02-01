@@ -2,7 +2,7 @@
 
 Associação Cuidadores aims to fully support carers around Portugal, providing a set of services in order to improve their quality of life. Their main partner is the Carers Trust organization, which has a validated model in the United Kingdom for more than 30 years. Cuidadores wants to know the context, needs and profile of all portuguese carers, therefore recognizing their role.
 
-This project consists of two website components and a mobile app: the institutional website of the association, a forum for carers inside the website and an app to quickly acccess both components.
+This project consists of two website components and a mobile app: the institutional website of the association, a forum for carers inside the website and an app to quickly access both components.
 
 - [Getting started](#getting-started)
   - [Prerequisites](#prerequisites)
