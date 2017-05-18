@@ -2,7 +2,7 @@
 
 Associação Cuidadores aims to fully support carers around Portugal, providing a set of services in order to improve their quality of life. Their main partner is the Carers Trust organization, which has a validated model in the United Kingdom for more than 30 years. Cuidadores wants to know the context, needs and profile of all portuguese carers, therefore recognizing their role.
 
-This project consists of two website components and a mobile app: the institutional website of the association, a forum for carers inside the website and an app to quickly acccess both components.
+This project consists of two website components and a mobile app: the institutional website of the association, a forum for carers inside the website and an app to quickly access both components.
 
 - [Getting started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -31,9 +31,10 @@ This project consists of two website components and a mobile app: the institutio
 - Apache web server.
 - PHP 5.5.9 or higher.
 - Minimum 512MB disk space in the web server. Keep in mind you need much more for the database, files uploaded by the users, media, backups and other files.
-- MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine.
+- MySQL 5.5.3 or higher with PDO and an InnoDB-compatible primary storage engine. You must have access to create triggers.
 - SSH (command-line) access to the server folders.
 - NodeJS 6.9
+- If there is a limit on the number of inodes allowed, it should not be lower than 30 000.
 
 ### Installation
 
